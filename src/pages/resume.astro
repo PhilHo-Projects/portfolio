@@ -1,0 +1,89 @@
+---
+import '../styles/resume.css';
+---
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title id="page-title">Philippe Ho - Resume</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Source+Sans+3:wght@300;400;600;700&display=swap" rel="stylesheet">
+</head>
+
+<body id="resume-body">
+    <div class="floating-download">
+        <button id="download-pdf" class="download-icon" title="Download as PDF">
+            <i class="fas fa-file-download"></i>
+        </button>
+        <button id="lang-toggle" class="download-icon" style="bottom: 90px;" title="Switch Language">
+            FR
+        </button>
+        <button id="edit-toggle" class="download-icon" style="bottom: 165px; background-color: #f39c12;"
+            title="Toggle Edit Mode">
+            <i class="fas fa-edit"></i>
+        </button>
+    </div>
+
+    <div class="container" id="resume-content">
+        <aside class="sidebar">
+            <header>
+                <h1 id="name"></h1>
+                <h2 id="role"></h2>
+            </header>
+            <div class="profile">
+                <div class="profile-img">
+                    <img src="/assets/img/profile2.webp" alt="Profile" id="profile-img">
+                </div>
+                <div class="contact-info">
+                    <p><i class="far fa-envelope fa-fw"></i> <span id="email">philippeho27@gmail.com</span></p>
+                    <p><i class="fas fa-phone fa-fw"></i> <span id="phone">(514) 713-5487</span></p>
+                    <p><i class="fas fa-map-marker-alt fa-fw"></i> <span id="location"></span></p>
+                    <div class="social-row">
+                        <a id="link-website" href="#" target="_blank" title="Personal Website"><i
+                                class="fas fa-globe"></i></a>
+                        <a id="link-linkedin" href="#" target="_blank" title="LinkedIn"><i
+                                class="fab fa-linkedin"></i></a>
+                        <a id="link-github" href="#" target="_blank" title="GitHub"><i class="fab fa-github"></i></a>
+                    </div>
+                </div>
+                <div class="social-links" id="social-links">
+                    <!-- Social links rendered here -->
+                </div>
+            </div>
+
+            <div id="sidebar-sections">
+                <!-- Sidebar sections rendered here -->
+            </div>
+        </aside>
+
+        <main class="content">
+            <section class="summary">
+                <h2 id="summary-title"></h2>
+                <p id="summary-text"></p>
+            </section>
+
+            <section class="experience">
+                <h2 id="experience-title"></h2>
+                <div id="experience-list"></div>
+            </section>
+
+            <section class="projects">
+                <h2 id="projects-title"></h2>
+                <div id="projects-list"></div>
+            </section>
+
+            <section class="education">
+                <h2 id="education-title"></h2>
+                <div id="education-list"></div>
+            </section>
+        </main>
+    </div>
+    <script>
+        import '../scripts/resume/main.ts';
+    </script>
+</body>
+
+</html>

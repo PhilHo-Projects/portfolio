@@ -1,0 +1,55 @@
+---
+import type { Project } from '../data/projects';
+
+interface Props {
+  project: Project;
+}
+
+const { project } = Astro.props;
+
+// Determine click handler based on type
+let onclick = "";
+if (project.type === "modal") {
+  onclick = `openProjectModal('${project.link}', '${project.title}')`;
+} else if (project.type === "certificate") {
+  onclick = "openCertificateModal()";
+} else if (project.type === "image") {
+  onclick = `openImageModal('${project.link}', '${project.title}')`;
+}
+
+// Generate CSS classes
+const baseClasses = `group relative overflow-hidden rounded-2xl border border-white/10 bg-[#1a1a1a] p-8 cursor-pointer transition-all`;
+const hoverClasses = `${project.borderColor} ${project.shadowColor}`;
+const gridClasses = project.colSpan || "";
+
+---
+
+<div onclick={onclick} class={`${baseClasses} ${hoverClasses} ${gridClasses}`}>
+  <div class="flex flex-col md:flex-row md:items-center justify-between gap-8 h-full">
+    <div class="relative z-10 flex-1">
+      {project.subtitle && (
+        <span class={`text-[10px] font-mono uppercase tracking-[0.2em] mb-2 block opacity-60 ${project.color}`}>
+          {project.subtitle}
+        </span>
+      )}
+      <h3 class={`text-2xl md:text-3xl font-medium mb-4 ${project.color}`}>
+        {project.title}
+      </h3>
+      <p class="text-slate-400 text-sm md:text-lg max-w-xl leading-relaxed">
+        {project.description}
+      </p>
+    </div>
+
+    {project.type !== "image" && project.title !== "OpenClaw" && (
+      <button class={`absolute top-4 right-4 md:top-6 md:right-6 p-1.5 md:p-2 rounded-lg text-slate-600 group-hover:bg-white/5 transition-all duration-200 group-hover:${project.color}`} title="Expand">
+        {project.type === "certificate" ? <i class="fa-solid fa-expand text-xs md:text-sm"></i> : <i class="fa-solid fa-up-right-from-square text-xs md:text-sm"></i>}
+      </button>
+    )}
+
+    {project.techIcon && (
+      <div class={`hidden md:block text-7xl md:text-8xl opacity-5 group-hover:opacity-10 transition-opacity ${project.color}`}>
+        <i class={project.techIcon}></i>
+      </div>
+    )}
+  </div>
+</div>

@@ -1,0 +1,71 @@
+@import "tailwindcss";
+
+@theme {
+  --font-mono: "IBM Plex Mono", ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+
+  --color-background: #121212;
+  --color-name-bright: oklch(85.2% 0.199 91.936);
+  --color-accent: oklch(92.4% 0.12 95.746);
+}
+
+@layer base {
+  body {
+    @apply bg-background text-slate-400 font-mono antialiased;
+  }
+
+  h1 {
+    @apply text-name-bright font-mono;
+  }
+
+  h2,
+  h3,
+  h4 {
+    @apply text-accent font-mono;
+  }
+
+  p {
+    @apply container leading-relaxed;
+  }
+}
+
+/* Maintain specific utility behavior */
+.editable-highlight {
+  @apply outline-2 outline-dashed outline-blue-500 bg-blue-500/10 rounded-sm;
+}
+
+[contenteditable]:focus {
+  @apply outline-2 outline-solid outline-blue-500 bg-blue-500/20;
+}
+
+.game-video-container {
+  @apply w-full max-w-full my-8 rounded-lg overflow-hidden border border-white/5;
+}
+
+.game-video {
+  @apply w-full h-auto block;
+}
+
+.contact-popup {
+  @apply hidden fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm pointer-events-none;
+}
+
+.popup-content {
+  @apply bg-[#1a1a1a] p-8 rounded-xl w-full max-w-sm border border-white/10 shadow-2xl pointer-events-auto;
+}
+
+/* Custom scrollbar */
+::-webkit-scrollbar {
+  width: 6px;
+}
+
+::-webkit-scrollbar-track {
+  @apply bg-background;
+}
+
+::-webkit-scrollbar-thumb {
+  @apply bg-white/10 rounded-full;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  @apply bg-white/20;
+}

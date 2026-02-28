@@ -1,0 +1,41 @@
+---
+import { projects } from '../data/projects';
+import ProjectCard from './ProjectCard.astro';
+---
+
+<section id="projects" class="pb-10">
+  <h2 class="text-xs uppercase tracking-[0.3em] text-slate-500 mb-4 border-b border-white/5 pb-4 font-mono">
+    Projects
+  </h2>
+
+  <div class="space-y-8">
+
+    <div id="game-development">
+      <h3 class="text-xs font-mono text-slate-600 uppercase tracking-widest mb-6">Game Development</h3>
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+        {projects.filter(p => p.category === "Game Development").map(project => (
+          <ProjectCard project={project} />
+        ))}
+      </div>
+    </div>
+
+    <div id="web-development">
+      <h3 class="text-xs font-mono text-slate-600 uppercase tracking-widest mb-6">Web Development</h3>
+      <div class="grid grid-cols-2 md:grid-cols-6 gap-4 md:gap-6">
+        {projects.filter(p => p.category === "Web Development").map(project => (
+          <ProjectCard project={project} />
+        ))}
+      </div>
+    </div>
+
+    <div id="automation">
+      <h3 class="text-xs font-mono text-slate-600 uppercase tracking-widest mb-6">Automation & Systems</h3>
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+        {projects.filter(p => p.category === "Automation & Systems").map(project => (
+          <ProjectCard project={project} />
+        ))}
+      </div>
+    </div>
+
+  </div>
+</section>

@@ -1,7 +1,7 @@
 module.exports = {
     apps: [{
         name: 'portfolio-resume',
-        script: 'server.js',
+        script: 'server.cjs',
         env: {
             NODE_ENV: 'development',
             PORT: 3005

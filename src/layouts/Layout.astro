@@ -1,0 +1,46 @@
+---
+import '../styles/global.css';
+
+interface Props {
+  title?: string;
+}
+
+const { title = "Philippe Ho | Software Developer" } = Astro.props;
+---
+
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+    <meta name="description" content="Philippe Ho - Software Developer Portfolio" />
+    <meta name="author" content="Philippe Ho" />
+
+    <!-- OpenGraph -->
+    <meta property="og:title" content="Philippe Ho | Software Developer" />
+    <meta property="og:description" content="Montreal-based developer focused on Unity and Unreal Engine. Shipped titles on Steam, exploring multiplayer and AI-assisted development." />
+    <meta property="og:image" content="https://philippeho.popnux.com/assets/img/profile2.webp" />
+    <meta property="og:url" content="https://philippeho.popnux.com/" />
+    <meta property="og:type" content="website" />
+    <meta name="twitter:card" content="summary_large_image" />
+
+    <title>{title}</title>
+    <link rel="icon" type="image/x-icon" href="/assets/img/tabicon2.ico" />
+
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:ital,wght@0,400;0,500;0,600;0,700;1,400;1,600&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/devicon.min.css" />
+    <script src="https://use.fontawesome.com/releases/v6.3.0/js/all.js" crossorigin="anonymous" async></script>
+  </head>
+  <body id="page-top" class="bg-background text-slate-400 selection:bg-name-bright/20 selection:text-white antialiased">
+    <main class="max-w-4xl mx-auto px-6 py-20 text-xl">
+      <slot />
+    </main>
+
+    <!-- Global Scripts (Modal Logic) -->
+    <script>
+      import '../scripts/main.ts';
+    </script>
+  </body>
+</html>
