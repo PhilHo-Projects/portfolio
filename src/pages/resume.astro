@@ -21,10 +21,12 @@ import '../styles/resume.css';
         <button id="lang-toggle" class="download-icon" style="bottom: 90px;" title="Switch Language">
             FR
         </button>
-        <button id="edit-toggle" class="download-icon" style="bottom: 165px; background-color: #f39c12;"
-            title="Toggle Edit Mode">
-            <i class="fas fa-edit"></i>
-        </button>
+        {import.meta.env.PUBLIC_READ_ONLY !== 'true' && (
+            <button id="edit-toggle" class="download-icon" style="bottom: 165px; background-color: #f39c12;"
+                title="Toggle Edit Mode">
+                <i class="fas fa-edit"></i>
+            </button>
+        )}
     </div>
 
     <div class="container" id="resume-content">
