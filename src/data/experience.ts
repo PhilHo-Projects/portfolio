@@ -16,7 +16,7 @@ export const experience: Job[] = [
         endDate: "Nov 2024",
         description: "Developed a Steam-published construction game, implementing essential gameplay systems including character movement, save functionality, shader effects, UI/UX, and sound integration.",
         link: "https://store.steampowered.com/app/3113740/Dont_Drop_The_Wall_Jack/",
-        videoSrc: "/assets/img/dontdrop.webm"
+        videoSrc: import.meta.env.BASE_URL + "assets/img/dontdrop.webm"
     },
     {
         company: "Small Detour Games",
@@ -25,6 +25,6 @@ export const experience: Job[] = [
         endDate: "Jun 2023",
         description: "Worked on implementing features including a hidden NPC relationship meter for tracking growth. Developed trigger points for specific events and interactions.",
         link: "https://store.steampowered.com/app/2707880/Troubadours/",
-        videoSrc: "/assets/img/troubadour.webm"
+        videoSrc: import.meta.env.BASE_URL + "assets/img/troubadour.webm"
     }
 ];

@@ -24,7 +24,7 @@ async function init(): Promise<void> {
 
 // Helper functions for landing page UI
 window.openResume = function (): void {
-    window.open('/resume', '_blank');
+    window.open(import.meta.env.BASE_URL + 'resume', '_blank');
 };
 
 window.copyEmail = function (event: MouseEvent): void {

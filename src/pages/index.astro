@@ -75,7 +75,7 @@ import Background from '../components/Background.astro';
         <!-- CAROUSEL MODE -->
         <div id="carousel-container" class="absolute inset-0 w-full h-full bg-[#050505] hidden flex items-center justify-center overflow-hidden">
           <div class="absolute inset-0 flex items-center justify-center opacity-10 pointer-events-none">
-            <img src="/assets/img/ue5-course.png" class="w-2/3 h-2/3 object-contain grayscale" alt="Background Logo">
+            <img src={import.meta.env.BASE_URL + "assets/img/ue5-course.png"} class="w-2/3 h-2/3 object-contain grayscale" alt="Background Logo">
           </div>
           <div class="relative z-10 max-w-4xl w-full p-12 flex flex-col items-center text-center">
             <h3 id="carousel-title" class="text-4xl md:text-5xl font-medium text-white mb-4 tracking-tight drop-shadow-xl">Title Placeholder</h3>

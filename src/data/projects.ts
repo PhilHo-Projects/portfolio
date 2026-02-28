@@ -98,7 +98,7 @@ export const projects: Project[] = [
         category: "Automation & Systems",
         subtitle: "Workflow Automation",
         description: "Job listings scraper. Fetches LinkedIn data, cleans with LLM, and displays on custom frontend.",
-        link: "/assets/img/n8n-workflow.png",
+        link: import.meta.env.BASE_URL + "assets/img/n8n-workflow.png",
         type: "image",
         color: "text-white",
         borderColor: "hover:border-white/40",

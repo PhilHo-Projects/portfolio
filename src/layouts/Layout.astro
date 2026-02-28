@@ -25,7 +25,7 @@ const { title = "Philippe Ho | Software Developer" } = Astro.props;
     <meta name="twitter:card" content="summary_large_image" />
 
     <title>{title}</title>
-    <link rel="icon" type="image/x-icon" href="/assets/img/tabicon2.ico" />
+    <link rel="icon" type="image/x-icon" href={import.meta.env.BASE_URL + "assets/img/tabicon2.ico"} />
 
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
