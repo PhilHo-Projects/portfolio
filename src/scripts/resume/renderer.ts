@@ -1,4 +1,4 @@
-import { setText, setHTML, setList } from '../../components/resume/domUtils';
+import { setText, setList } from '../../components/resume/domUtils';
 import { ResumeLanguageData, JobItem, ProjectItem, EducationItem } from '../../types/resume';
 
 export function renderResume(data: ResumeLanguageData): void {

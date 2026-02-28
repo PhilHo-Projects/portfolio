@@ -63,7 +63,7 @@ export class Editor {
             }
         });
 
-        console.log('Editor initialized. Press Ctrl+Shift+E to edit.');
+        // Editor ready: Ctrl+Shift+E to toggle edit mode
     }
 
     public async toggleEditMode(active: boolean): Promise<void> {
