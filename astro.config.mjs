@@ -4,7 +4,7 @@ import tailwindcss from '@tailwindcss/vite';
 
 // https://astro.build/config
 export default defineConfig({
-    base: process.env.PUBLIC_READ_ONLY === 'true' ? '/portfolio' : '/',
+    base: process.env.PUBLIC_READ_ONLY === 'true' ? '/portfolio/' : '/',
     vite: {
         plugins: [tailwindcss()],
     },
