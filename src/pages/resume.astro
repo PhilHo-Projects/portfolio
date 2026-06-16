@@ -1,5 +1,11 @@
 ---
 import '../styles/resume.css';
+import fs from 'node:fs';
+
+const embeddedResumeData = fs.readFileSync(
+    new URL('../../public/data/resume.json', import.meta.url),
+    'utf-8'
+);
 ---
 
 <!DOCTYPE html>
@@ -83,6 +89,7 @@ import '../styles/resume.css';
             </section>
         </main>
     </div>
+    <script id="initial-resume-data" type="application/json" set:html={embeddedResumeData}></script>
     <script>
         import '../scripts/resume/main.ts';
     </script>
