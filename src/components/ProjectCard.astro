@@ -17,38 +17,50 @@ if (project.type === "modal") {
   onclick = `openImageModal('${project.link}', '${project.title}')`;
 }
 
-// Generate CSS classes
-const baseClasses = `group relative overflow-hidden rounded-2xl border border-white/10 bg-[#1a1a1a] p-8 cursor-pointer transition-all`;
-const hoverClasses = `${project.borderColor} ${project.shadowColor}`;
-const gridClasses = project.colSpan || "";
-
+const accent = project.accent;
+const expandIcon =
+  project.type === "certificate" ? "fa-solid fa-expand" :
+  project.type === "image" ? "fa-solid fa-image" :
+  "fa-solid fa-up-right-from-square";
 ---
 
-<div onclick={onclick} class={`${baseClasses} ${hoverClasses} ${gridClasses}`}>
-  <div class="flex flex-col md:flex-row md:items-center justify-between gap-8 h-full">
-    <div class="relative z-10 flex-1">
-      {project.subtitle && (
-        <span class={`text-[10px] font-mono uppercase tracking-[0.2em] mb-2 block opacity-60 ${project.color}`}>
-          {project.subtitle}
-        </span>
-      )}
-      <h3 class={`text-2xl md:text-3xl font-medium mb-4 ${project.color}`}>
-        {project.title}
-      </h3>
-      <p class="text-slate-400 text-sm md:text-lg max-w-xl leading-relaxed">
-        {project.description}
-      </p>
-    </div>
+<div onclick={onclick} class="project-card group relative flex flex-col overflow-hidden rounded-2xl border bg-[#1a1a1a] cursor-pointer" style={`--accent:${accent}`}>
 
-    {project.type !== "image" && project.title !== "OpenClaw" && (
-      <button class={`absolute top-4 right-4 md:top-6 md:right-6 p-1.5 md:p-2 rounded-lg text-slate-600 group-hover:bg-white/5 transition-all duration-200 group-hover:${project.color}`} title="Expand">
-        {project.type === "certificate" ? <i class="fa-solid fa-expand text-xs md:text-sm"></i> : <i class="fa-solid fa-up-right-from-square text-xs md:text-sm"></i>}
-      </button>
+  <!-- Preview strip -->
+  <div class="relative h-24 flex items-center justify-center overflow-hidden" style={`background-color:${accent}14;`}>
+    <i class={`${project.icon} text-4xl transition-transform duration-300 group-hover:scale-110`} style={`color:${accent}; opacity:0.55;`}></i>
+
+    {project.status === "live" && (
+      <span class="absolute top-2.5 left-2.5 inline-flex items-center gap-1.5 rounded-md bg-black/50 px-2 py-1 text-[10px] font-mono tracking-wide" style="color:#5dcaa5;">
+        <span class="w-1.5 h-1.5 rounded-full bg-[#5dcaa5] animate-pulse"></span>Live demo
+      </span>
+    )}
+    {project.status === "readonly" && (
+      <span class="absolute top-2.5 left-2.5 inline-flex items-center gap-1.5 rounded-md bg-black/50 px-2 py-1 text-[10px] font-mono tracking-wide" style="color:#ef9f27;">
+        <i class="fa-regular fa-eye text-[10px]"></i>Read-only
+      </span>
     )}
 
-    {project.techIcon && (
-      <div class={`hidden md:block text-7xl md:text-8xl opacity-5 group-hover:opacity-10 transition-opacity ${project.color}`}>
-        <i class={project.techIcon}></i>
+    <span class="absolute top-2.5 right-2.5 text-slate-600 group-hover:text-slate-200 transition-colors">
+      <i class={`${expandIcon} text-xs`}></i>
+    </span>
+  </div>
+
+  <!-- Body -->
+  <div class="flex flex-col flex-1 p-5">
+    {project.subtitle && (
+      <span class="text-[10px] font-mono uppercase tracking-[0.18em] mb-1.5" style={`color:${accent};`}>
+        {project.subtitle}
+      </span>
+    )}
+    <h4 class="text-lg font-medium text-slate-100 mb-2">{project.title}</h4>
+    <p class="text-sm text-slate-400 leading-relaxed">{project.description}</p>
+
+    {project.tags && project.tags.length > 0 && (
+      <div class="mt-4 flex flex-wrap gap-1.5">
+        {project.tags.map((tag) => (
+          <span class="text-[10px] font-mono text-slate-400 border border-white/10 rounded px-2 py-0.5">{tag}</span>
+        ))}
       </div>
     )}
   </div>

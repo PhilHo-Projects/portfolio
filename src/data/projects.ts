@@ -1,120 +1,150 @@
 export interface Project {
     title: string;
     category: "Game Development" | "Web Development" | "Automation & Systems";
+    subtitle?: string;        // small label above the title
     description: string;
-    subtitle?: string; // "Multiplayer Sandbox", "Developer Tool", etc.
-    link: string; // URL to open
-    type: "modal" | "image" | "certificate"; // How it opens
-    image?: string; // For image modals
-    techIcon?: string; // Component name or icon class
-    color?: string; // CSS color class (text-cyan-400)
-    borderColor?: string; // CSS border color on hover
-    shadowColor?: string; // CSS shadow color
-    colSpan?: string; // "md:col-span-2" etc
+    link: string;             // URL the modal opens (live app, image, or "#")
+    type: "modal" | "image" | "certificate";
+    accent: string;           // hex accent color, e.g. "#22d3ee"
+    icon: string;             // FontAwesome or devicon class for the preview strip
+    tags?: string[];          // tech chips
+    status?: "live" | "readonly"; // demo badge in the preview strip
 }
 
 export const projects: Project[] = [
-    // Game Development
+    // --- Game Development ---
     {
-        title: "Unity - Multiplayer",
+        title: "ChatroomWars",
         category: "Game Development",
-        subtitle: "Multiplayer Sandbox",
-        description: "A specialized playground for testing multiplayer turn-based mini-games and custom networking logic.",
-        link: "https://philippeho.popnux.com/workshopgames/",
+        subtitle: "Multiplayer Game",
+        description: "A Unity WebGL game with a hand-rolled WebSocket backend. Live rooms, usernames, and real-time msgpack networking — playable right in the browser.",
+        link: "https://philippeho.dev/hiddengame/",
         type: "modal",
-        techIcon: "devicon-unity-plain",
-        color: "text-cyan-400",
-        borderColor: "hover:border-cyan-400/40",
-        shadowColor: "hover:shadow-[0_0_40px_-15px_rgba(34,211,238,0.15)]",
-        colSpan: "md:col-span-2"
+        accent: "#22d3ee",
+        icon: "devicon-unity-plain",
+        tags: ["Unity", "WebGL", "WebSocket"],
+        status: "live"
     },
     {
         title: "Unreal Engine 5",
         category: "Game Development",
-        subtitle: "Online Tutorials",
-        description: "Advanced coursework in C++ Multiplayer, Dedicated Servers (AWS GameLift), and Gameplay Frameworks.",
-        link: "#", // Opens certificate modal
+        subtitle: "Coursework",
+        description: "Advanced C++ multiplayer coursework — dedicated servers on AWS GameLift, gameplay frameworks, and networked systems.",
+        link: "#",
         type: "certificate",
-        techIcon: "devicon-unrealengine-original",
-        color: "text-white",
-        borderColor: "hover:border-white/40",
-        shadowColor: "hover:shadow-[0_0_40px_-15px_rgba(255,255,255,0.1)]",
-        colSpan: "md:col-span-2"
+        accent: "#e5e7eb",
+        icon: "devicon-unrealengine-original",
+        tags: ["C++", "GameLift", "Multiplayer"]
     },
 
-    // Web Development
+    // --- Web Development ---
     {
         title: "TurboReader",
         category: "Web Development",
         subtitle: "Developer Tool",
-        description: "High-speed reading interface using RSVP technology to simulate rapid serial visual presentation of text.",
-        link: "https://philippeho27.github.io/TurboReader/",
+        description: "A high-speed reading interface using RSVP — flashing words one at a time to push reading speed well past normal.",
+        link: "https://philippeho.dev/TurboReader/",
         type: "modal",
-        color: "text-emerald-400",
-        borderColor: "hover:border-emerald-400/40",
-        shadowColor: "hover:shadow-[0_0_30px_-10px_rgba(52,211,153,0.1)]",
-        colSpan: "col-span-2 md:col-span-4"
+        accent: "#34d399",
+        icon: "fa-solid fa-bolt",
+        tags: ["RSVP", "Vanilla JS"],
+        status: "live"
     },
     {
-        title: "MP3 Maker",
+        title: "Manga Tracker",
         category: "Web Development",
-        subtitle: "Audio Utility",
-        description: "Toolkit for converting streaming links from YouTube, Bandcamp, and SoundCloud into private audio archives.",
-        link: "https://philippeho.popnux.com/mp3maker/",
+        subtitle: "Full-stack App",
+        description: "Tracks reading progress across series with a daily scheduler that checks for new chapters. Express + SQLite, self-hosted.",
+        link: "https://philippeho.dev/manga-tracker/",
         type: "modal",
-        color: "text-violet-400",
-        borderColor: "hover:border-violet-400/40",
-        shadowColor: "hover:shadow-[0_0_30px_-10px_rgba(167,139,250,0.1)]",
-        colSpan: "col-span-1 md:col-span-2"
+        accent: "#fbbf24",
+        icon: "fa-solid fa-book",
+        tags: ["Express", "SQLite", "Cron"],
+        status: "readonly"
     },
     {
-        title: "Job Viewer",
+        title: "Chatsim",
         category: "Web Development",
-        subtitle: "Data App",
-        description: "A specialized dashboard for filtering and analyzing technical job postings.",
-        link: "https://philippeho.popnux.com/job-viewer/",
+        subtitle: "Animation Tool",
+        description: "Build and play back scripted texting animations — a little story engine for fake chat threads, with a JSON-backed editor.",
+        link: "https://philippeho.dev/chatsim/",
         type: "modal",
-        color: "text-amber-400",
-        borderColor: "hover:border-amber-400/40",
-        shadowColor: "hover:shadow-[0_0_30px_-10px_rgba(251,191,36,0.1)]",
-        colSpan: "col-span-1 md:col-span-3"
+        accent: "#a78bfa",
+        icon: "fa-solid fa-comments",
+        tags: ["Node", "SPA"],
+        status: "live"
     },
     {
         title: "Personal SoundCloud",
         category: "Web Development",
         subtitle: "Audio Platform",
-        description: "Custom streaming logic for private audio archives.",
-        link: "https://philippeho.popnux.com/personalsoundcloud/",
+        description: "A private streaming archive with custom upload, cover art, and playback logic — a self-hosted take on SoundCloud.",
+        link: "https://philippeho.dev/personalsoundcloud/",
         type: "modal",
-        color: "text-rose-400",
-        borderColor: "hover:border-rose-400/40",
-        shadowColor: "hover:shadow-[0_0_30px_-10px_rgba(251,113,133,0.1)]",
-        colSpan: "col-span-2 md:col-span-3"
+        accent: "#fb7185",
+        icon: "fa-solid fa-music",
+        tags: ["Node", "Uploads"],
+        status: "readonly"
+    },
+    {
+        title: "MP3 Maker",
+        category: "Web Development",
+        subtitle: "Audio Utility",
+        description: "Converts streaming links from YouTube, Bandcamp, and SoundCloud into clean audio files. Wraps yt-dlp + ffmpeg behind a simple UI.",
+        link: "https://philippeho.dev/mp3maker/",
+        type: "modal",
+        accent: "#38bdf8",
+        icon: "fa-solid fa-headphones",
+        tags: ["Node", "yt-dlp", "ffmpeg"],
+        status: "live"
+    },
+    {
+        title: "Wave Function Collapse",
+        category: "Web Development",
+        subtitle: "Generative Viz",
+        description: "An interactive visualiser of the Wave Function Collapse algorithm — procedural tile generation rendered live on canvas.",
+        link: "https://philippeho.dev/wfc/",
+        type: "modal",
+        accent: "#84cc16",
+        icon: "fa-solid fa-shapes",
+        tags: ["React", "Canvas", "Algorithm"],
+        status: "live"
     },
 
-    // Automation
+    // --- Automation & Systems ---
+    {
+        title: "ClassAction Scanner",
+        category: "Automation & Systems",
+        subtitle: "AI Scraper",
+        description: "Scrapes Canadian class-action settlements, summarizes each with Gemini, and emails a weekly digest. Python + n8n, fully automated.",
+        link: "https://philippeho.dev/classactions/",
+        type: "modal",
+        accent: "#c084fc",
+        icon: "fa-solid fa-robot",
+        tags: ["Python", "Gemini", "n8n"],
+        status: "live"
+    },
     {
         title: "n8n Job Scraper",
         category: "Automation & Systems",
         subtitle: "Workflow Automation",
-        description: "Job listings scraper. Fetches LinkedIn data, cleans with LLM, and displays on custom frontend.",
+        description: "An n8n pipeline that scrapes job listings, cleans them with an LLM, and pushes the results to a custom dashboard.",
         link: import.meta.env.BASE_URL + "assets/img/n8n-workflow.png",
         type: "image",
-        color: "text-white",
-        borderColor: "hover:border-white/40",
-        shadowColor: "hover:shadow-[0_0_30px_-10px_rgba(255,255,255,0.05)]",
-        colSpan: ""
+        accent: "#cbd5e1",
+        icon: "fa-solid fa-diagram-project",
+        tags: ["n8n", "LLM", "Automation"]
     },
     {
-        title: "OpenClaw",
+        title: "Job Viewer",
         category: "Automation & Systems",
-        subtitle: "Local Agent Platform",
-        description: "Open-source agent platform. Runs locally to automate Discord, Slack, and Telegram.",
-        link: "#",
-        type: "modal", // Actually just a card, but we'll treat it as default
-        color: "text-white",
-        borderColor: "border-white/10",
-        shadowColor: "",
-        colSpan: ""
+        subtitle: "Data App",
+        description: "The front end for the scraper above — filter, sort, and analyze technical job postings as they come in.",
+        link: "https://jobs.philippeho.dev/job-viewer/",
+        type: "modal",
+        accent: "#60a5fa",
+        icon: "fa-solid fa-table-list",
+        tags: ["Node", "Data"],
+        status: "live"
     }
 ];
