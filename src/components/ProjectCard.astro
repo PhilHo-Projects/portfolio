@@ -7,6 +7,8 @@ interface Props {
 
 const { project } = Astro.props;
 
+const isSoon = project.type === "soon";
+
 // Determine click handler based on type
 let onclick = "";
 if (project.type === "modal") {
@@ -24,7 +26,7 @@ const expandIcon =
   "fa-solid fa-up-right-from-square";
 ---
 
-<div onclick={onclick} class="project-card group relative flex flex-col overflow-hidden rounded-2xl border bg-[#1a1a1a] cursor-pointer" style={`--accent:${accent}`}>
+<div onclick={onclick} class:list={["project-card group relative flex flex-col overflow-hidden rounded-2xl border bg-[#1a1a1a]", isSoon ? "cursor-default" : "cursor-pointer"]} style={`--accent:${accent}`}>
 
   <!-- Preview strip -->
   <div class="relative h-24 flex items-center justify-center overflow-hidden" style={`background-color:${accent}14;`}>
@@ -40,10 +42,17 @@ const expandIcon =
         <i class="fa-regular fa-eye text-[10px]"></i>Read-only
       </span>
     )}
+    {isSoon && (
+      <span class="absolute top-2.5 left-2.5 inline-flex items-center gap-1.5 rounded-md bg-black/50 px-2 py-1 text-[10px] font-mono tracking-wide" style="color:#94a3b8;">
+        <i class="fa-regular fa-clock text-[10px]"></i>Coming soon
+      </span>
+    )}
 
-    <span class="absolute top-2.5 right-2.5 text-slate-600 group-hover:text-slate-200 transition-colors">
-      <i class={`${expandIcon} text-xs`}></i>
-    </span>
+    {!isSoon && (
+      <span class="absolute top-2.5 right-2.5 text-slate-600 group-hover:text-slate-200 transition-colors">
+        <i class={`${expandIcon} text-xs`}></i>
+      </span>
+    )}
   </div>
 
   <!-- Body -->

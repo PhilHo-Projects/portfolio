@@ -1,10 +1,10 @@
 export interface Project {
     title: string;
-    category: "Game Development" | "Web Development" | "Automation & Systems";
+    category: "Game Development" | "Web Development" | "Automation & Systems" | "Native & Tools";
     subtitle?: string;        // small label above the title
     description: string;
     link: string;             // URL the modal opens (live app, image, or "#")
-    type: "modal" | "image" | "certificate";
+    type: "modal" | "image" | "certificate" | "soon";
     accent: string;           // hex accent color, e.g. "#22d3ee"
     icon: string;             // FontAwesome or devicon class for the preview strip
     tags?: string[];          // tech chips
@@ -146,5 +146,29 @@ export const projects: Project[] = [
         icon: "fa-solid fa-table-list",
         tags: ["Node", "Data"],
         status: "live"
+    },
+
+    // --- Native & Tools ---
+    {
+        title: "Rust Music Player",
+        category: "Native & Tools",
+        subtitle: "Desktop App",
+        description: "A native music player and library manager built in Rust — a MusicBee-style desktop client for browsing, tagging, and playing a local collection. Demo walkthrough coming soon.",
+        link: "#",
+        type: "soon",
+        accent: "#f97316",
+        icon: "devicon-rust-plain",
+        tags: ["Rust", "Desktop", "Audio"]
+    },
+    {
+        title: "Song Finder",
+        category: "Native & Tools",
+        subtitle: "Search Tool",
+        description: "A fast Rust tool that indexes and searches a local music collection across USB drives and disks — find any track by name in milliseconds. Demo walkthrough coming soon.",
+        link: "#",
+        type: "soon",
+        accent: "#2dd4bf",
+        icon: "devicon-rust-plain",
+        tags: ["Rust", "Search", "CLI"]
     }
 ];
