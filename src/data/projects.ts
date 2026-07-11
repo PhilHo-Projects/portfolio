@@ -124,30 +124,6 @@ export const projects: Project[] = [
         tags: ["Python", "Gemini", "n8n"],
         status: "live"
     },
-    {
-        title: "n8n Job Scraper",
-        category: "Automation & Systems",
-        subtitle: "Workflow Automation",
-        description: "An n8n pipeline that scrapes job listings, cleans them with an LLM, and pushes the results to a custom dashboard.",
-        link: import.meta.env.BASE_URL + "assets/img/n8n-workflow.png",
-        type: "image",
-        accent: "#cbd5e1",
-        icon: "fa-solid fa-diagram-project",
-        tags: ["n8n", "LLM", "Automation"]
-    },
-    {
-        title: "Job Viewer",
-        category: "Automation & Systems",
-        subtitle: "Data App",
-        description: "The front end for the scraper above — filter, sort, and analyze technical job postings as they come in.",
-        link: "https://jobs.philippeho.dev/job-viewer/",
-        type: "modal",
-        accent: "#60a5fa",
-        icon: "fa-solid fa-table-list",
-        tags: ["Node", "Data"],
-        status: "live"
-    },
-
     // --- Native & Tools ---
     {
         title: "Rust Music Player",

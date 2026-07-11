@@ -1,6 +1,7 @@
 ---
 import { projects } from '../data/projects';
 import ProjectCard from './ProjectCard.astro';
+import JobScraperCaseStudy from './JobScraperCaseStudy.astro';
 ---
 
 <section id="projects" class="pb-10">
@@ -30,7 +31,8 @@ import ProjectCard from './ProjectCard.astro';
 
     <div id="automation">
       <h3 class="text-xs font-mono text-slate-600 uppercase tracking-widest mb-6">Automation & Systems</h3>
-      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-5">
+      <JobScraperCaseStudy />
+      <div class="mt-5 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-5">
         {projects.filter(p => p.category === "Automation & Systems").map(project => (
           <ProjectCard project={project} />
         ))}

@@ -1,0 +1,134 @@
+---
+const workflowImage = import.meta.env.BASE_URL + 'assets/img/n8n-workflow.png';
+const dashboardImage = import.meta.env.BASE_URL + 'assets/img/job-viewer-dashboard.png';
+const dashboardUrl = 'https://jobs.philippeho.dev/job-viewer/';
+
+const openWorkflow = `window.openImageModal('${workflowImage}', 'Job Scraper — n8n Workflow')`;
+const openDashboard = `window.openProjectModal('${dashboardUrl}', 'Job Viewer — Live Output')`;
+
+const pipeline = [
+  { label: 'Schedule / Webhook', icon: 'fa-solid fa-clock' },
+  { label: '3 targeted scrapers', icon: 'fa-solid fa-magnifying-glass' },
+  { label: 'Merge + prepare', icon: 'fa-solid fa-code-merge' },
+  { label: 'Gemini enrichment', icon: 'fa-solid fa-wand-magic-sparkles' },
+  { label: 'Job Viewer', icon: 'fa-solid fa-table-columns' },
+  { label: 'Email digest', icon: 'fa-solid fa-envelope' },
+];
+---
+
+<article
+  data-case-study="job-scraper"
+  class="relative overflow-hidden rounded-2xl border border-cyan-300/15 bg-[#111719] shadow-2xl shadow-cyan-950/10"
+>
+  <div class="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_15%_10%,rgba(34,211,238,0.10),transparent_34%),radial-gradient(circle_at_90%_90%,rgba(96,165,250,0.09),transparent_38%)]"></div>
+
+  <div class="relative grid grid-cols-1 lg:grid-cols-[1.15fr_0.85fr]">
+    <div class="relative min-h-[320px] overflow-hidden border-b border-white/10 bg-[#080b0d] lg:min-h-[500px] lg:border-r lg:border-b-0">
+      <button
+        type="button"
+        onclick={openWorkflow}
+        class="group absolute inset-x-4 top-4 overflow-hidden rounded-xl border border-white/10 bg-black text-left shadow-xl transition-colors hover:border-cyan-300/40 focus-visible:outline-2 focus-visible:outline-cyan-300 md:inset-x-6 md:top-6"
+        aria-label="View the complete n8n Job Scraper workflow"
+      >
+        <img
+          src={workflowImage}
+          alt="n8n Job Scraper workflow with three scraper branches, Gemini enrichment, dashboard delivery, and email output"
+          class="aspect-[2.32/1] w-full object-cover transition-transform duration-500 group-hover:scale-[1.02]"
+        />
+        <span class="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent"></span>
+        <span class="absolute bottom-3 left-3 flex items-center gap-2 text-[10px] font-mono uppercase tracking-[0.18em] text-cyan-100 md:bottom-4 md:left-4">
+          <i class="fa-solid fa-diagram-project text-cyan-300"></i>
+          Production workflow
+        </span>
+      </button>
+
+      <div class="pointer-events-none absolute left-1/2 top-[39%] hidden -translate-x-1/2 flex-col items-center lg:flex" aria-hidden="true">
+        <span class="h-16 w-px bg-gradient-to-b from-cyan-300/0 via-cyan-300/50 to-cyan-300/25"></span>
+        <span class="rounded-full border border-cyan-300/15 bg-[#0c1316] px-3 py-1.5 text-[9px] font-mono uppercase tracking-[0.17em] text-cyan-200/70">
+          Normalized records
+        </span>
+        <span class="h-16 w-px bg-gradient-to-b from-cyan-300/25 to-blue-300/50"></span>
+        <i class="fa-solid fa-chevron-down -mt-1 text-[9px] text-blue-300/70"></i>
+      </div>
+
+      <button
+        type="button"
+        onclick={openDashboard}
+        class="group absolute bottom-5 right-4 w-[72%] overflow-hidden rounded-xl border border-white/15 bg-[#f8f5ea] text-left shadow-2xl shadow-black/70 transition-transform hover:-translate-y-1 focus-visible:outline-2 focus-visible:outline-blue-300 sm:w-[62%] md:bottom-7 md:right-6 lg:w-[68%]"
+        aria-label="Open the live Job Viewer dashboard"
+      >
+        <img
+          src={dashboardImage}
+          alt="Job Viewer dashboard showing new, in-progress, and completed job columns"
+          class="aspect-[1.6/1] w-full object-cover object-top"
+        />
+        <span class="absolute inset-x-0 bottom-0 flex items-center justify-between bg-black/85 px-3 py-2 text-[9px] font-mono uppercase tracking-[0.16em] text-white sm:text-[10px]">
+          <span>Live output</span>
+          <i class="fa-solid fa-arrow-up-right-from-square text-blue-300 transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5"></i>
+        </span>
+      </button>
+    </div>
+
+    <div class="flex flex-col p-6 sm:p-8 lg:p-10">
+      <div class="mb-5 flex items-center justify-between gap-4">
+        <span class="inline-flex items-center gap-2 rounded-full border border-cyan-300/20 bg-cyan-300/5 px-3 py-1.5 text-[10px] font-mono uppercase tracking-[0.18em] text-cyan-200">
+          <span class="h-1.5 w-1.5 rounded-full bg-cyan-300 shadow-[0_0_10px_rgba(103,232,249,0.8)]"></span>
+          Featured automation
+        </span>
+        <span class="text-[10px] font-mono uppercase tracking-[0.16em] text-slate-600">n8n + Gemini</span>
+      </div>
+
+      <h4 class="max-w-md text-2xl font-medium leading-tight tracking-tight text-white sm:text-3xl">
+        Automated Job Intelligence Pipeline
+      </h4>
+      <p class="mt-4 text-sm leading-relaxed text-slate-400">
+        One system collects targeted job listings, normalizes them with an LLM, publishes structured results to a purpose-built dashboard, and sends a ready-to-review digest.
+      </p>
+
+      <div class="mt-6 grid grid-cols-3 gap-2" aria-label="Workflow proof points">
+        <p aria-label="15 workflow nodes" class="rounded-lg border border-white/8 bg-black/20 px-3 py-3 text-[10px] font-mono leading-snug text-slate-300">
+          <strong class="mb-1 block text-lg font-medium text-white">15</strong>
+          workflow nodes
+        </p>
+        <p aria-label="3 targeted searches" class="rounded-lg border border-white/8 bg-black/20 px-3 py-3 text-[10px] font-mono leading-snug text-slate-300">
+          <strong class="mb-1 block text-lg font-medium text-white">3</strong>
+          targeted searches
+        </p>
+        <p aria-label="Schedule + webhook trigger modes" class="rounded-lg border border-white/8 bg-black/20 px-3 py-3 text-[10px] font-mono leading-snug text-slate-300">
+          <strong class="mb-1 block text-lg font-medium text-white">2</strong>
+          trigger modes
+        </p>
+      </div>
+
+      <ol class="mt-7 grid grid-cols-2 gap-x-3 gap-y-2" aria-label="Job automation pipeline">
+        {pipeline.map((step, index) => (
+          <li class="flex items-center gap-2 rounded-lg border border-white/6 bg-white/[0.02] px-3 py-2.5 text-[10px] font-mono text-slate-400">
+            <span class="flex h-6 w-6 shrink-0 items-center justify-center rounded-md bg-cyan-300/8 text-cyan-300">
+              <i class={`${step.icon} text-[9px]`}></i>
+            </span>
+            <span><span class="mr-1 text-slate-600">0{index + 1}</span>{step.label}</span>
+          </li>
+        ))}
+      </ol>
+
+      <div class="mt-8 flex flex-col gap-3 sm:flex-row lg:mt-auto lg:pt-8">
+        <button
+          type="button"
+          onclick={openWorkflow}
+          class="inline-flex items-center justify-center gap-2 rounded-lg border border-white/12 bg-white/5 px-4 py-3 text-[10px] font-mono uppercase tracking-[0.15em] text-slate-200 transition-colors hover:border-cyan-300/30 hover:bg-cyan-300/8 focus-visible:outline-2 focus-visible:outline-cyan-300"
+        >
+          <i class="fa-solid fa-diagram-project text-cyan-300"></i>
+          View workflow
+        </button>
+        <button
+          type="button"
+          onclick={openDashboard}
+          class="inline-flex items-center justify-center gap-2 rounded-lg bg-cyan-300 px-4 py-3 text-[10px] font-mono font-semibold uppercase tracking-[0.15em] text-[#071013] transition-colors hover:bg-cyan-200 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-cyan-300"
+        >
+          Open live dashboard
+          <i class="fa-solid fa-arrow-up-right-from-square"></i>
+        </button>
+      </div>
+    </div>
+  </div>
+</article>
