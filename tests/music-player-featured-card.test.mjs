@@ -22,16 +22,19 @@ test('renders MusicPlayer as a released featured native app', () => {
 });
 
 test('offers verified platform downloads and source access', () => {
-  assert.match(html, /data-download="windows"/);
+  assert.match(html, /data-download="windows"[^>]*class="[^"]*min-h-11/);
   assert.match(html, /MusicPlayer-v1\.0\.0\.zip/);
-  assert.match(html, /data-download="macos"/);
+  assert.match(html, /data-download="macos"[^>]*class="[^"]*min-h-11/);
   assert.match(html, /MusicPlayer-macos-v1\.0\.0\.zip/);
-  assert.match(html, /https:\/\/github\.com\/PhilHo-Projects\/MusicPlayer/);
+  assert.match(html, /href="https:\/\/github\.com\/PhilHo-Projects\/MusicPlayer"[^>]*>[\s\S]*?View source/);
+  assert.match(html, /data-secondary-action="source"[^>]*class="[^"]*min-h-11/);
+  assert.match(html, /data-secondary-action="release"[^>]*class="[^"]*min-h-11/);
+  assert.match(html, /data-build-warning[^>]*class="[^"]*text-slate-400/);
   assert.match(html, /Unsigned indie build/);
 });
 
 test('removes the inaccurate generic Music Player card', () => {
   assert.doesNotMatch(html, /MusicBee-style desktop client/);
-  assert.doesNotMatch(html, /Music Player[\s\S]{0,200}Coming soon/);
+  assert.doesNotMatch(html, /<h4[^>]*>Rust Music Player<\/h4>/);
   assert.match(html, /Song Finder/);
 });
