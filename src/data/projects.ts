@@ -126,17 +126,6 @@ export const projects: Project[] = [
     },
     // --- Native & Tools ---
     {
-        title: "Rust Music Player",
-        category: "Native & Tools",
-        subtitle: "Desktop App",
-        description: "A native music player and library manager built in Rust — a MusicBee-style desktop client for browsing, tagging, and playing a local collection. Demo walkthrough coming soon.",
-        link: "#",
-        type: "soon",
-        accent: "#f97316",
-        icon: "devicon-rust-plain",
-        tags: ["Rust", "Desktop", "Audio"]
-    },
-    {
         title: "Song Finder",
         category: "Native & Tools",
         subtitle: "Search Tool",
