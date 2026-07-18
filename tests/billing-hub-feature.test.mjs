@@ -11,6 +11,9 @@ const build = spawnSync('npm', ['run', 'build'], {
 
 assert.equal(build.status, 0, `${build.stdout}\n${build.stderr}`);
 const html = readFileSync(new URL('../dist/index.html', import.meta.url), 'utf8');
+const billingHubStart = html.indexOf('data-featured-project="billing-hub"');
+const billingHubEnd = html.indexOf('</article>', billingHubStart);
+const billingHubHtml = html.slice(billingHubStart, billingHubEnd);
 
 test('renders Billing Hub as the featured Web Development project', () => {
   const billingHubIndex = html.indexOf('data-featured-project="billing-hub"');
@@ -24,14 +27,36 @@ test('renders Billing Hub as the featured Web Development project', () => {
 });
 
 test('uses real public-demo visuals and a safe live action', () => {
-  assert.match(html, /assets\/img\/billing-hub-dashboard\.png/);
-  assert.match(html, /assets\/img\/billing-hub-invoice\.png/);
-  assert.match(html, /alt="Billing Hub Gazette dashboard showing companies, time entries, expenses, current totals, and archived invoices"/);
-  assert.match(html, /alt="Billing Hub invoice preview showing billable work, expenses, totals, and PDF controls"/);
-  assert.match(html, /href="https:\/\/philippeho\.dev\/InvoicingAndTrackingTool\/"/);
-  assert.match(html, /target="_blank"/);
-  assert.match(html, /rel="noreferrer"/);
-  assert.match(html, /Open public demo/);
+  const demoLinks = [...billingHubHtml.matchAll(/<a[^>]*href="https:\/\/philippeho\.dev\/InvoicingAndTrackingTool\/"[^>]*>/g)].map((match) => match[0]);
+
+  assert.match(billingHubHtml, /assets\/img\/billing-hub-dashboard\.png/);
+  assert.match(billingHubHtml, /assets\/img\/billing-hub-invoice\.png/);
+  assert.match(billingHubHtml, /alt="Billing Hub Gazette dashboard showing companies, time entries, expenses, current totals, and archived invoices"/);
+  assert.match(billingHubHtml, /alt="Billing Hub invoice preview showing billable work, expenses, totals, and PDF controls"/);
+  assert.equal(demoLinks.length, 2);
+  for (const link of demoLinks) {
+    assert.match(link, /target="_blank"/);
+    assert.match(link, /rel="noreferrer"/);
+  }
+  assert.match(billingHubHtml, /Open public demo/);
+});
+
+test('defers both below-the-fold Billing Hub screenshots', () => {
+  const billingHubImages = [...billingHubHtml.matchAll(/<img[^>]+billing-hub-(?:dashboard|invoice)\.png[^>]*>/g)].map((match) => match[0]);
+
+  assert.equal(billingHubImages.length, 2);
+  for (const image of billingHubImages) {
+    assert.match(image, /loading="lazy"/);
+    assert.match(image, /decoding="async"/);
+  }
+  assert.match(billingHubImages[0], /width="1408"/);
+  assert.match(billingHubImages[0], /height="1082"/);
+  assert.match(billingHubImages[1], /width="1440"/);
+  assert.match(billingHubImages[1], /height="1000"/);
+});
+
+test('stacks the screenshots before enabling wider-screen overlap', () => {
+  assert.match(billingHubHtml, /data-invoice-preview[^>]*class="[^"]*mt-3[^"]*w-full[^"]*sm:-mt-16/);
 });
 
 test('keeps the screenshot stage vertically composed on wide cards', () => {
@@ -39,10 +64,6 @@ test('keeps the screenshot stage vertically composed on wide cards', () => {
 });
 
 test('explains the workflow without advertising private source code', () => {
-  const billingHubStart = html.indexOf('data-featured-project="billing-hub"');
-  const billingHubEnd = html.indexOf('</article>', billingHubStart);
-  const billingHubHtml = html.slice(billingHubStart, billingHubEnd);
-
   assert.match(html, /Multiple companies and timesheets/);
   assert.match(html, /Expenses flow into invoice-ready totals/);
   assert.match(html, /PDF, archive, download, and paid-state workflows/);

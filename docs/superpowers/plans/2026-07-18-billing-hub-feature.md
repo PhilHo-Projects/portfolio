@@ -294,7 +294,7 @@ git commit -m "feat: showcase Billing Hub"
 
 Run: `node --test --test-concurrency=1`
 
-Expected after responsive-review coverage: 10 tests pass, 0 fail.
+Expected after responsive-review and asset-loading coverage: 12 tests pass, 0 fail.
 
 - [ ] **Step 2: Run a fresh production build**
 

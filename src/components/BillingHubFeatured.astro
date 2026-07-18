@@ -40,14 +40,22 @@ const proofPoints = [
           <img
             src={dashboardImage}
             alt="Billing Hub Gazette dashboard showing companies, time entries, expenses, current totals, and archived invoices"
+            width="1408"
+            height="1082"
+            loading="lazy"
+            decoding="async"
             class="aspect-[4/3] w-full object-cover object-top transition-transform duration-500 ease-out group-hover:scale-[1.01] motion-reduce:transition-none motion-reduce:transform-none"
           />
         </span>
 
-        <span class="relative -mt-12 ml-auto mr-3 block w-[72%] overflow-hidden rounded-lg border border-white/20 bg-white sm:-mt-16 sm:mr-5 sm:w-[62%] lg:-mt-20 lg:mr-4 lg:w-[68%]">
+        <span data-invoice-preview class="relative mt-3 ml-auto block w-full overflow-hidden rounded-lg border border-white/20 bg-white sm:-mt-16 sm:mr-5 sm:w-[62%] lg:-mt-20 lg:mr-4 lg:w-[68%]">
           <img
             src={invoiceImage}
             alt="Billing Hub invoice preview showing billable work, expenses, totals, and PDF controls"
+            width="1440"
+            height="1000"
+            loading="lazy"
+            decoding="async"
             class="aspect-[1.39/1] w-full object-cover object-top transition-transform duration-500 ease-out group-hover:-translate-y-0.5 motion-reduce:transition-none motion-reduce:transform-none"
           />
         </span>
