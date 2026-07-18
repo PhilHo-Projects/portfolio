@@ -34,6 +34,10 @@ test('uses real public-demo visuals and a safe live action', () => {
   assert.match(html, /Open public demo/);
 });
 
+test('keeps the screenshot stage vertically composed on wide cards', () => {
+  assert.match(html, /data-media-stage[^>]*class="[^"]*lg:flex[^"]*lg:h-full[^"]*lg:flex-col[^"]*lg:justify-center/);
+});
+
 test('explains the workflow without advertising private source code', () => {
   const billingHubStart = html.indexOf('data-featured-project="billing-hub"');
   const billingHubEnd = html.indexOf('</article>', billingHubStart);
