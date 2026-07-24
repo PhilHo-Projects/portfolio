@@ -1,56 +1,40 @@
 ---
-import { projects } from '../data/projects';
+import { projects, type Project } from '../data/projects';
 import ProjectCard from './ProjectCard.astro';
+import StandardProjectDetails from './StandardProjectDetails.astro';
 import JobScraperCaseStudy from './JobScraperCaseStudy.astro';
 import MusicPlayerFeatured from './MusicPlayerFeatured.astro';
 import BillingHubFeatured from './BillingHubFeatured.astro';
+import CourseworkDetails from './CourseworkDetails.astro';
+
+const categories = [
+  ['game-development', 'Game Development'],
+  ['web-development', 'Web Development'],
+  ['automation', 'Automation & Systems'],
+  ['native-tools', 'Native & Tools'],
+] as const;
+
 ---
 
 <section id="projects" class="pb-10">
-  <h2 class="text-xs uppercase tracking-[0.3em] text-slate-500 mb-4 border-b border-white/5 pb-4 font-mono">
-    Projects
-  </h2>
-
+  <h2 class="mb-4 border-b border-white/5 pb-4 text-xs font-mono uppercase tracking-[0.3em] text-slate-500">Projects</h2>
   <div class="space-y-10">
-
-    <div id="game-development">
-      <h3 class="text-xs font-mono text-slate-600 uppercase tracking-widest mb-6">Game Development</h3>
-      <div class="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-5">
-        {projects.filter(p => p.category === "Game Development").map(project => (
-          <ProjectCard project={project} />
-        ))}
+    {categories.map(([anchor, category]) => (
+      <div id={anchor}>
+        <h3 class="mb-6 text-xs font-mono uppercase tracking-widest text-slate-600">{category}</h3>
+        <div data-project-grid class="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3 md:gap-5">
+          {projects.filter(project => project.category === category).map(project => (
+            <>
+              <ProjectCard project={project} />
+              {project.detail === 'billing-hub' && <BillingHubFeatured />}
+              {project.detail === 'job-scraper' && <JobScraperCaseStudy />}
+              {project.detail === 'music-player' && <MusicPlayerFeatured />}
+              {project.detail === 'standard' && <StandardProjectDetails project={project} />}
+              {project.detail === 'coursework' && <CourseworkDetails />}
+            </>
+          ))}
+        </div>
       </div>
-    </div>
-
-    <div id="web-development">
-      <h3 class="text-xs font-mono text-slate-600 uppercase tracking-widest mb-6">Web Development</h3>
-      <BillingHubFeatured />
-      <div class="mt-5 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-5">
-        {projects.filter(p => p.category === "Web Development").map(project => (
-          <ProjectCard project={project} />
-        ))}
-      </div>
-    </div>
-
-    <div id="automation">
-      <h3 class="text-xs font-mono text-slate-600 uppercase tracking-widest mb-6">Automation & Systems</h3>
-      <JobScraperCaseStudy />
-      <div class="mt-5 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-5">
-        {projects.filter(p => p.category === "Automation & Systems").map(project => (
-          <ProjectCard project={project} />
-        ))}
-      </div>
-    </div>
-
-    <div id="native-tools">
-      <h3 class="text-xs font-mono text-slate-600 uppercase tracking-widest mb-6">Native & Tools</h3>
-      <MusicPlayerFeatured />
-      <div class="mt-5 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-5">
-        {projects.filter(p => p.category === "Native & Tools").map(project => (
-          <ProjectCard project={project} />
-        ))}
-      </div>
-    </div>
-
+    ))}
   </div>
 </section>

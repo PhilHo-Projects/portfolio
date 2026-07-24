@@ -30,9 +30,9 @@ test('uses real public-demo visuals and a safe live action', () => {
   const demoLinks = [...billingHubHtml.matchAll(/<a[^>]*href="https:\/\/philippeho\.dev\/InvoicingAndTrackingTool\/"[^>]*>/g)].map((match) => match[0]);
 
   assert.match(billingHubHtml, /assets\/img\/billing-hub-dashboard\.png/);
-  assert.match(billingHubHtml, /assets\/img\/billing-hub-invoice\.png/);
   assert.match(billingHubHtml, /alt="Billing Hub Gazette dashboard showing companies, time entries, expenses, current totals, and archived invoices"/);
-  assert.match(billingHubHtml, /alt="Billing Hub invoice preview showing billable work, expenses, totals, and PDF controls"/);
+  assert.doesNotMatch(billingHubHtml, /billing-hub-invoice\.png/);
+  assert.doesNotMatch(billingHubHtml, /Gazette interface/);
   assert.equal(demoLinks.length, 2);
   for (const link of demoLinks) {
     assert.match(link, /target="_blank"/);
@@ -41,22 +41,16 @@ test('uses real public-demo visuals and a safe live action', () => {
   assert.match(billingHubHtml, /Open public demo/);
 });
 
-test('defers both below-the-fold Billing Hub screenshots', () => {
-  const billingHubImages = [...billingHubHtml.matchAll(/<img[^>]+billing-hub-(?:dashboard|invoice)\.png[^>]*>/g)].map((match) => match[0]);
+test('defers the Billing Hub dashboard screenshot', () => {
+  const billingHubImages = [...billingHubHtml.matchAll(/<img[^>]+billing-hub-dashboard\.png[^>]*>/g)].map((match) => match[0]);
 
-  assert.equal(billingHubImages.length, 2);
+  assert.equal(billingHubImages.length, 1);
   for (const image of billingHubImages) {
     assert.match(image, /loading="lazy"/);
     assert.match(image, /decoding="async"/);
   }
   assert.match(billingHubImages[0], /width="1408"/);
   assert.match(billingHubImages[0], /height="1082"/);
-  assert.match(billingHubImages[1], /width="1440"/);
-  assert.match(billingHubImages[1], /height="1000"/);
-});
-
-test('stacks the screenshots before enabling wider-screen overlap', () => {
-  assert.match(billingHubHtml, /data-invoice-preview[^>]*class="[^"]*mt-3[^"]*w-full[^"]*sm:-mt-16/);
 });
 
 test('keeps the screenshot stage vertically composed on wide cards', () => {

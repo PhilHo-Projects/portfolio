@@ -23,9 +23,12 @@ test('renders the verified Job Scraper case study', () => {
 test('shows both workflow and dashboard visuals with useful actions', () => {
   assert.match(html, /assets\/img\/n8n-workflow\.png/);
   assert.match(html, /assets\/img\/job-viewer-dashboard\.png/);
+  assert.match(html, /<a[^>]+data-job-media="workflow"[^>]+href="\/assets\/img\/n8n-workflow\.png"[^>]+target="_blank"[^>]+rel="noreferrer"/);
+  assert.match(html, /<a[^>]+data-job-media="dashboard"[^>]+href="https:\/\/jobs\.philippeho\.dev\/job-viewer\/"[^>]+target="_blank"[^>]+rel="noreferrer"/);
   assert.match(html, /View workflow/);
   assert.match(html, /Open live dashboard/);
   assert.match(html, /https:\/\/jobs\.philippeho\.dev\/job-viewer\//);
+  assert.doesNotMatch(html, /type="button"\s+type="button"/);
 });
 
 test('does not render redundant Job Scraper and Job Viewer cards', () => {

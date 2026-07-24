@@ -18,7 +18,7 @@ import { experience } from '../data/experience';
           {job.description}
         </p>
         {job.link && (
-          <a href={job.link} target="_blank" class="block group">
+          <a href={job.link} target="_blank" rel="noreferrer" class="block group">
             <div class="game-video-container border border-white/10 group-hover:border-accent/30 transition-colors">
               <video autoplay loop muted playsinline class="game-video" loading="lazy">
                 <source src={job.videoSrc} type="video/webm" />

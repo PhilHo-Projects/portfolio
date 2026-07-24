@@ -3,8 +3,6 @@ const workflowImage = import.meta.env.BASE_URL + 'assets/img/n8n-workflow.png';
 const dashboardImage = import.meta.env.BASE_URL + 'assets/img/job-viewer-dashboard.png';
 const dashboardUrl = 'https://jobs.philippeho.dev/job-viewer/';
 
-const openWorkflow = `window.openImageModal('${workflowImage}', 'Job Scraper — n8n Workflow')`;
-const openDashboard = `window.openProjectModal('${dashboardUrl}', 'Job Viewer — Live Output')`;
 
 const pipeline = [
   { label: 'Schedule / Webhook', icon: 'fa-solid fa-clock' },
@@ -17,18 +15,20 @@ const pipeline = [
 ---
 
 <article
+  id="project-detail-job-scraper"
+  data-project-detail="job-scraper"
+  hidden
+  aria-labelledby="project-heading-job-scraper"
   data-case-study="job-scraper"
-  class="relative overflow-hidden rounded-2xl border border-cyan-300/15 bg-[#111719] shadow-2xl shadow-cyan-950/10"
+  class="relative col-span-full overflow-hidden rounded-2xl border border-cyan-300/15 bg-[#111719] shadow-2xl shadow-cyan-950/10"
 >
   <div class="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_15%_10%,rgba(34,211,238,0.10),transparent_34%),radial-gradient(circle_at_90%_90%,rgba(96,165,250,0.09),transparent_38%)]"></div>
 
   <div class="relative grid grid-cols-1 lg:grid-cols-[1.15fr_0.85fr]">
     <div class="relative min-h-[320px] overflow-hidden border-b border-white/10 bg-[#080b0d] lg:min-h-[500px] lg:border-r lg:border-b-0">
-      <button
-        type="button"
-        onclick={openWorkflow}
+      <figure
+        data-job-media="workflow"
         class="group absolute inset-x-4 top-4 overflow-hidden rounded-xl border border-white/10 bg-black text-left shadow-xl transition-colors hover:border-cyan-300/40 focus-visible:outline-2 focus-visible:outline-cyan-300 md:inset-x-6 md:top-6"
-        aria-label="View the complete n8n Job Scraper workflow"
       >
         <img
           src={workflowImage}
@@ -40,7 +40,7 @@ const pipeline = [
           <i class="fa-solid fa-diagram-project text-cyan-300"></i>
           Production workflow
         </span>
-      </button>
+      </figure>
 
       <div class="pointer-events-none absolute left-1/2 top-[39%] hidden -translate-x-1/2 flex-col items-center lg:flex" aria-hidden="true">
         <span class="h-16 w-px bg-gradient-to-b from-cyan-300/0 via-cyan-300/50 to-cyan-300/25"></span>
@@ -51,11 +51,9 @@ const pipeline = [
         <i class="fa-solid fa-chevron-down -mt-1 text-[9px] text-blue-300/70"></i>
       </div>
 
-      <button
-        type="button"
-        onclick={openDashboard}
+      <figure
+        data-job-media="dashboard"
         class="group absolute bottom-5 right-4 w-[72%] overflow-hidden rounded-xl border border-white/15 bg-[#f8f5ea] text-left shadow-2xl shadow-black/70 transition-transform hover:-translate-y-1 focus-visible:outline-2 focus-visible:outline-blue-300 sm:w-[62%] md:bottom-7 md:right-6 lg:w-[68%]"
-        aria-label="Open the live Job Viewer dashboard"
       >
         <img
           src={dashboardImage}
@@ -66,7 +64,7 @@ const pipeline = [
           <span>Live output</span>
           <i class="fa-solid fa-arrow-up-right-from-square text-blue-300 transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5"></i>
         </span>
-      </button>
+      </figure>
     </div>
 
     <div class="flex flex-col p-6 sm:p-8 lg:p-10">
@@ -78,7 +76,7 @@ const pipeline = [
         <span class="text-[10px] font-mono uppercase tracking-[0.16em] text-slate-600">n8n + Gemini</span>
       </div>
 
-      <h4 class="max-w-md text-2xl font-medium leading-tight tracking-tight text-white sm:text-3xl">
+      <h4 id="project-heading-job-scraper" class="max-w-md text-2xl font-medium leading-tight tracking-tight text-white">
         Automated Job Intelligence Pipeline
       </h4>
       <p class="mt-4 text-sm leading-relaxed text-slate-400">
@@ -112,23 +110,26 @@ const pipeline = [
       </ol>
 
       <div class="mt-8 flex flex-col gap-3 sm:flex-row lg:mt-auto lg:pt-8">
-        <button
-          type="button"
-          onclick={openWorkflow}
-          class="inline-flex items-center justify-center gap-2 rounded-lg border border-white/12 bg-white/5 px-4 py-3 text-[10px] font-mono uppercase tracking-[0.15em] text-slate-200 transition-colors hover:border-cyan-300/30 hover:bg-cyan-300/8 focus-visible:outline-2 focus-visible:outline-cyan-300"
+        <a
+          href={workflowImage}
+          target="_blank"
+          rel="noreferrer"
+          class="inline-flex min-h-11 items-center justify-center gap-2 rounded-lg border border-white/12 bg-white/5 px-4 py-3 text-[10px] font-mono uppercase tracking-[0.15em] text-slate-200 transition-colors hover:border-cyan-300/30 hover:bg-cyan-300/8 focus-visible:outline-2 focus-visible:outline-cyan-300"
         >
           <i class="fa-solid fa-diagram-project text-cyan-300"></i>
           View workflow
-        </button>
-        <button
-          type="button"
-          onclick={openDashboard}
+        </a>
+        <a
+          href={dashboardUrl}
+          target="_blank"
+          rel="noreferrer"
           class="inline-flex items-center justify-center gap-2 rounded-lg bg-cyan-300 px-4 py-3 text-[10px] font-mono font-semibold uppercase tracking-[0.15em] text-[#071013] transition-colors hover:bg-cyan-200 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-cyan-300"
         >
           Open live dashboard
           <i class="fa-solid fa-arrow-up-right-from-square"></i>
-        </button>
+        </a>
       </div>
     </div>
   </div>
+  <button type="button" data-collapse-project="job-scraper" class="m-6 inline-flex min-h-11 items-center rounded-lg border border-white/15 px-4 py-3 text-[10px] font-mono uppercase tracking-[0.14em] text-slate-300">Collapse details</button>
 </article>

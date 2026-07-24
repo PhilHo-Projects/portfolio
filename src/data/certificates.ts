@@ -2,24 +2,34 @@ export interface Certificate {
     title: string;
     instructor: string;
     desc: string;
+    image: string;
+    imageAlt: string;
+    href: string;
 }
 
 export const certificates: Certificate[] = [
     {
         title: "Unreal Engine 5 C++ Multiplayer Shooter",
         instructor: "Stephen Ulibarri",
-        // Using static background logic in HTML, but we could dynamic swap if we wanted.
-        // For now, HTML has a static background logo.
-        desc: "Advanced C++ network programming. Implemented lag compensation, client-side prediction, extensive replication for weapons and projectiles, and matchmaking logic."
+        desc: "Built replicated weapons, projectiles, matchmaking, client-side prediction, and lag-compensated multiplayer systems in C++.",
+        image: "assets/img/ue5-multiplayer-shooter.webp",
+        imageAlt: "Unreal Engine multiplayer arena from the UE5 C++ Multiplayer Shooter course",
+        href: "https://www.udemy.com/course/unreal-engine-5-cpp-multiplayer-shooter/",
     },
     {
         title: "Unreal Engine 5: The Ultimate Game Developer Course",
         instructor: "Stephen Ulibarri",
-        desc: "Comprehensive study of the engine's core C++ architecture, gameplay framework (GameMode, PlayerController, Pawn), and physics interactions."
+        desc: "Worked through Unreal's C++ gameplay framework, character systems, combat, animation, physics, and engine architecture.",
+        image: "assets/img/ue5-ultimate-course.webp",
+        imageAlt: "Desert combat scene from the Unreal Engine 5 Ultimate Game Developer course",
+        href: "https://www.udemy.com/course/unreal-engine-5-the-ultimate-game-developer-course/",
     },
     {
         title: "Unreal Engine 5 Dedicated Servers with AWS & GameLift",
         instructor: "Stephen Ulibarri",
-        desc: "Cloud infrastructure mastery. Building Unreal Engine from source for Linux servers, deploying to AWS GameLift, and setting up FlexMatch with Lambda backend."
-    }
+        desc: "Built Unreal Engine for Linux servers and deployed multiplayer infrastructure with AWS GameLift, FlexMatch, Lambda, and API Gateway.",
+        image: "assets/img/ue5-dedicated-servers.webp",
+        imageAlt: "Cloud server artwork from the UE5 Dedicated Servers with AWS and GameLift course",
+        href: "https://www.udemy.com/course/unreal-engine-5-dedicated-servers-with-aws-and-gamelift/",
+    },
 ];

@@ -1,76 +1,18 @@
 ---
 import type { Project } from '../data/projects';
-
-interface Props {
-  project: Project;
-}
-
-const { project } = Astro.props;
-
-const isSoon = project.type === "soon";
-
-// Determine click handler based on type
-let onclick = "";
-if (project.type === "modal") {
-  onclick = `openProjectModal('${project.link}', '${project.title}')`;
-} else if (project.type === "certificate") {
-  onclick = "openCertificateModal()";
-} else if (project.type === "image") {
-  onclick = `openImageModal('${project.link}', '${project.title}')`;
-}
-
-const accent = project.accent;
-const expandIcon =
-  project.type === "certificate" ? "fa-solid fa-expand" :
-  project.type === "image" ? "fa-solid fa-image" :
-  "fa-solid fa-up-right-from-square";
+const { project } = Astro.props as { project: Project };
+const statusLabel = { live: 'Live demo', 'public-demo': 'Public demo', readonly: 'Read-only', 'under-construction': 'Under construction', 'coming-soon': 'Coming soon' }[project.status ?? 'coming-soon'];
 ---
-
-<div onclick={onclick} class:list={["project-card group relative flex flex-col overflow-hidden rounded-2xl border bg-[#1a1a1a]", isSoon ? "cursor-default" : "cursor-pointer"]} style={`--accent:${accent}`}>
-
-  <!-- Preview strip -->
-  <div class="relative h-24 flex items-center justify-center overflow-hidden" style={`background-color:${accent}14;`}>
-    <i class={`${project.icon} text-4xl transition-transform duration-300 group-hover:scale-110`} style={`color:${accent}; opacity:0.55;`}></i>
-
-    {project.status === "live" && (
-      <span class="absolute top-2.5 left-2.5 inline-flex items-center gap-1.5 rounded-md bg-black/50 px-2 py-1 text-[10px] font-mono tracking-wide" style="color:#5dcaa5;">
-        <span class="w-1.5 h-1.5 rounded-full bg-[#5dcaa5] animate-pulse"></span>Live demo
-      </span>
-    )}
-    {project.status === "readonly" && (
-      <span class="absolute top-2.5 left-2.5 inline-flex items-center gap-1.5 rounded-md bg-black/50 px-2 py-1 text-[10px] font-mono tracking-wide" style="color:#ef9f27;">
-        <i class="fa-regular fa-eye text-[10px]"></i>Read-only
-      </span>
-    )}
-    {isSoon && (
-      <span class="absolute top-2.5 left-2.5 inline-flex items-center gap-1.5 rounded-md bg-black/50 px-2 py-1 text-[10px] font-mono tracking-wide" style="color:#94a3b8;">
-        <i class="fa-regular fa-clock text-[10px]"></i>Coming soon
-      </span>
-    )}
-
-    {!isSoon && (
-      <span class="absolute top-2.5 right-2.5 text-slate-600 group-hover:text-slate-200 transition-colors">
-        <i class={`${expandIcon} text-xs`}></i>
-      </span>
-    )}
-  </div>
-
-  <!-- Body -->
-  <div class="flex flex-col flex-1 p-5">
-    {project.subtitle && (
-      <span class="text-[10px] font-mono uppercase tracking-[0.18em] mb-1.5" style={`color:${accent};`}>
-        {project.subtitle}
-      </span>
-    )}
-    <h4 class="text-lg font-medium text-slate-100 mb-2">{project.title}</h4>
-    <p class="text-sm text-slate-400 leading-relaxed">{project.description}</p>
-
-    {project.tags && project.tags.length > 0 && (
-      <div class="mt-4 flex flex-wrap gap-1.5">
-        {project.tags.map((tag) => (
-          <span class="text-[10px] font-mono text-slate-400 border border-white/10 rounded px-2 py-0.5">{tag}</span>
-        ))}
-      </div>
-    )}
-  </div>
-</div>
+<button type="button" data-project-trigger={project.id} aria-expanded="false" aria-controls={`project-detail-${project.id}`} class="project-card group relative flex min-h-11 flex-col overflow-hidden rounded-2xl border bg-[#1a1a1a] text-left transition-colors hover:border-white/25 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent" style={`--accent:${project.accent}`}>
+  <span class="relative flex h-24 items-center justify-center overflow-hidden" style={`background-color:${project.accent}14;`}>
+    <i class={`${project.icon} text-4xl transition-transform duration-300 group-hover:scale-110`} style={`color:${project.accent}; opacity:0.55;`} aria-hidden="true"></i>
+    <span class="absolute left-2.5 top-2.5 rounded-md bg-black/50 px-2 py-1 text-[10px] font-mono tracking-wide" style={`color:${project.accent};`}>{statusLabel}</span>
+    <i class="fa-solid fa-chevron-down absolute right-3 top-3 text-xs text-slate-500 transition-transform group-aria-expanded:rotate-180" aria-hidden="true"></i>
+  </span>
+  <span class="flex flex-1 flex-col p-5">
+    {project.subtitle && <span class="mb-1.5 text-[10px] font-mono uppercase tracking-[0.18em]" style={`color:${project.accent};`}>{project.subtitle}</span>}
+    <span class="text-lg font-medium text-slate-100">{project.title}</span>
+    <span class="mt-2 text-sm leading-relaxed text-slate-400">{project.description}</span>
+    {project.tags && <span class="mt-4 flex flex-wrap gap-1.5">{project.tags.map(tag => <span class="rounded border border-white/10 px-2 py-0.5 text-[10px] font-mono text-slate-400">{tag}</span>)}</span>}
+  </span>
+</button>

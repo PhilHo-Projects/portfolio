@@ -1,0 +1,129 @@
+---
+import type { Project } from '../data/projects';
+
+const { project } = Astro.props as { project: Project };
+const status = {
+  live: 'Live demo',
+  'public-demo': 'Public demo',
+  readonly: 'Read-only project',
+  'under-construction': 'Under construction',
+  'coming-soon': 'Coming soon',
+}[project.status ?? 'coming-soon'];
+const statusNote = {
+  live: 'Explore the live project in a new tab.',
+  'public-demo': 'The shared public demo resets on a schedule.',
+  readonly: 'The live project is available in read-only mode.',
+  'under-construction': 'This working preview is still being expanded.',
+  'coming-soon': 'A demo walkthrough will be available soon.',
+}[project.status ?? 'coming-soon'];
+const hasRichDetails = Boolean(project.preview && project.highlights?.length === 3);
+const previewSrc = project.preview ? import.meta.env.BASE_URL + project.preview.src : undefined;
+---
+
+<article
+  id={`project-detail-${project.id}`}
+  data-project-detail={project.id}
+  data-rich-project={hasRichDetails ? project.id : undefined}
+  hidden
+  class:list={[
+    'project-detail col-span-full overflow-hidden rounded-2xl border border-white/10 bg-[#141414] opacity-0 translate-y-2 transition duration-200 motion-reduce:transition-none',
+    hasRichDetails ? 'p-0' : 'p-6 sm:p-8',
+  ]}
+  style={`--accent:${project.accent}`}
+  aria-labelledby={`project-heading-${project.id}`}
+>
+  {hasRichDetails && project.preview && project.highlights ? (
+    <div>
+      <div class="p-6 sm:p-8 lg:p-9">
+        <div class="flex flex-wrap items-center gap-2">
+          <span class="inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/[0.03] px-3 py-1.5 text-[10px] font-mono uppercase tracking-[0.15em] text-slate-300">
+            <span class="h-1.5 w-1.5 rounded-full" style={`background-color:${project.accent}; box-shadow:0 0 10px ${project.accent};`}></span>
+            {status}
+          </span>
+          {project.stackLabel && <span class="rounded-full border border-white/10 px-3 py-1.5 text-[10px] font-mono text-slate-500">{project.stackLabel}</span>}
+        </div>
+        {project.subtitle && <p class="mt-7 text-[10px] font-mono uppercase tracking-[0.18em]" style={`color:${project.accent};`}>{project.subtitle}</p>}
+        <h3 id={`project-heading-${project.id}`} class="mt-2 text-2xl font-medium leading-tight tracking-tight text-white sm:text-3xl">{project.title}</h3>
+        <p class="mt-4 max-w-3xl text-sm leading-relaxed text-slate-400">{project.detailDescription ?? project.description}</p>
+
+        <figure data-project-preview={project.id} class="group relative mt-7 aspect-video overflow-hidden rounded-xl border border-white/10 bg-black shadow-2xl shadow-black/30">
+          <img
+            src={previewSrc}
+            alt={project.preview.alt}
+            width={project.preview.width}
+            height={project.preview.height}
+            loading="lazy"
+            decoding="async"
+            class="h-full w-full object-cover transition-transform duration-500 group-hover:scale-[1.015] motion-reduce:transition-none"
+            style={project.preview.objectPosition ? `object-position:${project.preview.objectPosition};` : undefined}
+          />
+          <figcaption class="absolute inset-x-0 bottom-0 bg-gradient-to-t from-black/80 to-transparent p-4 pt-10 text-[10px] font-mono uppercase tracking-[0.16em] text-white/85 sm:p-5 sm:pt-12">
+            {project.preview.caption}
+          </figcaption>
+        </figure>
+
+        <div class="mt-6 divide-y divide-white/[0.07] border-y border-white/[0.07]" aria-label={`${project.title} capabilities`}>
+          {project.highlights.map(highlight => (
+            <div data-project-highlight class="grid grid-cols-[2.25rem_1fr] gap-3 py-4">
+              <span class="flex h-9 w-9 items-center justify-center rounded-lg border border-white/10 bg-white/[0.03]" style={`color:${project.accent};`} aria-hidden="true">
+                <i class={`${highlight.icon} text-xs`}></i>
+              </span>
+              <div>
+                <h4 class="text-xs font-medium text-slate-100">{highlight.title}</h4>
+                <p class="mt-1 text-xs leading-relaxed text-slate-500">{highlight.detail}</p>
+              </div>
+            </div>
+          ))}
+        </div>
+
+        <div class="mt-7 flex flex-col gap-3 sm:flex-row">
+          {project.link && (
+            <a
+              href={project.link}
+              target="_blank"
+              rel="noreferrer"
+              class="inline-flex min-h-11 items-center justify-center gap-2 rounded-lg px-4 py-3 text-[10px] font-mono font-semibold uppercase tracking-[0.14em] text-[#111] transition-[filter] hover:brightness-110 focus-visible:outline-2 focus-visible:outline-offset-2"
+              style={`background-color:${project.accent}; outline-color:${project.accent};`}
+            >
+              {project.actionLabel ?? 'Open project'}
+              <i class="fa-solid fa-arrow-up-right-from-square" aria-hidden="true"></i>
+            </a>
+          )}
+          <button
+            type="button"
+            data-collapse-project={project.id}
+            class="inline-flex min-h-11 items-center justify-center rounded-lg border border-white/15 px-4 py-3 text-[10px] font-mono uppercase tracking-[0.14em] text-slate-300 transition-colors hover:border-white/30 hover:text-white focus-visible:outline-2 focus-visible:outline-offset-2"
+            style={`outline-color:${project.accent};`}
+          >
+            Collapse details
+          </button>
+        </div>
+      </div>
+    </div>
+  ) : (
+    <>
+      <div class="flex flex-wrap items-start justify-between gap-4">
+        <div>
+          <p class="text-[10px] font-mono uppercase tracking-[0.16em]" style={`color:${project.accent};`}>{status}</p>
+          <h3 id={`project-heading-${project.id}`} class="mt-2 text-2xl font-medium text-white">{project.title}</h3>
+        </div>
+        {project.link && (
+          <a
+            href={project.link}
+            target="_blank"
+            rel="noreferrer"
+            class="inline-flex min-h-11 items-center gap-2 rounded-lg px-4 py-3 text-[10px] font-mono uppercase tracking-[0.14em] text-[#111]"
+            style={`background-color:${project.accent};`}
+          >
+            {project.actionLabel ?? 'Open project'}
+            <i class="fa-solid fa-arrow-up-right-from-square" aria-hidden="true"></i>
+          </a>
+        )}
+      </div>
+      <p class="mt-5 max-w-3xl text-sm leading-relaxed text-slate-300">{project.detailDescription ?? project.description}</p>
+      {project.tags && <div class="mt-5 flex flex-wrap gap-2">{project.tags.map(tag => <span class="rounded border border-white/10 px-2 py-1 text-[10px] font-mono text-slate-400">{tag}</span>)}</div>}
+      <p class="mt-6 text-xs font-mono text-slate-500">{statusNote}</p>
+      <button type="button" data-collapse-project={project.id} class="mt-6 inline-flex min-h-11 items-center rounded-lg border border-white/15 px-4 py-3 text-[10px] font-mono uppercase tracking-[0.14em] text-slate-300">Collapse details</button>
+    </>
+  )}
+</article>

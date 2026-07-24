@@ -1,6 +1,5 @@
 ---
 const dashboardImage = import.meta.env.BASE_URL + 'assets/img/billing-hub-dashboard.png';
-const invoiceImage = import.meta.env.BASE_URL + 'assets/img/billing-hub-invoice.png';
 const publicDemo = 'https://philippeho.dev/InvoicingAndTrackingTool/';
 
 const proofPoints = [
@@ -23,55 +22,14 @@ const proofPoints = [
 ---
 
 <article
+  id="project-detail-billing-hub"
+  data-project-detail="billing-hub"
+  hidden
+  aria-labelledby="project-heading-billing-hub"
   data-featured-project="billing-hub"
-  class="overflow-hidden rounded-2xl border border-amber-300/15 bg-[#171510]"
+  class="col-span-full overflow-hidden rounded-2xl border border-amber-300/15 bg-[#171510]"
 >
-  <div class="grid grid-cols-1 lg:grid-cols-[1.16fr_0.84fr]">
-    <figure class="relative overflow-hidden border-b border-white/10 bg-[#0c0b09] lg:border-r lg:border-b-0">
-      <a
-        data-media-stage
-        href={publicDemo}
-        target="_blank"
-        rel="noreferrer"
-        aria-label="Open the Billing Hub public demo"
-        class="group block p-4 focus-visible:outline-2 focus-visible:outline-offset-[-2px] focus-visible:outline-amber-300 sm:p-6 lg:flex lg:h-full lg:flex-col lg:justify-center lg:p-8"
-      >
-        <span class="block overflow-hidden rounded-xl border border-amber-200/15 bg-[#d8c79a]">
-          <img
-            src={dashboardImage}
-            alt="Billing Hub Gazette dashboard showing companies, time entries, expenses, current totals, and archived invoices"
-            width="1408"
-            height="1082"
-            loading="lazy"
-            decoding="async"
-            class="aspect-[4/3] w-full object-cover object-top transition-transform duration-500 ease-out group-hover:scale-[1.01] motion-reduce:transition-none motion-reduce:transform-none"
-          />
-        </span>
-
-        <span data-invoice-preview class="relative mt-3 ml-auto block w-full overflow-hidden rounded-lg border border-white/20 bg-white sm:-mt-16 sm:mr-5 sm:w-[62%] lg:-mt-20 lg:mr-4 lg:w-[68%]">
-          <img
-            src={invoiceImage}
-            alt="Billing Hub invoice preview showing billable work, expenses, totals, and PDF controls"
-            width="1440"
-            height="1000"
-            loading="lazy"
-            decoding="async"
-            class="aspect-[1.39/1] w-full object-cover object-top transition-transform duration-500 ease-out group-hover:-translate-y-0.5 motion-reduce:transition-none motion-reduce:transform-none"
-          />
-        </span>
-
-        <span class="mt-4 flex items-center justify-between gap-4 text-[10px] font-mono uppercase tracking-[0.14em] text-amber-100/75">
-          <span class="inline-flex items-center gap-2">
-            <i class="fa-solid fa-camera text-amber-300"></i>
-            Public demo · Gazette interface
-          </span>
-          <i class="fa-solid fa-arrow-up-right-from-square text-amber-300 transition-transform group-hover:-translate-y-0.5 group-hover:translate-x-0.5 motion-reduce:transition-none motion-reduce:transform-none"></i>
-        </span>
-      </a>
-      <figcaption class="sr-only">Billing Hub dashboard and invoice preview captured from its public demo.</figcaption>
-    </figure>
-
-    <div class="flex flex-col p-6 sm:p-8 lg:p-9">
+  <div class="p-6 sm:p-8 lg:p-9">
       <div class="flex flex-wrap items-center justify-between gap-3">
         <span class="inline-flex items-center gap-2 rounded-full bg-emerald-300/10 px-3 py-1.5 text-[10px] font-mono uppercase tracking-[0.14em] text-emerald-200">
           <span class="h-1.5 w-1.5 rounded-full bg-emerald-300"></span>
@@ -81,10 +39,26 @@ const proofPoints = [
       </div>
 
       <p class="mt-7 text-[10px] font-mono uppercase tracking-[0.14em] text-amber-300">Freelance operations workspace</p>
-      <h4 class="mt-2 text-3xl font-medium leading-tight tracking-[-0.025em] text-white">Billing Hub</h4>
-      <p class="mt-4 max-w-[65ch] text-sm leading-relaxed text-slate-300">
+      <h4 id="project-heading-billing-hub" class="mt-2 text-3xl font-medium leading-tight tracking-[-0.025em] text-white">Billing Hub</h4>
+      <p class="mt-4 max-w-3xl text-sm leading-relaxed text-slate-300">
         A multi-company workspace that turns time entries and expenses into polished invoices, then keeps every paid and archived record within reach.
       </p>
+
+      <figure data-media-stage class="group mt-7 overflow-hidden rounded-xl border border-amber-200/15 bg-[#d8c79a]">
+          <img
+            src={dashboardImage}
+            alt="Billing Hub Gazette dashboard showing companies, time entries, expenses, current totals, and archived invoices"
+            width="1408"
+            height="1082"
+            loading="lazy"
+            decoding="async"
+            class="aspect-[4/3] w-full object-cover object-top transition-transform duration-500 ease-out group-hover:scale-[1.01] motion-reduce:transition-none motion-reduce:transform-none"
+          />
+        <figcaption class="flex items-center gap-2 bg-[#0c0b09] px-4 py-3 text-[10px] font-mono uppercase tracking-[0.14em] text-amber-100/75">
+            <i class="fa-solid fa-camera text-amber-300"></i>
+            Public demo
+        </figcaption>
+      </figure>
 
       <ul class="mt-7 divide-y divide-white/10 border-y border-white/10" aria-label="Billing Hub capabilities">
         {proofPoints.map((point) => (
@@ -100,7 +74,7 @@ const proofPoints = [
         ))}
       </ul>
 
-      <div class="mt-8 flex flex-col gap-4 sm:flex-row sm:items-center lg:mt-auto lg:pt-8">
+      <div class="mt-8 flex flex-col gap-4 sm:flex-row sm:flex-wrap sm:items-center">
         <a
           href={publicDemo}
           target="_blank"
@@ -114,7 +88,9 @@ const proofPoints = [
           <i class="fa-solid fa-lock text-amber-300/80"></i>
           Private repository
         </span>
+        <button type="button" data-collapse-project="billing-hub" class="inline-flex min-h-11 items-center justify-center rounded-lg border border-white/15 px-4 py-3 text-[10px] font-mono uppercase tracking-[0.14em] text-slate-300 transition-colors hover:border-white/30 hover:text-white">
+          Collapse details
+        </button>
       </div>
-    </div>
   </div>
 </article>
