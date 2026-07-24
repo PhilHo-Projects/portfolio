@@ -33,7 +33,7 @@ test('uses real public-demo visuals and a safe live action', () => {
   assert.match(billingHubHtml, /alt="Billing Hub Gazette dashboard showing companies, time entries, expenses, current totals, and archived invoices"/);
   assert.doesNotMatch(billingHubHtml, /billing-hub-invoice\.png/);
   assert.doesNotMatch(billingHubHtml, /Gazette interface/);
-  assert.equal(demoLinks.length, 2);
+  assert.equal(demoLinks.length, 1);
   for (const link of demoLinks) {
     assert.match(link, /target="_blank"/);
     assert.match(link, /rel="noreferrer"/);
@@ -53,8 +53,9 @@ test('defers the Billing Hub dashboard screenshot', () => {
   assert.match(billingHubImages[0], /height="1082"/);
 });
 
-test('keeps the screenshot stage vertically composed on wide cards', () => {
-  assert.match(html, /data-media-stage[^>]*class="[^"]*lg:flex[^"]*lg:h-full[^"]*lg:flex-col[^"]*lg:justify-center/);
+test('keeps the screenshot static while retaining the demo action', () => {
+  assert.match(billingHubHtml, /<figure data-media-stage/);
+  assert.doesNotMatch(billingHubHtml, /data-media-stage[^>]*href=/);
 });
 
 test('explains the workflow without advertising private source code', () => {
