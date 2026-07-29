@@ -1,29 +1,29 @@
-import { ResumeData } from '../../types/resume';
+import type { ResumeData, ResumeRegistry } from '../../types/resume';
 
-function getEmbeddedResumeData(): ResumeData | null {
-    const embeddedData = document.getElementById('initial-resume-data');
+function parseEmbedded<T>(id: string, label: string): T | null {
+    const embeddedData = document.getElementById(id);
 
     if (!embeddedData?.textContent) {
         return null;
     }
 
     try {
-        return JSON.parse(embeddedData.textContent) as ResumeData;
-    } catch (error) {
-        console.error('Error parsing embedded resume data:', error);
+        return JSON.parse(embeddedData.textContent) as T;
+    } catch {
+        console.error(`Unable to parse embedded ${label}.`);
         return null;
     }
 }
 
-export async function fetchResumeData(): Promise<ResumeData | null> {
-    const embeddedResumeData = getEmbeddedResumeData();
+export function getEmbeddedResumeData(): ResumeData | null {
+    return parseEmbedded<ResumeData>('initial-resume-data', 'CV data');
+}
 
-    try {
-        const response = await fetch(import.meta.env.BASE_URL + 'data/resume.json');
-        if (!response.ok) throw new Error('Failed to load resume data');
-        return await response.json();
-    } catch (error) {
-        console.error('Error fetching resume data, falling back to embedded data:', error);
-        return embeddedResumeData;
-    }
+export function getEmbeddedResumeRegistry(): ResumeRegistry | null {
+    return parseEmbedded<ResumeRegistry>('initial-resume-registry', 'CV registry');
+}
+
+// Kept until the page controller migration is wired in the next implementation step.
+export async function fetchResumeData(): Promise<ResumeData | null> {
+    return getEmbeddedResumeData();
 }

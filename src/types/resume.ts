@@ -23,6 +23,16 @@ export interface ApiErrorPayload {
     };
 }
 
+export interface ResumeBackup {
+    id: string;
+    createdAt: string;
+}
+
+export interface EditorSession {
+    authenticated: boolean;
+    available: boolean;
+}
+
 export interface ResumeLanguageData {
     meta: {
         title: string;
