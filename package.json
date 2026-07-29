@@ -5,6 +5,7 @@
   "scripts": {
     "dev": "astro dev",
     "start": "astro dev",
+    "test": "node --test --test-concurrency=1 tests/*.test.*",
     "build": "astro build",
     "preview": "astro preview",
     "astro": "astro"

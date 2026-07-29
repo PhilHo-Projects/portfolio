@@ -5,3 +5,5 @@ dist
 .github
 _legacy_backup
 npm-debug.log
+runtime
+tmp
