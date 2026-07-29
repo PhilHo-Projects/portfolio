@@ -12,6 +12,12 @@ const build = spawnSync('npm', ['run', 'build'], {
 assert.equal(build.status, 0, `${build.stdout}\n${build.stderr}`);
 const html = readFileSync(new URL('../dist/index.html', import.meta.url), 'utf8');
 
+function tagWithAttribute(tagName, attribute, value) {
+  return [...html.matchAll(new RegExp(`<${tagName}\\b[^>]*>`, 'g'))]
+    .map(([tag]) => tag)
+    .find((tag) => tag.includes(`${attribute}="${value}"`));
+}
+
 test('renders the verified Job Scraper case study', () => {
   assert.match(html, /data-case-study="job-scraper"/);
   assert.match(html, /Automated Job Intelligence Pipeline/);
@@ -23,8 +29,16 @@ test('renders the verified Job Scraper case study', () => {
 test('shows both workflow and dashboard visuals with useful actions', () => {
   assert.match(html, /assets\/img\/n8n-workflow\.png/);
   assert.match(html, /assets\/img\/job-viewer-dashboard\.png/);
-  assert.match(html, /<a[^>]+data-job-media="workflow"[^>]+href="\/assets\/img\/n8n-workflow\.png"[^>]+target="_blank"[^>]+rel="noreferrer"/);
-  assert.match(html, /<a[^>]+data-job-media="dashboard"[^>]+href="https:\/\/jobs\.philippeho\.dev\/job-viewer\/"[^>]+target="_blank"[^>]+rel="noreferrer"/);
+  assert.ok(tagWithAttribute('figure', 'data-job-media', 'workflow'));
+  assert.ok(tagWithAttribute('figure', 'data-job-media', 'dashboard'));
+
+  const workflowAction = tagWithAttribute('a', 'href', '/assets/img/n8n-workflow.png');
+  const dashboardAction = tagWithAttribute('a', 'href', 'https://jobs.philippeho.dev/job-viewer/');
+  for (const action of [workflowAction, dashboardAction]) {
+    assert.ok(action);
+    assert.match(action, /target="_blank"/);
+    assert.match(action, /rel="noreferrer"/);
+  }
   assert.match(html, /View workflow/);
   assert.match(html, /Open live dashboard/);
   assert.match(html, /https:\/\/jobs\.philippeho\.dev\/job-viewer\//);
