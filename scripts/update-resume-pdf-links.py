@@ -16,7 +16,7 @@ REPLACEMENTS = {
 reader = PdfReader(PRIMARY)
 writer = PdfWriter()
 writer.clone_document_from_reader(reader)
-replaced = set()
+resolved_targets = set()
 
 for page in writer.pages:
     for annotation_ref in page.get("/Annots", []):
@@ -26,12 +26,15 @@ for page in writer.pages:
             continue
         uri = action.get("/URI")
         if uri in REPLACEMENTS:
-            action[NameObject("/URI")] = TextStringObject(REPLACEMENTS[uri])
-            replaced.add(str(uri))
+            target = REPLACEMENTS[uri]
+            action[NameObject("/URI")] = TextStringObject(target)
+            resolved_targets.add(target)
+        elif uri in REPLACEMENTS.values():
+            resolved_targets.add(str(uri))
 
-missing = set(REPLACEMENTS) - replaced
+missing = set(REPLACEMENTS.values()) - resolved_targets
 if missing:
-    raise SystemExit(f"Expected PDF links not found: {sorted(missing)}")
+    raise SystemExit(f"Expected PDF link targets not found: {sorted(missing)}")
 
 OUTPUT.parent.mkdir(parents=True, exist_ok=True)
 with OUTPUT.open("wb") as stream:

@@ -24,6 +24,7 @@ export function createResumeController({
     managementAvailable: false,
   };
   let currentHref = initialHref;
+  let selectionSequence = 0;
 
   function snapshot() {
     return structuredClone(state);
@@ -47,6 +48,12 @@ export function createResumeController({
   function requireActive() {
     if (!state.registry || !state.activeId || !state.data) {
       throw new Error('The CV controller has not finished initializing.');
+    }
+  }
+
+  function requireCleanTransition(action) {
+    if (state.dirty) {
+      throw new Error(`Save or exit editing before ${action}.`);
     }
   }
 
@@ -89,8 +96,10 @@ export function createResumeController({
   async function selectVersion(id, { discardDirty = false } = {}) {
     requireActive();
     if (state.degraded || (state.dirty && !discardDirty)) return false;
+    const sequence = ++selectionSequence;
     const activeId = resolveResumeId(id, state.registry);
     const data = await api.read(activeId);
+    if (sequence !== selectionSequence) return false;
     state.activeId = activeId;
     state.data = data;
     state.dirty = false;
@@ -128,6 +137,7 @@ export function createResumeController({
   }
 
   async function activateCreated(entry) {
+    selectionSequence += 1;
     await refreshRegistry();
     state.activeId = entry.id;
     state.data = await api.read(entry.id);
@@ -139,11 +149,13 @@ export function createResumeController({
 
   async function duplicate(name) {
     requireActive();
+    requireCleanTransition('duplicating this CV');
     const entry = await api.duplicate(state.activeId, name);
     await activateCreated(entry);
   }
 
   async function createBlank(name) {
+    requireCleanTransition('creating a blank CV');
     const entry = await api.createBlank(name);
     await activateCreated(entry);
   }
@@ -175,6 +187,7 @@ export function createResumeController({
 
   async function restore(backupId) {
     requireActive();
+    requireCleanTransition('restoring a backup');
     state.data = await api.restore(state.activeId, backupId);
     state.dirty = false;
     renderCurrent();

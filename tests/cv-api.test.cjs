@@ -192,6 +192,31 @@ test('returns a stable payload-too-large API error', async () => {
   assert.equal((await json(response)).error.code, 'payload_too_large');
 });
 
+test('rate limits by the original client across Cloudflare and Traefik', async () => {
+  const { baseUrl } = await startApp({
+    authOptions: {
+      maxAttempts: 2,
+      tokenFactory: () => 'api-test-token',
+    },
+  });
+  const login = (forwardedFor) => fetch(`${baseUrl}/api/cv-editor/login`, {
+    method: 'POST',
+    headers: {
+      'content-type': 'application/json',
+      'x-forwarded-for': forwardedFor,
+    },
+    body: JSON.stringify({ password: 'wrong' }),
+  });
+
+  const firstClient = await login('203.0.113.10, 173.245.48.5');
+  const secondClient = await login('198.51.100.4, 173.245.48.5');
+  assert.equal(firstClient.status, 401);
+  assert.equal(secondClient.status, 401);
+
+  const firstClientAgain = await login('203.0.113.10, 173.245.48.5');
+  assert.equal(firstClientAgain.status, 429);
+});
+
 test('falls back to immutable seeds when the runtime registry is corrupt', async () => {
   const corruptDir = mkdtempSync(join(tmpdir(), 'portfolio-cv-corrupt-'));
   testDirs.push(corruptDir);

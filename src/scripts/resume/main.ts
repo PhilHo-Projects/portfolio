@@ -5,24 +5,12 @@ import {
 import { Editor } from '../../components/resume/Editor';
 import type {
     ResumeBackup,
-    ResumeData,
     ResumeLanguageData,
-    ResumeRegistry,
 } from '../../types/resume';
 import { createResumeApi } from './api';
 import { createResumeController } from './resume-controller';
+import type { ResumeControllerState } from './resume-controller';
 import { renderResume } from './renderer';
-
-type ApplicationState = {
-    registry: ResumeRegistry | null;
-    activeId: string | null;
-    data: ResumeData | null;
-    language: 'en' | 'fr';
-    editing: boolean;
-    dirty: boolean;
-    degraded: boolean;
-    managementAvailable: boolean;
-};
 
 type NameMode = 'rename' | 'duplicate' | 'blank';
 
@@ -82,11 +70,11 @@ function showModal(dialog: HTMLDialogElement): void {
 }
 
 function currentName(): string {
-    const state = controller.state as ApplicationState;
+    const state = controller.state;
     return state.registry?.resumes.find(({ id }) => id === state.activeId)?.name ?? '';
 }
 
-function renderApplicationState(state: ApplicationState): void {
+function renderApplicationState(state: ResumeControllerState): void {
     const previousValue = cvSelect.value;
     cvSelect.replaceChildren(
         ...(state.registry?.resumes ?? []).map((entry) => {
@@ -105,6 +93,9 @@ function renderApplicationState(state: ApplicationState): void {
 
     cvSelect.disabled = state.dirty || state.degraded;
     editButton.disabled = state.degraded || !state.managementAvailable;
+    duplicateButton.disabled = state.dirty;
+    blankButton.disabled = state.dirty;
+    historyButton.disabled = state.dirty;
 
     if (state.dirty) {
         status.textContent = 'Unsaved changes — save or exit editing first.';
@@ -122,12 +113,12 @@ const controller = createResumeController({
     embeddedRegistry: getEmbeddedResumeRegistry(),
     embeddedData: getEmbeddedResumeData(),
     initialHref: window.location.href,
-    render: (languageData: ResumeLanguageData) => {
-        renderResume(languageData);
+    render: (languageData: ResumeLanguageData, language: 'en' | 'fr') => {
+        renderResume(languageData, language);
         editor.bind(languageData);
     },
     replaceUrl: (relativeUrl: string) => history.replaceState(null, '', relativeUrl),
-    onState: (state: ApplicationState) => renderApplicationState(state),
+    onState: (state: ResumeControllerState) => renderApplicationState(state),
 });
 
 editor.onDirty = () => controller.markDirty();
@@ -143,6 +134,7 @@ cvSelect.addEventListener('change', async () => {
         transientStatus = '';
         status.textContent = '';
     } catch (error) {
+        cvSelect.value = controller.state.activeId ?? '';
         status.textContent = messageFrom(error);
     }
 });

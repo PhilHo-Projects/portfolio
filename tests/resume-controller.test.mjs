@@ -30,6 +30,8 @@ function makeHarness(
   const urls = [];
   const states = [];
   const calls = {
+    createBlank: [],
+    duplicate: [],
     login: [],
     logout: 0,
     save: [],
@@ -68,6 +70,7 @@ function makeHarness(
       return structuredClone(entry);
     },
     async duplicate(id, name) {
+      calls.duplicate.push({ id, name });
       const entry = {
         id: 'backend-copy',
         name,
@@ -79,6 +82,7 @@ function makeHarness(
       return structuredClone(entry);
     },
     async createBlank(name) {
+      calls.createBlank.push(name);
       const entry = {
         id: 'general-ai',
         name,
@@ -190,6 +194,30 @@ test('selects versions and toggles language within the active document', async (
   assert.equal(harness.rendered.at(-1).sidebar.role, 'Développeur logiciel back-end');
 });
 
+test('ignores a stale version response that finishes after a newer selection', async () => {
+  const harness = makeHarness();
+  const originalRead = harness.api.read;
+  let releaseBackend;
+  harness.api.read = async (id) => {
+    if (id === 'backend-software-developer') {
+      await new Promise((resolve) => {
+        releaseBackend = resolve;
+      });
+    }
+    return originalRead(id);
+  };
+
+  const controller = createResumeController(harness.dependencies);
+  await controller.initialize();
+  const staleSelection = controller.selectVersion('backend-software-developer');
+  await Promise.resolve();
+  await controller.selectVersion('game-full-stack');
+  releaseBackend();
+  assert.equal(await staleSelection, false);
+  assert.equal(controller.state.activeId, 'game-full-stack');
+  assert.equal(harness.rendered.at(-1).sidebar.role, 'Full-Stack Developer');
+});
+
 test('unlocks editing only after the login API succeeds', async () => {
   const harness = makeHarness();
   const controller = createResumeController(harness.dependencies);
@@ -234,6 +262,30 @@ test('saves complete bilingual data and clears dirty state', async () => {
   assert.equal(harness.calls.save[0].data.en.sidebar.role, 'Edited Role');
   assert.ok(harness.calls.save[0].data.fr);
   assert.equal(controller.state.dirty, false);
+});
+
+test('dirty edits block duplicate, blank, and restore transitions', async () => {
+  const harness = makeHarness();
+  const controller = createResumeController(harness.dependencies);
+  await controller.initialize();
+  await controller.unlock('0000');
+  harness.rendered.at(-1).sidebar.role = 'Unsaved Role';
+  controller.markDirty();
+
+  for (const transition of [
+    () => controller.duplicate('Should Not Exist'),
+    () => controller.createBlank('Should Not Exist'),
+    () => controller.restore('backup.json'),
+  ]) {
+    await assert.rejects(transition, /Save or exit editing before/);
+  }
+
+  assert.equal(controller.state.activeId, 'game-full-stack');
+  assert.equal(controller.state.data.en.sidebar.role, 'Unsaved Role');
+  assert.equal(controller.state.dirty, true);
+  assert.deepEqual(harness.calls.duplicate, []);
+  assert.deepEqual(harness.calls.createBlank, []);
+  assert.deepEqual(harness.calls.restore, []);
 });
 
 test('a 401 save exits editing while preserving dirty data', async () => {

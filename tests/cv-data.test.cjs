@@ -24,6 +24,22 @@ test('accepts the existing bilingual CV and rejects incomplete payloads', () => 
   );
 });
 
+test('rejects executable link schemes and malformed icon classes', () => {
+  const unsafeLink = structuredClone(gaming);
+  unsafeLink.en.sidebar.website.url = 'javascript:alert(1)';
+  assert.throws(
+    () => assertResumeData(unsafeLink),
+    (error) => error instanceof CvError && error.code === 'invalid_resume',
+  );
+
+  const unsafeIcon = structuredClone(gaming);
+  unsafeIcon.en.sidebar.sections[0].icon = 'fas fa-robot" onclick="alert(1)';
+  assert.throws(
+    () => assertResumeData(unsafeIcon),
+    (error) => error instanceof CvError && error.code === 'invalid_resume',
+  );
+});
+
 test('creates a blank CV with the sidebar intact', () => {
   const blank = createBlankResume(gaming, 'General AI');
 

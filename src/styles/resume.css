@@ -684,32 +684,29 @@ li {
         display: grid;
         grid-template-columns: 31% 69%;
         width: 100%;
-        height: 100vh;
-        max-height: 100vh;
         margin: 0 !important;
         padding: 0 !important;
         box-shadow: none;
-        overflow: hidden;
-        page-break-after: avoid;
-        page-break-inside: avoid;
+        overflow: visible;
+        page-break-inside: auto;
     }
 
     #resume-body .sidebar {
         background-color: var(--sidebar-bg) !important;
         color: var(--sidebar-text) !important;
         padding: 1.5rem 1rem;
-        height: 100%;
+        height: auto;
         display: flex;
         flex-direction: column;
-        page-break-inside: avoid;
+        page-break-inside: auto;
         -webkit-print-color-adjust: exact !important;
         print-color-adjust: exact !important;
     }
 
     #resume-body .content {
         padding: 1.5rem 2.5rem;
-        height: 100%;
-        overflow: hidden;
+        height: auto;
+        overflow: visible;
     }
 
     .job,

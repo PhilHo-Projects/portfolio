@@ -41,6 +41,32 @@ function requireStringArray(value, path) {
   }
 }
 
+function requireHttpsUrl(value, path) {
+  requireString(value, path);
+  let parsed;
+  try {
+    parsed = new URL(value);
+  } catch {
+    invalid(path, 'a valid HTTPS URL');
+  }
+  if (
+    parsed.protocol !== 'https:' ||
+    !parsed.hostname ||
+    parsed.username ||
+    parsed.password ||
+    value !== value.trim()
+  ) {
+    invalid(path, 'a valid HTTPS URL');
+  }
+}
+
+function requireIconClass(value, path) {
+  requireString(value, path, true);
+  if (value && !/^fa(?:s|r|b|l|d|t) fa-[a-z0-9-]+(?: fa-[a-z0-9-]+)*$/.test(value)) {
+    invalid(path, 'a Font Awesome icon class');
+  }
+}
+
 function validateLanguage(value, path) {
   const language = requireObject(value, path);
   const meta = requireObject(language.meta, `${path}.meta`);
@@ -52,7 +78,7 @@ function validateLanguage(value, path) {
 
   for (const link of ['website', 'linkedin', 'github']) {
     const linkValue = requireObject(sidebar[link], `${path}.sidebar.${link}`);
-    requireString(linkValue.url, `${path}.sidebar.${link}.url`);
+    requireHttpsUrl(linkValue.url, `${path}.sidebar.${link}.url`);
   }
 
   const languages = requireObject(sidebar.languages, `${path}.sidebar.languages`);
@@ -64,7 +90,7 @@ function validateLanguage(value, path) {
     requireObject(section, sectionPath);
     requireString(section.title, `${sectionPath}.title`, true);
     requireString(section.content, `${sectionPath}.content`, true);
-    requireString(section.icon, `${sectionPath}.icon`, true);
+    requireIconClass(section.icon, `${sectionPath}.icon`);
   });
 
   const main = requireObject(language.main, `${path}.main`);

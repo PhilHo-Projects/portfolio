@@ -16,6 +16,14 @@ const hero = readFileSync(new URL('../src/components/Hero.astro', import.meta.ur
 const portfolioScript = readFileSync(new URL('../src/scripts/main.ts', import.meta.url), 'utf8');
 const resumeMain = readFileSync(new URL('../src/scripts/resume/main.ts', import.meta.url), 'utf8');
 const editorSource = readFileSync(new URL('../src/components/resume/Editor.ts', import.meta.url), 'utf8');
+const rendererSource = readFileSync(
+  new URL('../src/scripts/resume/renderer.ts', import.meta.url),
+  'utf8',
+);
+const domUtilsSource = readFileSync(
+  new URL('../src/components/resume/domUtils.ts', import.meta.url),
+  'utf8',
+);
 
 test('renders a CV application bar instead of floating controls', () => {
   for (const id of [
@@ -71,6 +79,10 @@ test('uses a single-column phone layout and clean two-column print output', () =
     print,
     /#resume-body \.container\s*\{[\s\S]*?grid-template-columns:\s*31% 69%;/,
   );
+  const printContainer = print.match(/#resume-body \.container\s*\{([^}]*)\}/)?.[1] ?? '';
+  const printContent = print.match(/#resume-body \.content\s*\{([^}]*)\}/)?.[1] ?? '';
+  assert.doesNotMatch(printContainer, /(?:max-)?height:\s*100vh|overflow:\s*hidden/);
+  assert.doesNotMatch(printContent, /height:\s*100%|overflow:\s*hidden/);
 });
 
 test('links to the CV normally from the portfolio', () => {
@@ -90,4 +102,11 @@ test('wires the toolbar to the API controller without browser-side password chec
   assert.match(html, /id="restore-confirmation"/);
   assert.match(html, /id="confirm-restore"/);
   assert.match(html, /id="discard-edit-dialog"/);
+});
+
+test('renders stored CV content without dynamic HTML interpretation', () => {
+  assert.doesNotMatch(rendererSource, /\.innerHTML\s*=/);
+  assert.doesNotMatch(domUtilsSource, /\.innerHTML\s*=/);
+  assert.match(rendererSource, /createTextNode/);
+  assert.match(rendererSource, /createElement\(['"]br['"]\)/);
 });

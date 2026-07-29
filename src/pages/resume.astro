@@ -1,15 +1,11 @@
 ---
 import '../styles/resume.css';
-import fs from 'node:fs';
+import gameResume from '../../public/data/resumes/game-full-stack.json';
+import resumeRegistry from '../../public/data/resumes/index.json';
 
-const embeddedResumeData = fs.readFileSync(
-    new URL('../../public/data/resumes/game-full-stack.json', import.meta.url),
-    'utf-8'
-);
-const embeddedRegistry = fs.readFileSync(
-    new URL('../../public/data/resumes/index.json', import.meta.url),
-    'utf-8'
-);
+const safeJson = (value: unknown) => JSON.stringify(value).replace(/</g, '\\u003c');
+const embeddedResumeData = safeJson(gameResume);
+const embeddedRegistry = safeJson(resumeRegistry);
 ---
 
 <!DOCTYPE html>
