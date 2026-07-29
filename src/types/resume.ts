@@ -3,6 +3,26 @@ export interface ResumeData {
     fr: ResumeLanguageData;
 }
 
+export interface ResumeRegistryEntry {
+    id: string;
+    name: string;
+    createdAt: string;
+    updatedAt: string;
+}
+
+export interface ResumeRegistry {
+    schemaVersion: 1;
+    defaultResumeId: string;
+    resumes: ResumeRegistryEntry[];
+}
+
+export interface ApiErrorPayload {
+    error: {
+        code: string;
+        message: string;
+    };
+}
+
 export interface ResumeLanguageData {
     meta: {
         title: string;

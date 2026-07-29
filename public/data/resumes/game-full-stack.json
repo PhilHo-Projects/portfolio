@@ -1,0 +1,198 @@
+{
+    "en": {
+        "meta": {
+            "title": "Philippe Ho - Full-Stack Developer"
+        },
+        "sidebar": {
+            "role": "Full-Stack Developer",
+            "location": "Montréal, Québec",
+            "website": {
+                "url": "https://philippeho.dev/"
+            },
+            "linkedin": {
+                "url": "https://www.linkedin.com/in/philippe-ho/"
+            },
+            "github": {
+                "url": "https://github.com/PhilippeHo27"
+            },
+            "languages": {
+                "title": "Languages",
+                "items": [
+                    "English (Fluent)",
+                    "French (Fluent)"
+                ]
+            },
+            "sections": [
+                {
+                    "title": "AI Tools",
+                    "content": "Claude • Gemini • ChatGPT<br>Perplexity • n8n • Cursor",
+                    "icon": "fas fa-robot"
+                },
+                {
+                    "title": "Cloud & APIs",
+                    "content": "Unity Cloud Code<br>AWS GameLift<br>Apify • Spotify API",
+                    "icon": "fas fa-cloud"
+                },
+                {
+                    "title": "Technical Skills",
+                    "content": "C# • C++ • JavaScript • Python<br>Linux • AWS • GitHub •<br>Unity • Unreal Engine",
+                    "icon": "fas fa-laptop-code"
+                }
+            ]
+        },
+        "main": {
+            "summary": {
+                "title": "Summary",
+                "content": "Full-Stack Developer with experience in client solution delivery, API integration, and system automation. Delivered complete technical projects from concept to deployment, with hands-on experience in cloud platforms and workflow automation."
+            },
+            "experience": {
+                "title": "Professional Experience",
+                "items": [
+                    {
+                        "company": "Téléfix Productions",
+                        "role": "Game Programmer",
+                        "period": "01/2024-11/2024 | Montréal, Canada",
+                        "points": [
+                            "Delivered completed game released on Steam",
+                            "Managed project timeline and resolved technical integration issues",
+                            "Implemented workflow logic, UI systems, and asset pipelines using Unity & C#",
+                            "Leveraged AI tools for rapid prototyping and technical problem-solving"
+                        ]
+                    }
+                ]
+            },
+            "projects": {
+                "title": "Projects",
+                "items": [
+                    {
+                        "title": "Online Multiplayer Games",
+                        "description": "Built multiplayer game using Unity and WebSockets on AWS Linux server. Features automated matchmaking system and complete game session management."
+                    },
+                    {
+                        "title": "Unity Cloud API Integration",
+                        "description": "Integrated Unity Cloud services for turn-based multiplayer platform. Leveraged CloudCode APIs and Unity's lobby system to implement automated matchmaking and game sessions."
+                    },
+                    {
+                        "title": "Multiplayer Networking Systems",
+                        "description": "Built competitive multiplayer shooter in Unreal Engine using C++ and networked architecture. Implemented client-server communication, state replication, and real-time event handling across distributed game sessions."
+                    }
+                ]
+            },
+            "education": {
+                "title": "Education",
+                "items": [
+                    {
+                        "school": "Collège de Bois-de-Boulogne",
+                        "period": "2022-2023 | Montréal, Canada",
+                        "description": "Game Development Program, worked with Unity & Unreal Engine. Learned C++, C#, GitHub, Agile Methodology and 3-months internship at an indie company."
+                    },
+                    {
+                        "school": "Concordia University",
+                        "period": "2008-2011 | Montréal, Canada",
+                        "description": "Civil Engineering - 56 Completed credits"
+                    }
+                ]
+            }
+        }
+    },
+    "fr": {
+        "meta": {
+            "title": "Philippe Ho - Développeur Full-Stack"
+        },
+        "sidebar": {
+            "role": "Développeur Full-Stack",
+            "location": "Montréal, Québec",
+            "website": {
+                "url": "https://philippeho.dev/"
+            },
+            "linkedin": {
+                "url": "https://www.linkedin.com/in/philippe-ho/"
+            },
+            "github": {
+                "url": "https://github.com/PhilippeHo27"
+            },
+            "languages": {
+                "title": "Langues",
+                "items": [
+                    "Anglais (Courant)",
+                    "Français (Courant)"
+                ]
+            },
+            "sections": [
+                {
+                    "title": "Outils IA",
+                    "content": "Claude • Gemini • ChatGPT<br>Perplexity • n8n • Cursor",
+                    "icon": "fas fa-robot"
+                },
+                {
+                    "title": "Cloud et APIs",
+                    "content": "Unity Cloud Code<br>AWS GameLift<br>Apify • API Spotify",
+                    "icon": "fas fa-cloud"
+                },
+                {
+                    "title": "Compétences Techniques",
+                    "content": "C# • C++ • JavaScript • Python<br>Linux • AWS • GitHub •<br>Unity • Unreal Engine",
+                    "icon": "fas fa-laptop-code"
+                }
+            ]
+        },
+        "main": {
+            "summary": {
+                "title": "Résumé",
+                "content": "Développeur spécialisé dans le déploiement de solutions techniques et l'automatisation de systèmes. J'assure la réalisation complète de projets, de la phase de conception jusqu'à la mise en production."
+            },
+            "experience": {
+                "title": "Expérience Professionnelle",
+                "items": [
+                    {
+                        "company": "Téléfix Productions",
+                        "role": "Programmeur de Jeux",
+                        "period": "01/2024-11/2024 | Montréal, Canada",
+                        "points": [
+                            "Livré un jeu complet et publié sur Steam",
+                            "Gestion du projet et résolution des problèmes d'intégration technique",
+                            "Implémenté la logique du jeu, l'interface et lets assets avec Unity",
+                            "Prototypage rapide et résolution de problèmes techniques"
+                        ]
+                    }
+                ]
+            },
+            "projects": {
+                "title": "Projets",
+                "items": [
+                    {
+                        "title": "Jeux Multijoueur en Ligne",
+                        "description": "Construit un jeu multijoueur utilisant Unity et WebSockets sur serveur Linux AWS. Fonctionnalités de système de matchmaking automatisé et gestion de sessions de jeu."
+                    },
+                    {
+                        "title": "Intégration d'API Unity Cloud",
+                        "description": "Intégré les services Unity Cloud pour plateforme multijoueur au tour par tour. Exploité les APIs CloudCode et le système de lobby d'Unity pour implémenter le matchmaking automatisé et sessions de jeu."
+                    },
+                    {
+                        "title": "Automatiseur de Playlist Spotify",
+                        "description": "Construit un outil d'automatisation Python pour intégrer des mp3 dans des playlists."
+                    },
+                    {
+                        "title": "Systèmes de Réseautage Multijoueur",
+                        "description": "Construit un jeu de tir multijoueur compétitif dans Unreal Engine utilisant C++ et architecture réseau. Implémenté la communication client-serveur, réplication d'état et gestion d'événements temps réel à travers des sessions de jeu distribuées."
+                    }
+                ]
+            },
+            "education": {
+                "title": "Formation",
+                "items": [
+                    {
+                        "school": "Collège de Bois-de-Boulogne",
+                        "period": "2022-2023 | Montréal, Canada",
+                        "description": "Programme de Développement de Jeux, travaillé avec Unity & Unreal Engine. Appris C++, C#, GitHub, Méthodologie Agile et stage de 3 mois dans une compagnie indie."
+                    },
+                    {
+                        "school": "Université Concordia",
+                        "period": "2008-2011 | Montréal, Canada",
+                        "description": "Génie Civil - 56 crédits complétés"
+                    }
+                ]
+            }
+        }
+    }
+}

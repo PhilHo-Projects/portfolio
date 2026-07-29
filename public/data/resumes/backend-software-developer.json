@@ -1,0 +1,194 @@
+{
+    "en": {
+        "meta": {
+            "title": "Philippe Ho - Backend Software Developer"
+        },
+        "sidebar": {
+            "role": "Backend Software Developer",
+            "location": "Montréal, Québec",
+            "website": {
+                "url": "https://philippeho.dev/"
+            },
+            "linkedin": {
+                "url": "https://www.linkedin.com/in/philippe-ho/"
+            },
+            "github": {
+                "url": "https://github.com/PhilippeHo27"
+            },
+            "languages": {
+                "title": "Languages",
+                "items": [
+                    "English (Fluent)",
+                    "French (Fluent)"
+                ]
+            },
+            "sections": [
+                {
+                    "title": "Backend & Data",
+                    "content": "Node.js • Express • WebSocket<br>PostgreSQL • SQLite • REST APIs",
+                    "icon": "fas fa-server"
+                },
+                {
+                    "title": "Cloud & Operations",
+                    "content": "Docker • Linux • Coolify<br>AWS • Cloudflare • GitHub",
+                    "icon": "fas fa-cloud"
+                },
+                {
+                    "title": "Languages & Automation",
+                    "content": "TypeScript • JavaScript • Python • C#<br>n8n • Gemini • LLM APIs",
+                    "icon": "fas fa-laptop-code"
+                }
+            ]
+        },
+        "main": {
+            "summary": {
+                "title": "Summary",
+                "content": "Backend-focused software developer who builds and deploys practical web services, real-time systems, and automation pipelines. Hands-on experience with Node.js, Express, WebSockets, PostgreSQL, SQLite, Docker, Linux, and API integrations, backed by shipped software and self-hosted production projects."
+            },
+            "experience": {
+                "title": "Professional Experience",
+                "items": [
+                    {
+                        "company": "Téléfix Productions",
+                        "role": "Game Programmer",
+                        "period": "01/2024-11/2024 | Montréal, Canada",
+                        "points": [
+                            "Shipped a complete Unity and C# game on Steam as part of a small production team",
+                            "Owned technical delivery across gameplay systems, persistence, UI, asset pipelines, and release integration",
+                            "Diagnosed cross-system issues and coordinated fixes against project deadlines",
+                            "Used Git-based workflows and AI-assisted tooling to prototype and resolve technical problems"
+                        ]
+                    }
+                ]
+            },
+            "projects": {
+                "title": "Selected Backend Projects",
+                "items": [
+                    {
+                        "title": "Hidden Multiplayer Service",
+                        "description": "Built and deployed an Express and WebSocket service for real-time matchmaking and game messages, with optional PostgreSQL accounts, browser sessions, validation, rate limits, and guest play."
+                    },
+                    {
+                        "title": "Billing Hub",
+                        "description": "Built a server-backed multi-company workspace that turns time entries and expenses into invoice-ready records, PDFs, payment state, and durable archives."
+                    },
+                    {
+                        "title": "Automated Job Intelligence Pipeline",
+                        "description": "Built an n8n and Gemini pipeline that collects job listings, normalizes them into structured records, publishes a purpose-built dashboard, and delivers a review digest."
+                    }
+                ]
+            },
+            "education": {
+                "title": "Education",
+                "items": [
+                    {
+                        "school": "Collège de Bois-de-Boulogne",
+                        "period": "2022-2023 | Montréal, Canada",
+                        "description": "Game Development Program, worked with Unity & Unreal Engine. Learned C++, C#, GitHub, Agile Methodology and 3-months internship at an indie company."
+                    },
+                    {
+                        "school": "Concordia University",
+                        "period": "2008-2011 | Montréal, Canada",
+                        "description": "Civil Engineering - 56 Completed credits"
+                    }
+                ]
+            }
+        }
+    },
+    "fr": {
+        "meta": {
+            "title": "Philippe Ho - Développeur logiciel back-end"
+        },
+        "sidebar": {
+            "role": "Développeur logiciel back-end",
+            "location": "Montréal, Québec",
+            "website": {
+                "url": "https://philippeho.dev/"
+            },
+            "linkedin": {
+                "url": "https://www.linkedin.com/in/philippe-ho/"
+            },
+            "github": {
+                "url": "https://github.com/PhilippeHo27"
+            },
+            "languages": {
+                "title": "Langues",
+                "items": [
+                    "Anglais (Courant)",
+                    "Français (Courant)"
+                ]
+            },
+            "sections": [
+                {
+                    "title": "Back-end et données",
+                    "content": "Node.js • Express • WebSocket<br>PostgreSQL • SQLite • APIs REST",
+                    "icon": "fas fa-server"
+                },
+                {
+                    "title": "Cloud et opérations",
+                    "content": "Docker • Linux • Coolify<br>AWS • Cloudflare • GitHub",
+                    "icon": "fas fa-cloud"
+                },
+                {
+                    "title": "Langages et automatisation",
+                    "content": "TypeScript • JavaScript • Python • C#<br>n8n • Gemini • APIs LLM",
+                    "icon": "fas fa-laptop-code"
+                }
+            ]
+        },
+        "main": {
+            "summary": {
+                "title": "Résumé",
+                "content": "Développeur logiciel orienté back-end qui conçoit et déploie des services web, des systèmes temps réel et des pipelines d'automatisation concrets. Expérience pratique avec Node.js, Express, WebSockets, PostgreSQL, SQLite, Docker, Linux et les intégrations d'API, appuyée par des logiciels livrés et des projets de production auto-hébergés."
+            },
+            "experience": {
+                "title": "Expérience Professionnelle",
+                "items": [
+                    {
+                        "company": "Téléfix Productions",
+                        "role": "Programmeur de Jeux",
+                        "period": "01/2024-11/2024 | Montréal, Canada",
+                        "points": [
+                            "Livré un jeu complet Unity et C# sur Steam au sein d'une petite équipe de production",
+                            "Pris en charge la livraison technique des systèmes de jeu, de la persistance, de l'interface, des pipelines d'actifs et de l'intégration de la version",
+                            "Diagnostiqué des problèmes entre systèmes et coordonné les correctifs selon les échéances du projet",
+                            "Utilisé des flux Git et des outils assistés par IA pour prototyper et résoudre des problèmes techniques"
+                        ]
+                    }
+                ]
+            },
+            "projects": {
+                "title": "Projets back-end sélectionnés",
+                "items": [
+                    {
+                        "title": "Service multijoueur Hidden",
+                        "description": "Construit et déployé un service Express et WebSocket pour le matchmaking et les messages de jeu en temps réel, avec comptes PostgreSQL optionnels, sessions navigateur, validation, limites de débit et jeu invité."
+                    },
+                    {
+                        "title": "Billing Hub",
+                        "description": "Construit un espace multi-entreprises côté serveur qui transforme les heures et dépenses en factures, PDF, états de paiement et archives durables."
+                    },
+                    {
+                        "title": "Pipeline automatisé d'intelligence d'emploi",
+                        "description": "Construit un pipeline n8n et Gemini qui collecte des offres, les normalise en données structurées, publie un tableau de bord dédié et livre un résumé prêt à réviser."
+                    }
+                ]
+            },
+            "education": {
+                "title": "Formation",
+                "items": [
+                    {
+                        "school": "Collège de Bois-de-Boulogne",
+                        "period": "2022-2023 | Montréal, Canada",
+                        "description": "Programme de Développement de Jeux, travaillé avec Unity & Unreal Engine. Appris C++, C#, GitHub, Méthodologie Agile et stage de 3 mois dans une compagnie indie."
+                    },
+                    {
+                        "school": "Université Concordia",
+                        "period": "2008-2011 | Montréal, Canada",
+                        "description": "Génie Civil - 56 crédits complétés"
+                    }
+                ]
+            }
+        }
+    }
+}
