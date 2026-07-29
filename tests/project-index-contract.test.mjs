@@ -13,7 +13,7 @@ assert.equal(build.status, 0, `${build.stdout}\n${build.stderr}`);
 const html = readFileSync(new URL('../dist/index.html', import.meta.url), 'utf8');
 
 const richProjectIds = [
-  'chatroomwars',
+  'hidden',
   'turboreader',
   'manga-tracker',
   'chatsim',
@@ -31,13 +31,31 @@ function projectDetail(id) {
 }
 
 test('renders every project as a collapsed expandable index item', () => {
-  const ids = ['chatroomwars', 'unreal-engine-5', 'billing-hub', 'job-scraper', 'music-player', 'song-finder'];
+  const ids = ['hidden', 'unreal-engine-5', 'billing-hub', 'job-scraper', 'music-player', 'song-finder'];
   for (const id of ids) {
     assert.match(html, new RegExp(`data-project-trigger="${id}"`));
     assert.match(html, new RegExp(`aria-controls="project-detail-${id}"`));
     assert.match(html, new RegExp(`id="project-detail-${id}"`));
   }
   assert.doesNotMatch(html, /aria-expanded="true"/);
+});
+
+test('presents Hidden as the current live browser strategy game', () => {
+  const detail = projectDetail('hidden');
+
+  assert.match(html, /data-project-trigger="hidden"/);
+  assert.match(detail, /Blind-board Strategy Game/);
+  assert.match(detail, /React · TypeScript · WebSocket · PostgreSQL/);
+  assert.match(detail, /assets\/img\/hidden-gameplay\.webp/);
+  assert.match(detail, /Blind-board tactics/);
+  assert.match(detail, /Online and offline play/);
+  assert.match(detail, /Production account backend/);
+  assert.match(
+    detail,
+    /href="https:\/\/hidden\.philippeho\.dev"[^>]+target="_blank"[^>]+rel="noreferrer"/,
+  );
+
+  assert.doesNotMatch(html, /ChatroomWars|Unity WebGL|\/hiddengame\//);
 });
 
 test('removes the legacy project modal and iframe surface', () => {
