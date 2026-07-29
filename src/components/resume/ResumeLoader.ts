@@ -22,8 +22,3 @@ export function getEmbeddedResumeData(): ResumeData | null {
 export function getEmbeddedResumeRegistry(): ResumeRegistry | null {
     return parseEmbedded<ResumeRegistry>('initial-resume-registry', 'CV registry');
 }
-
-// Kept until the page controller migration is wired in the next implementation step.
-export async function fetchResumeData(): Promise<ResumeData | null> {
-    return getEmbeddedResumeData();
-}

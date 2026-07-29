@@ -16,9 +16,9 @@ export function setHTML(id: string, html: string, dataPath?: string): void {
 
 export function setList<T>(id: string, items: T[] | null | undefined, createItemFn: (item: T, index: number) => HTMLElement): void {
     const el = document.getElementById(id);
-    if (!el || !items) return;
+    if (!el) return;
     el.innerHTML = '';
-    items.forEach((item, index) => {
+    (items ?? []).forEach((item, index) => {
         el.appendChild(createItemFn(item, index));
     });
 }

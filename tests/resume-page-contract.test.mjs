@@ -14,6 +14,8 @@ const html = readFileSync(new URL('../dist/resume/index.html', import.meta.url),
 const css = readFileSync(new URL('../src/styles/resume.css', import.meta.url), 'utf8');
 const hero = readFileSync(new URL('../src/components/Hero.astro', import.meta.url), 'utf8');
 const portfolioScript = readFileSync(new URL('../src/scripts/main.ts', import.meta.url), 'utf8');
+const resumeMain = readFileSync(new URL('../src/scripts/resume/main.ts', import.meta.url), 'utf8');
+const editorSource = readFileSync(new URL('../src/components/resume/Editor.ts', import.meta.url), 'utf8');
 
 test('renders a CV application bar instead of floating controls', () => {
   for (const id of [
@@ -75,4 +77,17 @@ test('links to the CV normally from the portfolio', () => {
   assert.match(hero, /href="\/resume"/);
   assert.doesNotMatch(hero, /window\.openResume/);
   assert.doesNotMatch(portfolioScript, /openResume/);
+});
+
+test('wires the toolbar to the API controller without browser-side password checks', () => {
+  assert.match(resumeMain, /import\s+\{\s*createResumeController\s*\}/);
+  assert.match(resumeMain, /import\s+\{\s*createResumeApi/);
+  assert.match(resumeMain, /window\.print\(\)/);
+  assert.match(resumeMain, /new-blank-cv/);
+  assert.match(resumeMain, /duplicate-cv/);
+  assert.doesNotMatch(`${resumeMain}\n${editorSource}`, /password\s*!==\s*['"]0000['"]/);
+  assert.doesNotMatch(`${resumeMain}\n${editorSource}`, /\b(?:prompt|alert|confirm)\s*\(/);
+  assert.match(html, /id="restore-confirmation"/);
+  assert.match(html, /id="confirm-restore"/);
+  assert.match(html, /id="discard-edit-dialog"/);
 });

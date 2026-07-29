@@ -58,14 +58,22 @@ export function renderResume(data: ResumeLanguageData): void {
     // Experience
     setText('experience-title', data.main.experience.title, 'main.experience.title');
     setList('experience-list', data.main.experience.items, createJobElement);
+    setItemContainerVisibility('experience-list', data.main.experience.items.length > 0);
 
     // Projects
     setText('projects-title', data.main.projects.title, 'main.projects.title');
     setList('projects-list', data.main.projects.items, createProjectElement);
+    setItemContainerVisibility('projects-list', data.main.projects.items.length > 0);
 
     // Education
     setText('education-title', data.main.education.title, 'main.education.title');
     setList('education-list', data.main.education.items, createEducationElement);
+    setItemContainerVisibility('education-list', data.main.education.items.length > 0);
+}
+
+function setItemContainerVisibility(id: string, hasItems: boolean): void {
+    const container = document.getElementById(id);
+    if (container) container.hidden = !hasItems;
 }
 
 function createJobElement(job: JobItem, index: number): HTMLElement {
