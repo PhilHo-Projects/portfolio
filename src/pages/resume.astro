@@ -24,20 +24,94 @@ const embeddedRegistry = fs.readFileSync(
 </head>
 
 <body id="resume-body">
-    <div class="floating-download">
-        <button id="download-pdf" class="download-icon" title="Download as PDF">
-            <i class="fas fa-file-download"></i>
-        </button>
-        <button id="lang-toggle" class="download-icon" style="bottom: 90px;" title="Switch Language">
-            FR
-        </button>
-        {import.meta.env.PUBLIC_READ_ONLY !== 'true' && (
-            <button id="edit-toggle" class="download-icon" style="bottom: 165px; background-color: #f39c12;"
-                title="Toggle Edit Mode">
-                <i class="fas fa-edit"></i>
+    <header id="resume-toolbar" class="resume-toolbar">
+        <div class="resume-toolbar-primary">
+            <a id="portfolio-link" class="toolbar-link" href="/#projects">
+                <i class="fas fa-arrow-left" aria-hidden="true"></i>
+                Portfolio
+            </a>
+            <label class="cv-selector-label" for="cv-select">
+                <span>CV version</span>
+                <select id="cv-select" aria-label="CV version"></select>
+            </label>
+        </div>
+        <div class="resume-toolbar-actions">
+            <button id="lang-toggle" type="button">FR</button>
+            <button id="print-resume" type="button">
+                <i class="fas fa-print" aria-hidden="true"></i>
+                Print / PDF
             </button>
-        )}
-    </div>
+            <button id="edit-toggle" type="button">
+                <i class="fas fa-pen" aria-hidden="true"></i>
+                Edit
+            </button>
+            <div id="editor-actions" hidden>
+                <button id="rename-cv" type="button">Rename</button>
+                <button id="duplicate-cv" type="button">Duplicate</button>
+                <button id="new-blank-cv" type="button">New Blank</button>
+                <button id="save-cv" type="button">Save</button>
+                <button id="history-cv" type="button">History</button>
+                <button id="exit-edit" type="button">Exit editing</button>
+            </div>
+        </div>
+        <p id="resume-status" role="status" aria-live="polite"></p>
+    </header>
+
+    <dialog id="editor-login-dialog" aria-labelledby="editor-login-title">
+        <form id="editor-login-form">
+            <h2 id="editor-login-title">Unlock CV editor</h2>
+            <p>Enter the editor password to manage CV versions.</p>
+            <label for="editor-password">Password</label>
+            <input id="editor-password" name="password" type="password" autocomplete="current-password" required>
+            <p id="editor-login-error" class="dialog-error" role="alert"></p>
+            <div class="dialog-actions">
+                <button id="editor-login-submit" type="submit">Unlock</button>
+                <button type="submit" formmethod="dialog" value="cancel">Cancel</button>
+            </div>
+        </form>
+    </dialog>
+
+    <dialog id="cv-name-dialog" aria-labelledby="cv-name-title">
+        <form id="cv-name-form">
+            <h2 id="cv-name-title">Name CV</h2>
+            <label for="cv-name-input">CV name</label>
+            <input id="cv-name-input" name="name" type="text" maxlength="80" required>
+            <p id="cv-name-error" class="dialog-error" role="alert"></p>
+            <div class="dialog-actions">
+                <button id="cv-name-submit" type="submit">Save</button>
+                <button type="submit" formmethod="dialog" value="cancel">Cancel</button>
+            </div>
+        </form>
+    </dialog>
+
+    <dialog id="cv-history-dialog" aria-labelledby="cv-history-title">
+        <div class="dialog-content">
+            <h2 id="cv-history-title">CV history</h2>
+            <p id="cv-history-error" class="dialog-error" role="alert"></p>
+            <div id="cv-history-list"></div>
+            <div id="restore-confirmation" class="restore-confirmation" hidden>
+                <p>Restore <strong id="restore-backup-name"></strong>? The current version will be backed up first.</p>
+                <div class="dialog-actions">
+                    <button id="confirm-restore" type="button">Confirm restore</button>
+                    <button id="cancel-restore" type="button">Cancel</button>
+                </div>
+            </div>
+            <form method="dialog" class="dialog-actions">
+                <button type="submit">Close</button>
+            </form>
+        </div>
+    </dialog>
+
+    <dialog id="discard-edit-dialog" aria-labelledby="discard-edit-title">
+        <div class="dialog-content">
+            <h2 id="discard-edit-title">Discard unsaved changes?</h2>
+            <p>Your current edits will be lost.</p>
+            <div class="dialog-actions">
+                <button id="confirm-exit-edit" type="button">Discard and exit</button>
+                <form method="dialog"><button type="submit">Keep editing</button></form>
+            </div>
+        </div>
+    </dialog>
 
     <div class="container" id="resume-content">
         <aside class="sidebar">

@@ -53,6 +53,7 @@
 
 #resume-body {
     background-color: var(--bg-page);
+    min-height: 100vh;
 }
 
 #resume-body,
@@ -77,55 +78,201 @@
     grid-template-columns: 31% 69%;
     max-width: 8.5in;
     min-height: 100vh;
-    margin: 0 auto;
+    margin: var(--spacing-lg) auto;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
     background-color: var(--bg-content);
 }
 
 
 /* ============================================
-   FLOATING DOWNLOAD BUTTON
+   CV APPLICATION BAR
    ============================================ */
-.floating-download {
-    position: fixed;
-    top: 15px;
-    right: 15px;
-    z-index: 1000;
+#resume-body [hidden] {
+    display: none !important;
 }
 
+.resume-toolbar {
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+    display: grid;
+    grid-template-columns: minmax(18rem, 1fr) auto;
+    align-items: center;
+    gap: 0.625rem 1rem;
+    width: 100%;
+    margin: 0;
+    padding: 0.625rem max(0.75rem, calc((100vw - 8.5in) / 2));
+    background: #17191d;
+    border-bottom: 1px solid #343841;
+    box-shadow: 0 0.25rem 1rem rgba(0, 0, 0, 0.22);
+}
 
-.download-icon {
-    background-color: var(--accent-secondary);
-    color: var(--text-primary);
-    border: none;
-    border-radius: 50%;
-    width: 45px;
-    height: 45px;
+.resume-toolbar-primary,
+.resume-toolbar-actions,
+#editor-actions {
     display: flex;
     align-items: center;
+    gap: 0.5rem;
+}
+
+.resume-toolbar-actions {
+    justify-content: flex-end;
+    flex-wrap: wrap;
+}
+
+.toolbar-link,
+.resume-toolbar button,
+.resume-toolbar select {
+    min-height: 44px;
+    border: 1px solid #4a505c;
+    border-radius: 0.5rem;
+    background: #24272d;
+    color: #f4f6f8;
+    font: 600 0.875rem/1 var(--font-base);
+}
+
+.toolbar-link,
+.resume-toolbar button {
+    display: inline-flex;
+    align-items: center;
     justify-content: center;
+    gap: 0.45rem;
+    padding: 0.7rem 0.85rem;
     cursor: pointer;
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
-    transition: background-color 0.3s ease, transform 0.3s ease;
-    will-change: transform;
+    white-space: nowrap;
 }
 
-
-.download-icon i {
-    font-size: clamp(1rem, 1.25rem, 1.5rem);
+.toolbar-link {
+    text-decoration: none;
 }
 
+.resume-toolbar button:hover,
+.toolbar-link:hover,
+.resume-toolbar select:hover {
+    background: #30343c;
+    border-color: #7d8797;
+    text-decoration: none;
+}
 
-.download-icon:hover {
-    background-color: var(--accent-hover);
-    transform: scale(1.05);
+.resume-toolbar button:disabled,
+.resume-toolbar select:disabled {
+    cursor: not-allowed;
+    opacity: 0.5;
+}
+
+.resume-toolbar :focus-visible,
+#resume-body dialog :focus-visible {
+    outline: 3px solid var(--accent-secondary);
+    outline-offset: 2px;
+}
+
+.cv-selector-label {
+    display: grid;
+    grid-template-columns: auto minmax(12rem, 20rem);
+    align-items: center;
+    gap: 0.5rem;
+    color: #d7dbe2;
+    font: 600 0.75rem/1 var(--font-base);
+}
+
+.resume-toolbar select {
+    width: 100%;
+    padding: 0.55rem 2.25rem 0.55rem 0.7rem;
+}
+
+#resume-status {
+    grid-column: 1 / -1;
+    min-height: 1rem;
+    color: #c7ced8;
+    font-size: 0.75rem;
+    text-align: center;
+}
+
+#resume-body dialog {
+    width: min(32rem, calc(100vw - 2rem));
+    max-height: calc(100vh - 2rem);
+    margin: auto;
+    padding: 0;
+    border: 1px solid #c9ced6;
+    border-radius: 0.75rem;
+    background: #fff;
+    box-shadow: 0 1.25rem 4rem rgba(0, 0, 0, 0.35);
+}
+
+#resume-body dialog::backdrop {
+    background: rgba(8, 10, 14, 0.72);
+}
+
+#resume-body dialog form,
+#resume-body .dialog-content {
+    display: grid;
+    gap: 0.85rem;
+    padding: 1.25rem;
+}
+
+#resume-body dialog h2 {
+    color: var(--text-primary);
+    font: 700 1.25rem/1.2 var(--font-base);
+}
+
+#resume-body dialog label {
+    font: 600 0.875rem/1.2 var(--font-base);
+}
+
+#resume-body dialog input {
+    min-height: 44px;
+    width: 100%;
+    padding: 0.7rem;
+    border: 1px solid #8b929e;
+    border-radius: 0.4rem;
+    font: 1rem/1.2 var(--font-base);
+}
+
+#resume-body .dialog-actions {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: flex-end;
+    gap: 0.5rem;
+    padding: 0;
+}
+
+#resume-body .dialog-actions button,
+#cv-history-list button {
+    min-height: 44px;
+    padding: 0.65rem 0.9rem;
+    border: 1px solid #667085;
+    border-radius: 0.4rem;
+    background: #fff;
+    cursor: pointer;
+    font: 600 0.875rem/1 var(--font-base);
+}
+
+.dialog-error {
+    min-height: 1.25rem;
+    color: #b42318 !important;
+}
+
+#cv-history-list {
+    display: grid;
+    gap: 0.5rem;
+    max-height: 18rem;
+    overflow-y: auto;
+}
+
+.restore-confirmation {
+    display: grid;
+    gap: 0.75rem;
+    padding: 0.85rem;
+    border: 1px solid #f0b429;
+    border-radius: 0.5rem;
+    background: #fffaeb;
 }
 
 
 /* ============================================
    SIDEBAR
    ============================================ */
-.sidebar {
+#resume-body .sidebar {
     background-color: var(--sidebar-bg);
     color: var(--sidebar-text);
     padding: var(--spacing-lg);
@@ -184,6 +331,7 @@
     margin-bottom: 0.625rem;
     display: flex;
     align-items: center;
+    overflow-wrap: anywhere;
 }
 
 
@@ -264,6 +412,7 @@
 #resume-body .sidebar div,
 #resume-body .sidebar li {
     color: var(--sidebar-text-muted);
+    overflow-wrap: anywhere;
 }
 
 
@@ -296,32 +445,32 @@
 /* ============================================
    MAIN CONTENT
    ============================================ */
-.content {
+#resume-body .content {
     padding: 1.25rem;
     min-height: 100%;
 }
 
 
-header {
+#resume-body .sidebar header {
     margin-bottom: var(--spacing-lg);
 }
 
 
-:is(header, .content) h1 {
+#resume-body :is(.sidebar header, .content) h1 {
     font-size: 2.2rem;
     color: var(--text-primary);
     margin-bottom: 0.125rem;
 }
 
 
-:is(header, .content) h2 {
+#resume-body :is(.sidebar header, .content) h2 {
     font-size: 1.3rem;
     color: var(--accent-primary);
     font-weight: 500;
 }
 
 
-section {
+#resume-body section {
     margin-bottom: 0.5rem;
     page-break-inside: avoid;
 }
@@ -387,20 +536,20 @@ li {
 }
 
 
-a {
+#resume-body a {
     color: var(--accent-primary);
     text-decoration: none;
     transition: text-decoration 0.2s ease;
 }
 
 
-a:hover {
+#resume-body a:hover {
     text-decoration: underline;
 }
 
 
-p,
-li {
+#resume-body p,
+#resume-body li {
     font-size: 0.9rem;
 }
 
@@ -427,16 +576,16 @@ li {
 
 /* Tablet */
 @media screen and (max-width: 768px) {
-    .container {
+    #resume-body .container {
         grid-template-columns: 40% 60%;
         max-width: 100%;
     }
 
-    .sidebar {
+    #resume-body .sidebar {
         padding: var(--spacing-md);
     }
 
-    .content {
+    #resume-body .content {
         padding: var(--spacing-md);
     }
 
@@ -448,35 +597,68 @@ li {
 
 /* Mobile */
 @media screen and (max-width: 640px) {
-    .container {
+    .resume-toolbar {
+        position: relative;
+        grid-template-columns: 1fr;
+        gap: 0.5rem;
+        padding: 0.625rem;
+    }
+
+    .resume-toolbar-primary,
+    .resume-toolbar-actions {
+        width: 100%;
+        justify-content: flex-start;
+        flex-wrap: wrap;
+    }
+
+    .resume-toolbar-primary .toolbar-link {
+        flex: 0 0 auto;
+    }
+
+    .cv-selector-label {
+        flex: 1 1 13rem;
+        grid-template-columns: 1fr;
+        gap: 0.2rem;
+    }
+
+    .resume-toolbar-actions > button {
+        flex: 1 1 auto;
+    }
+
+    #editor-actions {
+        flex: 1 0 100%;
+        flex-wrap: wrap;
+    }
+
+    #editor-actions button {
+        flex: 1 1 calc(33.333% - 0.5rem);
+    }
+
+    #resume-status {
+        text-align: left;
+    }
+
+    #resume-body .container {
         grid-template-columns: 1fr;
         grid-template-rows: auto 1fr;
+        width: 100%;
+        margin: 0;
     }
 
-    .sidebar {
+    #resume-body .sidebar {
         padding: var(--spacing-md);
     }
 
-    .content {
+    #resume-body .content {
         padding: var(--spacing-md);
     }
 
-    .sidebar header h1 {
+    #resume-body .sidebar header h1 {
         font-size: 1.5rem;
     }
 
-    .sidebar header h2 {
+    #resume-body .sidebar header h2 {
         font-size: 1.1rem;
-    }
-
-    .floating-download {
-        top: 10px;
-        right: 10px;
-    }
-
-    .download-icon {
-        width: 40px;
-        height: 40px;
     }
 }
 
@@ -538,10 +720,16 @@ li {
     }
 
     .download-btn,
-    .download-icon,
-    .floating-download,
-    #editor-controls {
+    #resume-toolbar,
+    #editor-actions,
+    #resume-body dialog,
+    .editable-highlight {
         display: none !important;
+    }
+
+    [contenteditable="true"] {
+        outline: none !important;
+        background: transparent !important;
     }
 
     * {

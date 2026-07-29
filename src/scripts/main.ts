@@ -2,14 +2,11 @@ import './project-index';
 
 declare global {
   interface Window {
-    openResume: () => void;
     copyEmail: (event: MouseEvent) => void;
     showContactPopup: (event: MouseEvent) => void;
     closeContactPopup: () => void;
   }
 }
-
-window.openResume = () => window.open(import.meta.env.BASE_URL + 'resume', '_blank');
 
 window.copyEmail = (event: MouseEvent) => {
   event.preventDefault();
