@@ -20,6 +20,6 @@ const app = createPortfolioApp({
   secure,
 });
 
-app.listen(port, '0.0.0.0', () => {
+app.listen(port, '::', () => {
   console.log(`Portfolio listening on port ${port}`);
 });
