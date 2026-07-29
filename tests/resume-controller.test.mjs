@@ -27,6 +27,7 @@ function makeHarness(
     ['backend-software-developer', structuredClone(backend)],
   ]);
   const rendered = [];
+  const renderedLanguages = [];
   const urls = [];
   const states = [];
   const calls = {
@@ -114,6 +115,7 @@ function makeHarness(
     calls,
     documents,
     rendered,
+    renderedLanguages,
     registry: () => registry,
     states,
     urls,
@@ -122,7 +124,10 @@ function makeHarness(
       embeddedRegistry: structuredClone(seedRegistry),
       embeddedData: structuredClone(gaming),
       initialHref,
-      render: (data) => rendered.push(data),
+      render: (data, language) => {
+        rendered.push(data);
+        renderedLanguages.push(language);
+      },
       replaceUrl: (url) => urls.push(url),
       onState: (state) => states.push(state),
     },
@@ -192,6 +197,7 @@ test('selects versions and toggles language within the active document', async (
   controller.toggleLanguage();
   assert.equal(controller.state.language, 'fr');
   assert.equal(harness.rendered.at(-1).sidebar.role, 'Développeur logiciel back-end');
+  assert.equal(harness.renderedLanguages.at(-1), 'fr');
 });
 
 test('ignores a stale version response that finishes after a newer selection', async () => {

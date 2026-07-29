@@ -24,7 +24,7 @@ type ResumeApi = {
     session(): Promise<EditorSession>;
     login(password: string): Promise<void>;
     logout(): Promise<void>;
-    save(id: string, data: ResumeData): Promise<ResumeData>;
+    save(id: string, data: ResumeData): Promise<void>;
     rename(id: string, name: string): Promise<ResumeRegistryEntry>;
     duplicate(id: string, name: string): Promise<ResumeRegistryEntry>;
     createBlank(name: string): Promise<ResumeRegistryEntry>;

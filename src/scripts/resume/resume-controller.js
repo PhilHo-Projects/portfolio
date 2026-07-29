@@ -35,7 +35,7 @@ export function createResumeController({
   }
 
   function renderCurrent() {
-    if (state.data) render(state.data[state.language]);
+    if (state.data) render(state.data[state.language], state.language);
   }
 
   function updateUrl() {
