@@ -9,6 +9,8 @@ const { createPortfolioApp } = require('../server/app.cjs');
 const rootDir = join(__dirname, '..');
 const seedDir = join(rootDir, 'public', 'data', 'resumes');
 const gaming = require('../public/data/resumes/game-full-stack.json');
+// Derived from the seed registry so adding a CV version does not break this test.
+const seededIds = require('../public/data/resumes/index.json').resumes.map(({ id }) => id);
 const servers = [];
 const testDirs = [];
 
@@ -59,10 +61,7 @@ test('serves health and the public seeded CV registry', async () => {
   const registry = await json(registryResponse);
   assert.equal(registryResponse.status, 200);
   assert.equal(registry.defaultResumeId, 'game-full-stack');
-  assert.deepEqual(
-    registry.resumes.map(({ id }) => id),
-    ['game-full-stack', 'backend-software-developer'],
-  );
+  assert.deepEqual(registry.resumes.map(({ id }) => id), seededIds);
 
   const resumeResponse = await fetch(`${baseUrl}/api/cvs/game-full-stack`);
   assert.equal(resumeResponse.status, 200);

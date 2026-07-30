@@ -8,6 +8,8 @@ const { CvError } = require('../server/cv-data.cjs');
 const { createCvStore } = require('../server/cv-store.cjs');
 
 const seedDir = join(__dirname, '..', 'public', 'data', 'resumes');
+// Derived from the seed registry so adding a CV version does not break these tests.
+const seededIds = require('../public/data/resumes/index.json').resumes.map(({ id }) => id);
 const testDirs = [];
 
 function makeStore(overrides = {}) {
@@ -34,10 +36,7 @@ test('initializes an empty runtime directory from seeds without overwriting late
   const { store } = makeStore();
   store.initialize();
   assert.equal(store.list().defaultResumeId, 'game-full-stack');
-  assert.deepEqual(
-    store.list().resumes.map(({ id }) => id),
-    ['game-full-stack', 'backend-software-developer'],
-  );
+  assert.deepEqual(store.list().resumes.map(({ id }) => id), seededIds);
 
   const changed = store.read('game-full-stack');
   changed.en.sidebar.role = 'Changed Role';
@@ -146,7 +145,10 @@ test('omits a missing non-default document and reports a warning', () => {
   const { dataDir, store, warnings } = makeStore();
   store.initialize();
   rmSync(join(dataDir, 'backend-software-developer.json'));
-  assert.deepEqual(store.list().resumes.map(({ id }) => id), ['game-full-stack']);
+  assert.deepEqual(
+    store.list().resumes.map(({ id }) => id),
+    seededIds.filter((id) => id !== 'backend-software-developer'),
+  );
   assert.deepEqual(warnings, [{ code: 'missing_cv_file', id: 'backend-software-developer' }]);
 });
 

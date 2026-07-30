@@ -13,6 +13,12 @@
       "name": "Backend Software Developer",
       "createdAt": "2026-07-29T00:00:00.000Z",
       "updatedAt": "2026-07-29T00:00:00.000Z"
+    },
+    {
+      "id": "customer-solutions-consultant",
+      "name": "Customer Solutions Consultant",
+      "createdAt": "2026-07-29T00:00:00.000Z",
+      "updatedAt": "2026-07-29T00:00:00.000Z"
     }
   ]
 }

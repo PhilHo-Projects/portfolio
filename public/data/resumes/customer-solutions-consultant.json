@@ -1,0 +1,210 @@
+{
+    "en": {
+        "meta": {
+            "title": "Philippe Ho - Customer Solutions Consultant"
+        },
+        "sidebar": {
+            "role": "Developer & Technical Consultant",
+            "location": "Montréal, Québec",
+            "website": {
+                "url": "https://philippeho.dev/"
+            },
+            "linkedin": {
+                "url": "https://www.linkedin.com/in/philippe-ho/"
+            },
+            "github": {
+                "url": "https://github.com/PhilippeHo27"
+            },
+            "languages": {
+                "title": "Languages",
+                "items": [
+                    "English (Fluent)",
+                    "French (Fluent)"
+                ]
+            },
+            "sections": [
+                {
+                    "title": "LLM & GenAI Tools",
+                    "content": "GPT • Claude • Gemini<br>Windsurf • Suno • Midjourney",
+                    "icon": "fas fa-robot"
+                },
+                {
+                    "title": "Cloud & APIs",
+                    "content": "AWS Services • Unity Cloud<br>Steam • Spotify<br>REST • WebSockets",
+                    "icon": "fas fa-cloud"
+                },
+                {
+                    "title": "Technical Skills",
+                    "content": "C# • C++ • JavaScript • Python<br>Linux • AWS • GitHub •<br>Unity • Unreal Engine",
+                    "icon": "fas fa-laptop-code"
+                }
+            ]
+        },
+        "main": {
+            "summary": {
+                "title": "Summary",
+                "content": "Client-facing developer with experience shipping products from concept to release and explaining complexities in clear, accessible terms; 7 years as a licensed claims adjuster managing client relationships through complex investigations and settlements."
+            },
+            "experience": {
+                "title": "Professional Experience",
+                "items": [
+                    {
+                        "company": "SCM ClaimsPro / Crawford & Company / IPG",
+                        "role": "Licensed Commercial Claims Adjuster",
+                        "period": "2013-2020 | Montréal, Canada",
+                        "points": [
+                            "Managed commercial claims for Lloyd's of London syndicates and international insurers, coordinating UK underwriters, syndicate agents, and multi-party stakeholders across complex investigations.",
+                            "Produced bilingual technical reports for underwriters and C-level stakeholders, translating complex legal, financial, and coverage issues into clear recommendations and settlement rationale.",
+                            "Handled high-pressure escalations and difficult client conversations, de-escalating conflicts and maintaining professional relationships through resolution.",
+                            "Delivered case presentations and status updates to insurers and senior management, summarizing findings, reserves, and technical assessments for decision-making."
+                        ]
+                    },
+                    {
+                        "company": "Téléfix Productions",
+                        "role": "Game Developer",
+                        "period": "01/2024-11/2024 | Montréal, Canada",
+                        "points": [
+                            "Shipped a Unity game on Steam as solo developer; built core systems (gameplay, controls, UI) and delivered weekly technical presentations to the company owner, translating development progress and technical constraints."
+                        ]
+                    }
+                ]
+            },
+            "projects": {
+                "title": "Integration & Networking Projects",
+                "items": [
+                    {
+                        "title": "Unreal Engine Multiplayer with Steam",
+                        "description": "Multiplayer game built on the Steam Online Subsystem: session management, state replication, async callbacks, and integrated Steam APIs for authentication."
+                    },
+                    {
+                        "title": "Unity Multiplayer on AWS",
+                        "description": "Unity Engine multiplayer game with AWS/Linux server deployment, Cloud Code lobbies, and automated matchmaking systems."
+                    },
+                    {
+                        "title": "Agentic Automation with n8n",
+                        "description": "Building agentic automation workflows with n8n: API integrations, workflow orchestration, and autonomous task execution."
+                    }
+                ]
+            },
+            "education": {
+                "title": "Education",
+                "items": [
+                    {
+                        "school": "Collège de Bois-de-Boulogne — AEC (Attestation of College Studies)",
+                        "period": "2022-2023 | Montréal, Canada",
+                        "description": "Game Development Program, worked with Unity & Unreal Engine. Learned C++, C#, GitHub, Agile Methodology and 3-months internship at an indie company."
+                    },
+                    {
+                        "school": "Concordia University — Civil Engineering (56 credits completed)",
+                        "period": "2008-2011 | Montréal, Canada",
+                        "description": "Critical thinking, problem solving, technical communication."
+                    }
+                ]
+            }
+        }
+    },
+    "fr": {
+        "meta": {
+            "title": "Philippe Ho - Consultant en Solutions Client"
+        },
+        "sidebar": {
+            "role": "Développeur et Consultant Technique",
+            "location": "Montréal, Québec",
+            "website": {
+                "url": "https://philippeho.dev/"
+            },
+            "linkedin": {
+                "url": "https://www.linkedin.com/in/philippe-ho/"
+            },
+            "github": {
+                "url": "https://github.com/PhilippeHo27"
+            },
+            "languages": {
+                "title": "Langues",
+                "items": [
+                    "Anglais (Courant)",
+                    "Français (Courant)"
+                ]
+            },
+            "sections": [
+                {
+                    "title": "Outils LLM et IA Générative",
+                    "content": "GPT • Claude • Gemini<br>Windsurf • Suno • Midjourney",
+                    "icon": "fas fa-robot"
+                },
+                {
+                    "title": "Cloud et APIs",
+                    "content": "Services AWS • Unity Cloud<br>Steam • Spotify<br>REST • WebSockets",
+                    "icon": "fas fa-cloud"
+                },
+                {
+                    "title": "Compétences Techniques",
+                    "content": "C# • C++ • JavaScript • Python<br>Linux • AWS • GitHub •<br>Unity • Unreal Engine",
+                    "icon": "fas fa-laptop-code"
+                }
+            ]
+        },
+        "main": {
+            "summary": {
+                "title": "Résumé",
+                "content": "Développeur orienté client, avec de l'expérience à livrer des produits du concept à la mise en production et à vulgariser des sujets complexes en termes clairs et accessibles; 7 ans comme expert en sinistres agréé à gérer des relations clients à travers des enquêtes et des règlements complexes."
+            },
+            "experience": {
+                "title": "Expérience Professionnelle",
+                "items": [
+                    {
+                        "company": "SCM ClaimsPro / Crawford & Company / IPG",
+                        "role": "Expert en Sinistres Commerciaux Agréé",
+                        "period": "2013-2020 | Montréal, Canada",
+                        "points": [
+                            "Géré des sinistres commerciaux pour les syndicats du Lloyd's of London et des assureurs internationaux, en coordonnant souscripteurs britanniques, agents de syndicats et parties prenantes multiples à travers des enquêtes complexes.",
+                            "Produit des rapports techniques bilingues pour les souscripteurs et la haute direction, traduisant des enjeux juridiques, financiers et de couverture complexes en recommandations claires et en justification des règlements.",
+                            "Géré des escalades sous pression et des conversations clients difficiles, en désamorçant les conflits et en maintenant les relations professionnelles jusqu'à la résolution.",
+                            "Présenté des dossiers et des mises à jour aux assureurs et à la haute direction, en résumant constats, réserves et évaluations techniques pour la prise de décision."
+                        ]
+                    },
+                    {
+                        "company": "Téléfix Productions",
+                        "role": "Développeur de Jeux",
+                        "period": "01/2024-11/2024 | Montréal, Canada",
+                        "points": [
+                            "Livré un jeu Unity sur Steam comme développeur unique; construit les systèmes de base (gameplay, contrôles, interface) et présenté chaque semaine l'avancement technique au propriétaire de l'entreprise, en traduisant progrès et contraintes techniques."
+                        ]
+                    }
+                ]
+            },
+            "projects": {
+                "title": "Projets d'Intégration et de Réseautage",
+                "items": [
+                    {
+                        "title": "Multijoueur Unreal Engine avec Steam",
+                        "description": "Jeu multijoueur bâti sur le Steam Online Subsystem: gestion de sessions, réplication d'état, callbacks asynchrones et intégration des APIs Steam pour l'authentification."
+                    },
+                    {
+                        "title": "Multijoueur Unity sur AWS",
+                        "description": "Jeu multijoueur Unity Engine avec déploiement sur serveur AWS/Linux, lobbies Cloud Code et systèmes de matchmaking automatisé."
+                    },
+                    {
+                        "title": "Automatisation Agentique avec n8n",
+                        "description": "Construction de workflows d'automatisation agentique avec n8n: intégrations d'API, orchestration de workflows et exécution autonome de tâches."
+                    }
+                ]
+            },
+            "education": {
+                "title": "Formation",
+                "items": [
+                    {
+                        "school": "Collège de Bois-de-Boulogne — AEC (Attestation d'Études Collégiales)",
+                        "period": "2022-2023 | Montréal, Canada",
+                        "description": "Programme de Développement de Jeux, travaillé avec Unity & Unreal Engine. Appris C++, C#, GitHub, Méthodologie Agile et stage de 3 mois dans une compagnie indie."
+                    },
+                    {
+                        "school": "Université Concordia — Génie Civil (56 crédits complétés)",
+                        "period": "2008-2011 | Montréal, Canada",
+                        "description": "Pensée critique, résolution de problèmes, communication technique."
+                    }
+                ]
+            }
+        }
+    }
+}
