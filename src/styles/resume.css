@@ -282,7 +282,7 @@
 
 #resume-body .sidebar header {
     text-align: center;
-    margin-bottom: var(--spacing-md);
+    margin-bottom: var(--spacing-lg);
     margin-top: 0;
 }
 
@@ -323,7 +323,7 @@
 
 
 .contact-info {
-    margin-bottom: 0.25rem;
+    margin-bottom: 0.75rem;
 }
 
 
@@ -335,7 +335,7 @@
 }
 
 
-.contact-info i {
+.contact-info p i {
     width: 20px;
     margin-right: 0.625rem;
 }
@@ -344,16 +344,20 @@
     display: flex;
     gap: 0.75rem;
     margin-top: 0.5rem;
-    padding-left: 2px;
 }
 
-.social-row a {
+/* Needs #resume-body to outrank the generic `#resume-body a` accent colour. */
+#resume-body .social-row a {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 20px;
     color: var(--sidebar-text-muted);
-    font-size: 1.2rem;
+    font-size: 1.15rem;
     transition: color 0.2s, transform 0.2s;
 }
 
-.social-row a:hover {
+#resume-body .social-row a:hover {
     color: var(--sidebar-text);
     transform: translateY(-2px);
 }
@@ -365,30 +369,6 @@
 
 .contact-info a:hover {
     text-decoration: underline;
-}
-
-
-.social-links:empty {
-    display: none;
-}
-
-.social-links {
-    display: flex;
-    flex-direction: column;
-    gap: 0.625rem;
-    margin-bottom: 1.875rem;
-}
-
-
-.social-links a {
-    color: var(--sidebar-text-muted);
-    text-decoration: none;
-    transition: color 0.3s ease;
-}
-
-
-.social-links a:hover {
-    color: var(--accent-primary);
 }
 
 
@@ -448,25 +428,6 @@
 #resume-body .content {
     padding: 1.25rem;
     min-height: 100%;
-}
-
-
-#resume-body .sidebar header {
-    margin-bottom: var(--spacing-lg);
-}
-
-
-#resume-body :is(.sidebar header, .content) h1 {
-    font-size: 2.2rem;
-    color: var(--text-primary);
-    margin-bottom: 0.125rem;
-}
-
-
-#resume-body :is(.sidebar header, .content) h2 {
-    font-size: 1.3rem;
-    color: var(--accent-primary);
-    font-weight: 500;
 }
 
 
