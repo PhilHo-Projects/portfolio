@@ -227,9 +227,15 @@ Unit tests, `node:test`, matching the existing suite's style:
 
 Integration:
 
-- **PDF page count.** Render each CV version through headless Chrome at Letter size and assert the
+- **PDF page count.** Render each CV version through headless Chrome at Letter size and confirm the
   output is exactly one page. This is the requirement stated literally, and it is the method that
   produced the current-state table above.
+
+  This runs as a **manual verification gate, not a committed test**. The suite is currently
+  dependency-free `node:test`, and adding Playwright would pull roughly 150MB of browser binaries
+  into the repository to support a single assertion. The pure fit logic is covered by unit tests;
+  the PDF check guards against CSS drift and is run deliberately, with its procedure and expected
+  output recorded in the implementation plan.
 
 Existing tests must continue to pass unchanged, in particular the element-id assertions in
 `tests/resume-page-contract.test.mjs`.
