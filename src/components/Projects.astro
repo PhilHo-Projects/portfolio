@@ -8,11 +8,13 @@ import BillingHubFeatured from './BillingHubFeatured.astro';
 import CourseworkDetails from './CourseworkDetails.astro';
 
 const categories = [
-  ['game-development', 'Game Development'],
   ['web-development', 'Web Development'],
+  ['game-development', 'Game Development'],
   ['automation', 'Automation & Systems'],
   ['native-tools', 'Native & Tools'],
 ] as const;
+
+const visibleProjects = projects.filter(project => project.visible !== false);
 
 ---
 
@@ -23,7 +25,7 @@ const categories = [
       <div id={anchor}>
         <h3 class="mb-6 text-xs font-mono uppercase tracking-widest text-slate-600">{category}</h3>
         <div data-project-grid class="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3 md:gap-5">
-          {projects.filter(project => project.category === category).map(project => (
+          {visibleProjects.filter(project => project.category === category).map(project => (
             <>
               <ProjectCard project={project} />
               {project.detail === 'billing-hub' && <BillingHubFeatured />}

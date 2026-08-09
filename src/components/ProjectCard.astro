@@ -1,12 +1,14 @@
 ---
 import type { Project } from '../data/projects';
 const { project } = Astro.props as { project: Project };
-const statusLabel = { live: 'Live demo', 'public-demo': 'Public demo', readonly: 'Read-only', 'under-construction': 'Under construction', 'coming-soon': 'Coming soon' }[project.status ?? 'coming-soon'];
+const statusLabel = project.status
+  ? { live: 'Live demo', 'public-demo': 'Public demo', readonly: 'Read-only', 'under-construction': 'Under construction', 'coming-soon': 'Coming soon' }[project.status]
+  : undefined;
 ---
 <button type="button" data-project-trigger={project.id} aria-expanded="false" aria-controls={`project-detail-${project.id}`} class="project-card group relative flex min-h-11 flex-col overflow-hidden rounded-2xl border bg-[#1a1a1a] text-left transition-colors hover:border-white/25 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent" style={`--accent:${project.accent}`}>
   <span class="relative flex h-24 items-center justify-center overflow-hidden" style={`background-color:${project.accent}14;`}>
     <i class={`${project.icon} text-4xl transition-transform duration-300 group-hover:scale-110`} style={`color:${project.accent}; opacity:0.55;`} aria-hidden="true"></i>
-    <span class="absolute left-2.5 top-2.5 rounded-md bg-black/50 px-2 py-1 text-[10px] font-mono tracking-wide" style={`color:${project.accent};`}>{statusLabel}</span>
+    {statusLabel && <span class="absolute left-2.5 top-2.5 rounded-md bg-black/50 px-2 py-1 text-[10px] font-mono tracking-wide" style={`color:${project.accent};`}>{statusLabel}</span>}
     <i class="fa-solid fa-chevron-down absolute right-3 top-3 text-xs text-slate-500 transition-transform group-aria-expanded:rotate-180" aria-hidden="true"></i>
   </span>
   <span class="flex flex-1 flex-col p-5">

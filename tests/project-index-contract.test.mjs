@@ -17,8 +17,6 @@ const richProjectIds = [
   'turboreader',
   'manga-tracker',
   'chatsim',
-  'personal-soundcloud',
-  'mp3-maker',
   'wave-function-collapse',
   'classaction-scanner',
 ];
@@ -38,6 +36,33 @@ test('renders every project as a collapsed expandable index item', () => {
     assert.match(html, new RegExp(`id="project-detail-${id}"`));
   }
   assert.doesNotMatch(html, /aria-expanded="true"/);
+});
+
+test('renders Web Development before Game Development', () => {
+  const webDevelopment = html.indexOf('id="web-development"');
+  const gameDevelopment = html.indexOf('id="game-development"');
+
+  assert.notEqual(webDevelopment, -1);
+  assert.notEqual(gameDevelopment, -1);
+  assert.ok(webDevelopment < gameDevelopment);
+});
+
+test('omits temporarily hidden audio projects from the built page', () => {
+  for (const id of ['personal-soundcloud', 'mp3-maker']) {
+    assert.doesNotMatch(html, new RegExp(`data-project-trigger="${id}"`));
+    assert.doesNotMatch(html, new RegExp(`id="project-detail-${id}"`));
+  }
+});
+
+test('shows Coming soon only for projects with that explicit status', () => {
+  const card = (id) => {
+    const start = html.indexOf(`data-project-trigger="${id}"`);
+    assert.notEqual(start, -1, `Missing card for ${id}`);
+    return html.slice(start, html.indexOf('</button>', start));
+  };
+
+  assert.doesNotMatch(card('unreal-engine-5'), /Coming soon/);
+  assert.match(card('song-finder'), /Coming soon/);
 });
 
 test('presents Hidden as the current live browser strategy game', () => {
@@ -91,7 +116,6 @@ test('keeps status and compact copy aligned with the live implementations', () =
   assert.match(html, /Public demo/);
   assert.match(projectDetail('classaction-scanner'), /Under construction/);
   assert.match(projectDetail('classaction-scanner'), /Open working preview/);
-  assert.match(projectDetail('mp3-maker'), /SoundCloud and Bandcamp/);
   assert.doesNotMatch(html, /YouTube, Bandcamp, and SoundCloud/);
 });
 

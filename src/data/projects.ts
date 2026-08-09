@@ -28,6 +28,7 @@ export interface Project {
     icon: string;
     tags?: string[];
     status?: ProjectStatus;
+    visible?: boolean;
     detailDescription?: string;
     stackLabel?: string;
     actionLabel?: string;
@@ -187,6 +188,7 @@ export const projects: Project[] = [
         id: "personal-soundcloud",
         title: "Personal SoundCloud",
         category: "Web Development",
+        visible: false,
         subtitle: "Audio Platform",
         description: "A private streaming archive with custom upload, cover art, and playback logic — a self-hosted take on SoundCloud.",
         link: "https://philippeho.dev/personalsoundcloud/",
@@ -215,6 +217,7 @@ export const projects: Project[] = [
         id: "mp3-maker",
         title: "MP3 Maker",
         category: "Web Development",
+        visible: false,
         subtitle: "Audio Utility",
         description: "Converts SoundCloud and Bandcamp links into clean audio files. Wraps yt-dlp + ffmpeg behind a simple UI.",
         link: "https://philippeho.dev/mp3maker/",
