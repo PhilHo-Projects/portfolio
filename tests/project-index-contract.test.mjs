@@ -1,6 +1,6 @@
 import assert from 'node:assert/strict';
 import { spawnSync } from 'node:child_process';
-import { readFileSync } from 'node:fs';
+import { existsSync, readFileSync } from 'node:fs';
 import test from 'node:test';
 
 const build = spawnSync('npm', ['run', 'build'], {
@@ -17,6 +17,7 @@ const richProjectIds = [
   'turboreader',
   'manga-tracker',
   'chatsim',
+  'personal-soundcloud',
   'wave-function-collapse',
   'classaction-scanner',
 ];
@@ -47,11 +48,32 @@ test('renders Web Development before Game Development', () => {
   assert.ok(webDevelopment < gameDevelopment);
 });
 
-test('omits temporarily hidden audio projects from the built page', () => {
-  for (const id of ['personal-soundcloud', 'mp3-maker']) {
-    assert.doesNotMatch(html, new RegExp(`data-project-trigger="${id}"`));
-    assert.doesNotMatch(html, new RegExp(`id="project-detail-${id}"`));
-  }
+test('keeps the unfinished MP3 utility hidden from the built page', () => {
+  assert.doesNotMatch(html, /data-project-trigger="mp3-maker"/);
+  assert.doesNotMatch(html, /id="project-detail-mp3-maker"/);
+});
+
+test('presents CloudSound as the live self-hosted audio platform', () => {
+  const detail = projectDetail('personal-soundcloud');
+  const cardStart = html.indexOf('data-project-trigger="personal-soundcloud"');
+  const card = html.slice(cardStart, html.indexOf('</button>', cardStart));
+
+  assert.notEqual(cardStart, -1);
+  assert.match(card, /Live demo/);
+  assert.match(card, /CloudSound/);
+  assert.match(card, /Self-hosted Audio Platform/);
+  assert.match(card, /public listening.*approved member uploads.*resumable R2 storage.*custom waveform player/);
+  assert.match(detail, /React · TypeScript · Fastify · SQLite · Cloudflare R2/);
+  assert.match(detail, /assets\/img\/cloudsound\.webp/);
+  assert.match(detail, /alt="CloudSound public set library with search, layout, and sorting controls"/);
+  assert.ok(existsSync(new URL('../public/assets/img/cloudsound.webp', import.meta.url)));
+  assert.match(detail, /Direct-to-R2 uploads/);
+  assert.match(detail, /Approved accounts/);
+  assert.match(detail, /Custom playback/);
+  assert.match(
+    detail,
+    /href="https:\/\/cloudsound\.philippeho\.dev"[^>]+target="_blank"[^>]+rel="noreferrer"/,
+  );
 });
 
 test('shows Coming soon only for projects with that explicit status', () => {
