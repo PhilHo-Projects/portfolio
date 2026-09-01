@@ -314,7 +314,7 @@ export const projects: Project[] = [
         title: "MusicPlayer",
         category: "Native & Tools",
         subtitle: "Released desktop app",
-        description: "A responsive desktop player for MP3, WAV, FLAC, M4A, and AAC with hands-on waveform controls, spectral feedback, and beat-aware navigation.",
+        description: "A native desktop player for DJs — it picks up Traktor's BPM and key analysis and draws a spectral waveform you can jump through a bar at a time.",
         detail: "music-player",
         accent: "#fb923c",
         icon: "devicon-rust-plain",

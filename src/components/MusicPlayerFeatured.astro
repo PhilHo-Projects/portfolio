@@ -1,14 +1,17 @@
 ---
-const screenshot = import.meta.env.BASE_URL + 'assets/img/music-player-v1.0.0.png';
+// Bump this after tagging a release; every link and label below follows from it.
+const version = '1.0.0';
+
+const screenshot = import.meta.env.BASE_URL + `assets/img/music-player-v${version}.png`;
 const repository = 'https://github.com/PhilHo-Projects/MusicPlayer';
-const release = `${repository}/releases/tag/v1.0.0`;
-const windowsDownload = `${repository}/releases/download/v1.0.0/MusicPlayer-v1.0.0.zip`;
-const macDownload = `${repository}/releases/download/v1.0.0/MusicPlayer-macos-v1.0.0.zip`;
+const release = `${repository}/releases/tag/v${version}`;
+const windowsDownload = `${repository}/releases/download/v${version}/MusicPlayer-v${version}.zip`;
+const macDownload = `${repository}/releases/download/v${version}/MusicPlayer-macos-v${version}.zip`;
 
 const proofPoints = [
+  { label: 'Traktor BPM + key', icon: 'fa-solid fa-record-vinyl' },
+  { label: 'Live FFT spectrum', icon: 'fa-solid fa-wave-square' },
   { label: '10-band EQ', icon: 'fa-solid fa-sliders' },
-  { label: 'Live FFT + waveform', icon: 'fa-solid fa-wave-square' },
-  { label: 'Traktor analysis', icon: 'fa-solid fa-record-vinyl' },
 ];
 ---
 
@@ -36,20 +39,20 @@ const proofPoints = [
     <p class="mt-7 text-[10px] font-mono uppercase tracking-[0.16em] text-orange-400">Native DJ-focused audio player</p>
     <h4 id="project-heading-music-player" class="mt-2 text-3xl font-medium leading-tight tracking-[-0.025em] text-white">MusicPlayer</h4>
     <p class="mt-4 max-w-3xl text-sm leading-relaxed text-slate-400">
-      A responsive desktop player for MP3, WAV, FLAC, M4A, and AAC with hands-on waveform controls, spectral feedback, and beat-aware navigation.
+      A native desktop player built for DJs. It reads Traktor's own analysis, so a track opens with its BPM, musical key, and a spectral waveform you can jump through a bar at a time. Handles MP3, WAV, FLAC, M4A, and AAC.
     </p>
 
     <figure class="group relative mt-7 overflow-hidden rounded-xl border border-white/10 bg-[#0d0d0d]">
       <img
         src={screenshot}
-        alt="MusicPlayer v1.0.0 playing a demo track with cover art, a live spectrum, mirrored waveform, and 10-band equalizer"
+        alt={`MusicPlayer v${version} playing a Traktor-analyzed track, showing cover art, the detected BPM and key, a live spectrum, and a spectral waveform`}
         class="aspect-[1.405/1] w-full object-cover object-center transition-transform duration-500 ease-out group-hover:scale-[1.01] sm:aspect-[8/5]"
       />
       <span class="absolute inset-0 bg-gradient-to-t from-black/70 via-transparent to-transparent"></span>
       <span class="absolute inset-x-4 bottom-4 flex items-end justify-between gap-4 sm:inset-x-5 sm:bottom-5">
         <span class="inline-flex items-center gap-2 rounded-md bg-black/80 px-3 py-2 text-[10px] font-mono uppercase tracking-[0.14em] text-orange-100">
           <i class="fa-solid fa-camera text-orange-400"></i>
-          Captured from v1.0.0
+          Captured from v{version}
         </span>
       </span>
     </figure>
@@ -69,7 +72,7 @@ const proofPoints = [
       </div>
 
       <div class="border-t border-white/10 pt-7 lg:border-t-0 lg:border-l lg:pt-0 lg:pl-8">
-        <p class="text-[10px] font-mono uppercase tracking-[0.14em] text-slate-400">Download v1.0.0</p>
+        <p class="text-[10px] font-mono uppercase tracking-[0.14em] text-slate-400">Download v{version}</p>
         <div class="mt-3 grid grid-cols-1 gap-2 sm:grid-cols-2 lg:grid-cols-1">
           <a
             data-download="windows"
