@@ -94,7 +94,7 @@ export const projects: Project[] = [
         category: "Web Development",
         subtitle: "Freelance operations workspace",
         description: "A multi-company workspace that turns time entries and expenses into polished invoices, then keeps every paid and archived record within reach.",
-        link: "https://philippeho.dev/InvoicingAndTrackingTool/",
+        link: "https://billinghub.philippeho.dev/",
         detail: "billing-hub",
         accent: "#fbbf24",
         icon: "fa-solid fa-file-invoice-dollar",
