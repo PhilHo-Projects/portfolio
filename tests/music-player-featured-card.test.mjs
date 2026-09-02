@@ -18,7 +18,9 @@ test('renders MusicPlayer as a released featured native app', () => {
   assert.match(html, /Native DJ-focused audio player/);
   assert.match(html, /10-band EQ/);
   assert.match(html, /Traktor/);
-  assert.match(html, /assets\/img\/music-player-v1\.0\.0\.png/);
+  // Fingerprinted by Astro rather than served from `public/`, so replacing the
+  // screenshot can't leave browsers on a cached copy of the old one.
+  assert.match(html, /\/_astro\/music-player-v1\.0\.0\.[\w-]+\.png/);
 });
 
 test('offers verified platform downloads and source access', () => {
