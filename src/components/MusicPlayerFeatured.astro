@@ -1,8 +1,13 @@
 ---
-// Bump this after tagging a release; every link and label below follows from it.
-const version = '1.0.0';
+// Imported rather than referenced from `public/` so Astro fingerprints the file
+// (`/_astro/music-player-v1.0.0.<hash>.png`). Replacing a same-named file under
+// `public/` leaves browsers and Cloudflare serving the old image for hours; a
+// content hash makes new bytes a new URL, so a redeploy can't go stale.
+import screenshot from '../assets/music-player-v1.0.0.png';
 
-const screenshot = import.meta.env.BASE_URL + `assets/img/music-player-v${version}.png`;
+// Bump this after tagging a release; every link and label below follows from it.
+// The screenshot import above is versioned by filename and updated alongside it.
+const version = '1.0.0';
 const repository = 'https://github.com/PhilHo-Projects/MusicPlayer';
 const release = `${repository}/releases/tag/v${version}`;
 const windowsDownload = `${repository}/releases/download/v${version}/MusicPlayer-v${version}.zip`;
@@ -44,7 +49,9 @@ const proofPoints = [
 
     <figure class="group relative mt-7 overflow-hidden rounded-xl border border-white/10 bg-[#0d0d0d]">
       <img
-        src={screenshot}
+        src={screenshot.src}
+        width={screenshot.width}
+        height={screenshot.height}
         alt={`MusicPlayer v${version} playing a Traktor-analyzed track, showing cover art, the detected BPM and key, a live spectrum, and a spectral waveform`}
         class="aspect-[1.405/1] w-full object-cover object-center transition-transform duration-500 ease-out group-hover:scale-[1.01] sm:aspect-[8/5]"
       />
