@@ -27,7 +27,7 @@ test('renders Billing Hub as the featured Web Development project', () => {
 });
 
 test('uses real public-demo visuals and a safe live action', () => {
-  const demoLinks = [...billingHubHtml.matchAll(/<a[^>]*href="https:\/\/philippeho\.dev\/InvoicingAndTrackingTool\/"[^>]*>/g)].map((match) => match[0]);
+  const demoLinks = [...billingHubHtml.matchAll(/<a[^>]*href="https:\/\/billinghub\.philippeho\.dev\/"[^>]*>/g)].map((match) => match[0]);
 
   assert.match(billingHubHtml, /assets\/img\/billing-hub-dashboard\.png/);
   assert.match(billingHubHtml, /alt="Billing Hub Gazette dashboard showing companies, time entries, expenses, current totals, and archived invoices"/);
