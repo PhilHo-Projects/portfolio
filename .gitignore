@@ -12,6 +12,10 @@ build/
 .cache/
 .worktrees/
 
+# Local server state: CV_DATA_DIR seeds itself here, and ACTIVITY_DIR is
+# pointed here when testing the activity section against a real summary.
+runtime/
+
 # Environment variables
 .env
 .env.local

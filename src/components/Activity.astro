@@ -1,0 +1,61 @@
+---
+const cards = [
+  { key: 'input', label: 'Input' },
+  { key: 'output', label: 'Output', note: 'reasoning' },
+  { key: 'cache-read', label: 'Cache reads' },
+  { key: 'fresh-input', label: 'Fresh input' },
+];
+---
+
+<section id="activity" hidden>
+  <h2 class="text-xs uppercase tracking-[0.3em] text-slate-500 mb-4 border-b border-white/5 pb-4 font-mono">
+    Activity
+  </h2>
+
+  <p class="text-xs font-mono text-slate-600 uppercase tracking-wider mb-2">Tokens consumed</p>
+  <div class="flex flex-col sm:flex-row sm:items-baseline gap-x-8 gap-y-2 mb-10">
+    <span class="text-5xl font-medium text-accent" data-activity="total">—</span>
+    <span class="text-xs font-mono text-slate-600" data-activity="measured"></span>
+  </div>
+
+  <div class="grid grid-cols-2 gap-8 mb-10">
+    {['codex', 'claude'].map((tool) => (
+      <div>
+        <p class="text-xs font-mono text-slate-500 uppercase tracking-wider mb-2">{tool}</p>
+        <p class="text-2xl font-medium" data-activity={`${tool}-raw`}>—</p>
+        <p class="text-xs font-mono text-slate-600" data-activity={`${tool}-sessions`}></p>
+      </div>
+    ))}
+  </div>
+
+  <div class="grid grid-cols-2 lg:grid-cols-4 gap-6 mb-10">
+    {cards.map((card) => (
+      <div class="border border-white/10 p-4">
+        <p class="text-xs font-mono text-slate-500 uppercase tracking-wider mb-2">{card.label}</p>
+        <p class="text-xl font-medium" data-activity={card.key}>—</p>
+        {card.note && <p class="text-xs font-mono text-slate-600 mt-1" data-activity={card.note}></p>}
+      </div>
+    ))}
+  </div>
+
+  <div class="border border-white/10 p-4 overflow-x-auto">
+    <p class="text-xs font-mono text-slate-500 uppercase tracking-wider mb-4">Tokens per day</p>
+    <div class="text-slate-400" data-activity="heatmap"></div>
+  </div>
+</section>
+
+<script>
+  import { renderActivity } from '../scripts/activity/render.js';
+
+  const section = document.getElementById('activity');
+  if (section) {
+    // Stays hidden on any failure. The tracker being unreachable must never
+    // show a broken section on the portfolio.
+    fetch('/api/activity')
+      .then((response) => (response.ok ? response.json() : null))
+      .then((summary) => {
+        if (summary) renderActivity(section, summary);
+      })
+      .catch(() => {});
+  }
+</script>
