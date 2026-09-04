@@ -38,9 +38,18 @@ const cards = [
     ))}
   </div>
 
-  <div class="border border-white/10 p-4 overflow-x-auto">
+  <!-- The scroll container is the inner div, not the card: `overflow-x-auto`
+       computes overflow-y to auto as well, which would clip the tooltip. -->
+  <div class="relative border border-white/10 p-4" data-activity="heatmap-card">
     <p class="text-xs font-mono text-slate-500 uppercase tracking-wider mb-4">Tokens per day</p>
-    <div class="text-slate-400" data-activity="heatmap"></div>
+    <div class="overflow-x-auto">
+      <div class="text-slate-400" data-activity="heatmap"></div>
+    </div>
+    <div
+      data-activity="tooltip"
+      hidden
+      class="pointer-events-none absolute z-10 whitespace-nowrap border border-white/15 bg-background px-2 py-1 text-xs font-mono text-slate-200 shadow-lg"
+    ></div>
   </div>
 </section>
 
