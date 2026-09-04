@@ -28,6 +28,23 @@
 - Nginx is disabled on Hetzner so Coolify/Traefik owns ports `80` and `443`.
 - DNS is on Cloudflare: `philippeho.dev` apex A -> `95.217.6.255` proxied; `coolify.philippeho.dev` and `*.philippeho.dev` A -> `95.217.6.255` DNS-only.
 
+## Activity section (TokenTracker)
+
+The Activity section on the home page renders a summary written by the
+TokenTracker container on the same host. There is no HTTP call and no shared
+secret between the two apps — they share one directory:
+
+- Portfolio Coolify storage: host `/home/phil/app-data/tokentracker-public` →
+  container `/srv/activity`, **read-only**, with `ACTIVITY_DIR=/srv/activity`.
+- TokenTracker writes that same host directory and is the only writer.
+
+`GET /api/activity` reads exactly one filename from it and is deliberately not
+`express.static` on the directory. A missing or corrupt file is a 404 and the
+section hides itself, so the page never breaks when the tracker is down.
+
+Never point `ACTIVITY_DIR` at `/home/phil/app-data/tokentracker` — that
+directory holds raw session data.
+
 ## Coolify Agent Access
 - Coolify API access is enabled.
 - Local token env file: `C:\Users\phili\.config\coolify\env.ps1`
