@@ -1,4 +1,5 @@
 const express = require('express');
+const { readFileSync } = require('node:fs');
 const { join } = require('node:path');
 const { CvError } = require('./cv-data.cjs');
 const { createCvAuth } = require('./cv-auth.cjs');
@@ -42,6 +43,7 @@ function createPortfolioApp({
   distDir,
   password,
   secure,
+  activityDir,
   authOptions = {},
   storeOptions = {},
 }) {
@@ -77,6 +79,35 @@ function createPortfolioApp({
   app.get('/healthz', (_req, res) => {
     res.json({ status: 'ok' });
   });
+
+  // TokenTracker writes this directory; this app only ever reads it. One fixed
+  // filename, never a path taken from the request, and deliberately not
+  // express.static on the directory — anything else that ever lands in there
+  // stays unreachable.
+  if (activityDir) {
+    const activityFile = join(activityDir, 'summary.json');
+
+    app.get('/api/activity', (_req, res) => {
+      let summary;
+      try {
+        summary = JSON.parse(readFileSync(activityFile, 'utf8'));
+      } catch {
+        // Missing or corrupt is a normal state — the tracker may not have
+        // synced yet. The section hides itself; the page is unaffected.
+        res.status(404).json({
+          error: {
+            code: 'activity_unavailable',
+            message: 'Activity summary is not available.',
+          },
+        });
+        return;
+      }
+      // Rewritten at most twice a day, and the apex is Cloudflare-proxied, so
+      // the edge absorbs essentially all of this traffic.
+      res.set('Cache-Control', 'public, max-age=1800');
+      res.json(summary);
+    });
+  }
 
   app.get('/api/cvs', (_req, res) => {
     res.json(store.list());
