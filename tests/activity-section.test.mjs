@@ -6,6 +6,7 @@ import test from 'node:test';
 const root = join(import.meta.dirname, '..');
 const component = readFileSync(join(root, 'src/components/Activity.astro'), 'utf8');
 const index = readFileSync(join(root, 'src/pages/index.astro'), 'utf8');
+const render = readFileSync(join(root, 'src/scripts/activity/render.js'), 'utf8');
 
 test('fetches the summary from the portfolio origin', () => {
   assert.match(component, /['"]\/api\/activity['"]/);
@@ -26,6 +27,20 @@ test('carries no cost, pricing, or weighted framing', () => {
   for (const pattern of banned) {
     assert.doesNotMatch(component, pattern);
   }
+});
+
+test('gives the heatmap a tooltip layer that cannot be clipped', () => {
+  assert.match(component, /data-activity="heatmap-card"/);
+  assert.match(component, /data-activity="tooltip"/);
+  // The card is the positioning context, so it must not be the scroll
+  // container: overflow-x-auto computes overflow-y to auto and would clip.
+  assert.doesNotMatch(component, /heatmap-card"[^>]*overflow-x-auto/);
+});
+
+test('does not also emit native SVG titles', () => {
+  // Both mechanisms at once means the OS bubble fights the styled tooltip.
+  assert.doesNotMatch(render, /createElementNS\(SVG_NS, 'title'\)/);
+  assert.match(render, /addEventListener\('pointermove'/);
 });
 
 test('is composed into the home page', () => {

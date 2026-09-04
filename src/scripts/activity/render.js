@@ -1,4 +1,5 @@
 import {
+  MONTHS,
   addDays,
   calendarGrid,
   compact,
@@ -73,14 +74,77 @@ function buildHeatmap(days, from, doc) {
       rect.setAttribute('height', String(CELL));
       rect.setAttribute('rx', '2');
       rect.setAttribute('fill', LEVEL_FILL[levelOf(value, cuts)]);
-      const title = doc.createElementNS(SVG_NS, 'title');
-      title.textContent = value > 0 ? `${date} — ${compact(value)} tokens` : `${date} — quiet`;
-      rect.appendChild(title);
+      // Read back by the delegated tooltip listener. Deliberately not a native
+      // <title>: that needs a second of steady hovering and renders as an
+      // unstyled OS bubble most people never notice.
+      rect.dataset.date = date;
+      rect.dataset.value = String(value);
       svg.appendChild(rect);
     });
   });
 
   return svg;
+}
+
+/**
+ * "2026-09-04" -> "Sep 4, 2026". Parsed from the string rather than through
+ * Date, which reads a bare date as UTC midnight and renders the previous day
+ * for anyone west of GMT.
+ *
+ * @param {string} date
+ * @returns {string}
+ */
+function formatDay(date) {
+  const [y, m, d] = date.split('-');
+  return `${MONTHS[Number(m) - 1]} ${Number(d)}, ${y}`;
+}
+
+/**
+ * One delegated listener on the SVG rather than 365 per-cell ones.
+ *
+ * @param {SVGSVGElement} svg
+ * @param {HTMLElement} card  positioning context; must not clip overflow
+ * @param {HTMLElement} tip
+ */
+function attachTooltip(svg, card, tip) {
+  const hide = () => {
+    tip.hidden = true;
+  };
+
+  const show = (event, cell) => {
+    const value = Number(cell.dataset.value);
+    const day = formatDay(cell.dataset.date);
+    tip.textContent = value > 0 ? `${day} · ${compact(value)} tokens` : `${day} · quiet`;
+    // Unhide before measuring: a display:none element has no width.
+    tip.hidden = false;
+
+    const box = card.getBoundingClientRect();
+    const x = Math.min(
+      Math.max(event.clientX - box.left + 12, 8),
+      Math.max(8, box.width - tip.offsetWidth - 8),
+    );
+    let y = event.clientY - box.top - tip.offsetHeight - 10;
+    // Flip below the cursor rather than escaping the top of the card.
+    if (y < 4) y = event.clientY - box.top + 18;
+
+    tip.style.left = `${x}px`;
+    tip.style.top = `${y}px`;
+  };
+
+  const onPoint = (event) => {
+    const cell = event.target;
+    if (cell instanceof Element && cell.tagName === 'rect' && cell.dataset.date) {
+      show(event, cell);
+    } else {
+      hide();
+    }
+  };
+
+  svg.addEventListener('pointermove', onPoint);
+  // Touch has no hover state, so the tap itself is the whole interaction.
+  svg.addEventListener('pointerdown', onPoint);
+  svg.addEventListener('pointerleave', hide);
+  svg.addEventListener('pointercancel', hide);
 }
 
 /**
@@ -113,7 +177,12 @@ export function renderActivity(root, summary, doc = root.ownerDocument) {
 
   const host = root.querySelector('[data-activity="heatmap"]');
   if (host) {
-    host.replaceChildren(buildHeatmap(summary.days, summary.from, doc));
+    const svg = buildHeatmap(summary.days, summary.from, doc);
+    host.replaceChildren(svg);
+
+    const card = root.querySelector('[data-activity="heatmap-card"]');
+    const tip = root.querySelector('[data-activity="tooltip"]');
+    if (card && tip) attachTooltip(svg, card, tip);
   }
 
   root.hidden = false;
