@@ -31,13 +31,15 @@ margins and with Chrome's default header/footer margins. The gauge reports the
 same value in view and edit mode, confirming that editing chrome is excluded
 from the measurement.
 
-- Two of three CV versions already print to two pages. The third clears one page by 28px,
-  roughly one line of body text, so any edit tips it over.
-- Sidebar columns run 874–917px against the same 1056px budget. The left column wastes space
-  while the right column overflows.
-- The second PDF page is almost empty in every failing case: a sliver of text over a full-height
+As originally found:
+
+- Two of three CV versions printed to two pages. The third cleared one page by 28px,
+  roughly one line of body text, so any edit tipped it over.
+- Sidebar columns ran 874–917px against the same 1056px budget: the left column wasted space
+  while the right column overflowed.
+- The second PDF page was almost empty in every failing case: a sliver of text over a full-height
   sidebar background.
-- Nothing in the page measures its own height. There is no feedback of any kind while editing.
+- Nothing in the page measured its own height. There was no feedback of any kind while editing.
 
 ### Editor limits
 
