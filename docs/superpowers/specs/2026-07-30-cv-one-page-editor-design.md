@@ -19,11 +19,17 @@ The finished page should:
 Measured by rendering each CV to a real PDF through headless Chrome at Letter size with zero
 page margins:
 
-| CV | Main column | Fill vs. 1056px | PDF pages |
-| --- | --- | --- | --- |
-| `game-full-stack` | 1028px | 97% | 1 |
-| `backend-software-developer` | 1071px | 101% | 2 |
-| `customer-solutions-consultant` | 1315px | 125% | 2 |
+| CV | Main column before | PDF pages before | Density applied | PDF pages after |
+| --- | --- | --- | --- | --- |
+| `game-full-stack` | 1028px | 1 | 0 (untouched) | 1 |
+| `backend-software-developer` | 1071px | 2 | 1 (spacing) | 1 |
+| `customer-solutions-consultant` | 1315px | 2 | 4 (full ladder) | 1 |
+
+Verified 2026-09-07 against the built server, rendering each version through
+headless Chrome at Letter size. All three produce one page both with zero page
+margins and with Chrome's default header/footer margins. The gauge reports the
+same value in view and edit mode, confirming that editing chrome is excluded
+from the measurement.
 
 - Two of three CV versions already print to two pages. The third clears one page by 28px,
   roughly one line of body text, so any edit tips it over.
@@ -246,3 +252,32 @@ Existing tests must continue to pass unchanged, in particular the element-id ass
 - Deletion is immediate with one-step undo rather than guarded by a confirmation dialog.
 - The type floor is 92%, keeping body text at or above roughly 8.3pt for print and ATS legibility.
 - Reordering is deliberately excluded; it was raised and set aside to keep this change focused.
+
+## Implementation notes
+
+Three defects surfaced during implementation that the design had not anticipated:
+
+- **Toolbar text was invisible, not merely mis-coloured.** The generic
+  `#resume-body a/span/p` rules carry ID specificity and beat the toolbar's own
+  colours. Besides the known blue Portfolio link, the "CV version" label and
+  `#resume-status` both rendered near-black on the near-black bar, so every
+  status and error message the editor produced had never actually been visible.
+
+- **Structural controls corrupted the values they sat beside.** Appending a
+  delete button inside a `[data-path]` element put its glyph inside the region
+  the editor reads with `innerText`, so the first keystroke in a project title,
+  bullet or school name appended the glyph to the saved value. Controls are now
+  siblings of the editable span, and `Editor.readValue` strips control text as a
+  second line of defence.
+
+- **Editing chrome inflated the page measurement.** The add and delete controls
+  are screen-only but sat in normal flow, so the gauge over-reported while
+  editing: the consultant CV read "109% — over by 92px" against a PDF that was
+  genuinely one page. The fitter now hides that chrome for the duration of a
+  measurement.
+
+One pre-existing data defect was found and left for a content decision:
+`game-full-stack.json` carries three projects in English and four in French,
+the extra French entry being "Automatiseur de Playlist Spotify" at index 2.
+Because the renderer addresses items by index, a delete on that CV removes a
+different project in each language until the lists are reconciled.
