@@ -245,7 +245,7 @@ All API errors use a small JSON shape with a stable code and human-readable mess
 
 ## Authentication and safety
 
-- The production password is supplied through `CV_EDITOR_PASSWORD`; Coolify will initially set it to `0000`.
+- The production password is supplied through `CV_EDITOR_PASSWORD`. **Superseded 2026-09-07:** there is no default. A missing password, one shorter than 16 characters, or one padded with whitespace disables CV editing entirely while the public CV stays readable.
 - The password is never committed, embedded into JavaScript, or returned by an endpoint.
 - Login is rate-limited by client address.
 - A successful login creates a random server-side session with a short idle expiry.
@@ -255,7 +255,7 @@ All API errors use a small JSON shape with a stable code and human-readable mess
 - IDs and backup names are selected from server-known registry entries; request values are never concatenated into filesystem paths unchecked.
 - Writes use temporary files and atomic replacement to reduce corruption risk.
 
-The `0000` value is intentionally temporary and can be changed later through Coolify without rebuilding the site.
+**Superseded 2026-09-07.** The `0000` fallback was removed from `server.cjs`. `CV_EDITOR_PASSWORD` is now mandatory and validated by `describePasswordProblem` in `server/cv-auth.cjs`; the application fails closed when it is absent or weak.
 
 ## Server and Docker architecture
 

@@ -37,7 +37,7 @@ async function startApp(options = {}) {
     dataDir,
     seedDir,
     distDir: join(rootDir, 'dist'),
-    password: '0000',
+    password: 'test-editor-password-0123',
     secure: false,
     ...options,
   });
