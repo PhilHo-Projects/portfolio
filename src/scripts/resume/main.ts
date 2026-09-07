@@ -8,6 +8,8 @@ import type {
     ResumeLanguageData,
 } from '../../types/resume';
 import { createResumeApi } from './api';
+import { createPageFitter } from './page-fit';
+import type { PageFitResult } from './page-fit';
 import { createResumeController } from './resume-controller';
 import type { ResumeControllerState } from './resume-controller';
 import { renderResume } from './renderer';
@@ -57,6 +59,50 @@ const confirmExitButton = requiredElement<HTMLButtonElement>('confirm-exit-edit'
 
 const api = createResumeApi();
 const editor = new Editor();
+const resumeContent = requiredElement<HTMLElement>('resume-content');
+
+/**
+ * The grid stretches both columns to the taller row, so scrollHeight reports
+ * the stretched height for both and cannot be used. Measure the union of each
+ * column's children instead.
+ */
+function columnHeight(column: Element | null): number {
+    if (!column) return 0;
+    const children = [...column.children].filter((child) => child.getClientRects().length > 0);
+    if (children.length === 0) return 0;
+    const top = Math.min(...children.map((child) => child.getBoundingClientRect().top));
+    const bottom = Math.max(...children.map((child) => child.getBoundingClientRect().bottom));
+    const styles = getComputedStyle(column);
+    return (bottom - top) + parseFloat(styles.paddingTop) + parseFloat(styles.paddingBottom);
+}
+
+const pageFitter = createPageFitter({
+    measure: () => Math.max(
+        columnHeight(resumeContent.querySelector('.content')),
+        columnHeight(resumeContent.querySelector('.sidebar')),
+    ),
+    applyStep: (step: number) => {
+        resumeContent.dataset.density = String(step);
+    },
+    getLineHeight: () => {
+        const sample = resumeContent.querySelector('.content p');
+        if (!sample) return 21;
+        const lineHeight = parseFloat(getComputedStyle(sample).lineHeight);
+        return Number.isFinite(lineHeight) && lineHeight > 0 ? lineHeight : 21;
+    },
+});
+
+let lastFitResult: PageFitResult | null = null;
+let fitTimer = 0;
+
+function runPageFit(): void {
+    lastFitResult = pageFitter.fit();
+}
+
+function schedulePageFit(): void {
+    window.clearTimeout(fitTimer);
+    fitTimer = window.setTimeout(runPageFit, 150);
+}
 let nameMode: NameMode = 'rename';
 let selectedBackup: ResumeBackup | null = null;
 let transientStatus = 'Loading CV…';
@@ -138,12 +184,16 @@ const controller = createResumeController({
     render: (languageData: ResumeLanguageData, language: 'en' | 'fr') => {
         renderResume(languageData, language);
         editor.bind(languageData);
+        runPageFit();
     },
     replaceUrl: (relativeUrl: string) => history.replaceState(null, '', relativeUrl),
     onState: (state: ResumeControllerState) => renderApplicationState(state),
 });
 
-editor.onDirty = () => controller.markDirty();
+editor.onDirty = () => {
+    controller.markDirty();
+    schedulePageFit();
+};
 
 printButton.addEventListener('click', () => window.print());
 languageButton.addEventListener('click', () => controller.toggleLanguage());
@@ -321,6 +371,9 @@ confirmExitButton.addEventListener('click', async () => {
 async function init(): Promise<void> {
     try {
         await controller.initialize();
+        // Web font metrics change measured height materially, so refit once
+        // the real faces have loaded.
+        void document.fonts.ready.then(runPageFit);
         if (!controller.state.dirty && controller.state.managementAvailable) {
             transientStatus = '';
             status.textContent = '';

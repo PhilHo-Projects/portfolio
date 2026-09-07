@@ -164,3 +164,33 @@ test('keeps the status line legible against #resume-body p', () => {
   // which left every status and error message black on the dark bar.
   assert.match(css, /#resume-body #resume-status\s*\{[^}]*color:/);
 });
+
+test('defines a five-step density ladder down to a 0.92 type floor', () => {
+  for (const step of [1, 2, 3, 4]) {
+    assert.match(css, new RegExp(`\[data-density="${step}"\]`));
+  }
+  assert.match(css, /--fit-scale:\s*0\.92/);
+  assert.doesNotMatch(css, /\[data-density="5"\]/);
+  // Sizing must flow through the custom properties, not hardcoded overrides.
+  assert.match(css, /font-size:\s*calc\([^)]*var\(--fit-scale\)/);
+  assert.match(css, /line-height:\s*var\(--fit-leading/);
+});
+
+test('measures the same layout it prints', () => {
+  // The fitter measures the screen layout to predict the printed page, so a
+  // different print padding would rewrap the text and invalidate the result.
+  const print = css.slice(css.indexOf('@media print'));
+  const printContent = print.match(/#resume-body \.content\s*\{([^}]*)\}/)?.[1] ?? '';
+  const printSidebar = print.match(/#resume-body \.sidebar\s*\{([^}]*)\}/)?.[1] ?? '';
+  assert.doesNotMatch(printContent, /padding/);
+  assert.doesNotMatch(printSidebar, /padding/);
+  const screen = css.slice(0, css.indexOf('@media screen'));
+  assert.match(screen, /#resume-body \.content\s*\{[^}]*padding:\s*1\.5rem 2\.5rem/);
+  assert.match(screen, /#resume-body \.sidebar\s*\{[^}]*padding:\s*1\.5rem 1rem/);
+});
+
+test('runs the page fitter from the resume entry point', () => {
+  assert.match(resumeMain, /createPageFitter/);
+  assert.match(resumeMain, /data-density|dataset\.density/);
+  assert.match(resumeMain, /document\.fonts/);
+});

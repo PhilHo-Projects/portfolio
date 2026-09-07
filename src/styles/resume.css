@@ -42,6 +42,42 @@
 
 
 /* ============================================
+   ONE-PAGE DENSITY LADDER
+   Step 0 is the designed density. Each step trades a little air, then a
+   little type size, for vertical room. Type never goes below 92%.
+   ============================================ */
+#resume-body .container {
+    --fit-space: 1;
+    --fit-leading: 1.5;
+    --fit-scale: 1;
+}
+
+#resume-body .container[data-density="1"] {
+    --fit-space: 0.78;
+    --fit-leading: 1.42;
+    --fit-scale: 1;
+}
+
+#resume-body .container[data-density="2"] {
+    --fit-space: 0.78;
+    --fit-leading: 1.42;
+    --fit-scale: 0.96;
+}
+
+#resume-body .container[data-density="3"] {
+    --fit-space: 0.6;
+    --fit-leading: 1.35;
+    --fit-scale: 0.96;
+}
+
+#resume-body .container[data-density="4"] {
+    --fit-space: 0.6;
+    --fit-leading: 1.32;
+    --fit-scale: 0.92;
+}
+
+
+/* ============================================
    GENERAL RESET
    ============================================ */
 * {
@@ -67,7 +103,7 @@
 #resume-body li,
 #resume-body span {
     font-family: var(--font-base) !important;
-    line-height: var(--line-height-base);
+    line-height: var(--fit-leading, var(--line-height-base));
     color: var(--text-primary);
     orphans: 3;
     widows: 3;
@@ -308,7 +344,7 @@
 #resume-body .sidebar {
     background-color: var(--sidebar-bg);
     color: var(--sidebar-text);
-    padding: var(--spacing-lg);
+    padding: 1.5rem 1rem;
     min-height: 100%;
 }
 
@@ -337,11 +373,11 @@
 
 
 .profile-img {
-    width: 125px;
+    width: calc(125px * var(--fit-scale));
     aspect-ratio: 1 / 1;
     border-radius: 50%;
     overflow: hidden;
-    margin: 0 auto var(--spacing-lg);
+    margin: 0 auto calc(var(--spacing-lg) * var(--fit-space));
     border: 3px solid white;
     box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
 }
@@ -361,7 +397,7 @@
 
 
 .contact-info p {
-    margin-bottom: 0.625rem;
+    margin-bottom: calc(0.625rem * var(--fit-space));
     display: flex;
     align-items: center;
     overflow-wrap: anywhere;
@@ -407,14 +443,14 @@
 
 
 .sidebar-section {
-    margin-bottom: var(--spacing-lg);
+    margin-bottom: calc(var(--spacing-lg) * var(--fit-space));
     page-break-inside: avoid;
 }
 
 
 #resume-body .sidebar-section h2 {
-    font-size: 0.95rem;
-    margin-bottom: 0.625rem;
+    font-size: calc(0.95rem * var(--fit-scale));
+    margin-bottom: calc(0.625rem * var(--fit-space));
     color: var(--sidebar-text-muted);
     border-bottom: 2px solid var(--accent-primary);
     padding-bottom: var(--spacing-sm);
@@ -459,24 +495,27 @@
 /* ============================================
    MAIN CONTENT
    ============================================ */
+/* Must match the print-media padding exactly: the page fitter measures the
+   screen layout to predict the printed page, and different horizontal padding
+   would rewrap the text and change the height. */
 #resume-body .content {
-    padding: 1.25rem;
+    padding: 1.5rem 2.5rem;
     min-height: 100%;
 }
 
 
 #resume-body section {
-    margin-bottom: 0.5rem;
+    margin-bottom: calc(0.5rem * var(--fit-space));
     page-break-inside: avoid;
 }
 
 
 #resume-body section h2 {
-    font-size: 1.25rem;
+    font-size: calc(1.25rem * var(--fit-scale));
     color: var(--accent-primary);
     border-bottom: 3px solid var(--border-color);
     padding-bottom: 0.25rem;
-    margin-bottom: 0.8rem;
+    margin-bottom: calc(0.8rem * var(--fit-space));
     font-weight: 700;
 }
 
@@ -487,13 +526,13 @@
 #resume-body .job,
 #resume-body .project,
 #resume-body .school {
-    margin-bottom: 1rem;
+    margin-bottom: calc(1rem * var(--fit-space));
     page-break-inside: avoid;
 }
 
 
 #resume-body h3 {
-    font-size: 1.05rem;
+    font-size: calc(1.05rem * var(--fit-scale));
     color: var(--text-primary);
     margin-bottom: 2px;
     font-weight: 700;
@@ -501,12 +540,12 @@
 
 #resume-body ul {
     padding-left: 1.5rem;
-    margin-bottom: 0.5rem;
+    margin-bottom: calc(0.5rem * var(--fit-space));
     list-style-type: disc;
 }
 
 #resume-body li {
-    margin-bottom: 4px;
+    margin-bottom: calc(4px * var(--fit-space));
 }
 
 
@@ -545,7 +584,7 @@ li {
 
 #resume-body p,
 #resume-body li {
-    font-size: 0.9rem;
+    font-size: calc(0.9rem * var(--fit-scale));
 }
 
 
@@ -694,7 +733,6 @@ li {
     #resume-body .sidebar {
         background-color: var(--sidebar-bg) !important;
         color: var(--sidebar-text) !important;
-        padding: 1.5rem 1rem;
         height: auto;
         display: flex;
         flex-direction: column;
@@ -704,7 +742,6 @@ li {
     }
 
     #resume-body .content {
-        padding: 1.5rem 2.5rem;
         height: auto;
         overflow: visible;
     }
