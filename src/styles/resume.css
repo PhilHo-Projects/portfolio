@@ -110,6 +110,7 @@
 }
 
 #resume-body .container {
+    position: relative;
     display: grid;
     grid-template-columns: 31% 69%;
     max-width: 8.5in;
@@ -335,6 +336,71 @@
     border: 1px solid #f0b429;
     border-radius: 0.5rem;
     background: #fffaeb;
+}
+
+
+/* ============================================
+   PAGE FILL GAUGE AND PAGE BREAK RULER
+   ============================================ */
+.page-fit-gauge {
+    display: grid;
+    gap: 0.3rem;
+    min-width: 16rem;
+}
+
+.page-fit-bar {
+    height: 0.5rem;
+    border-radius: 999px;
+    background: #2f333b;
+    overflow: hidden;
+}
+
+.page-fit-fill {
+    display: block;
+    height: 100%;
+    width: 0;
+    border-radius: 999px;
+    background: #2f9e63;
+    transition: width 0.15s ease, background-color 0.15s ease;
+}
+
+#resume-body .page-fit-label {
+    color: #f4f6f8;
+    font: 600 0.75rem/1.2 var(--font-base);
+}
+
+.page-fit-gauge[data-fit-state="tightened"] .page-fit-fill {
+    background: #4fc3f7;
+}
+
+.page-fit-gauge[data-fit-state="over"] .page-fit-fill {
+    background: #e5484d;
+}
+
+.page-break-ruler {
+    display: none;
+}
+
+#resume-body.is-editing .page-break-ruler {
+    display: block;
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: 1040px;
+    z-index: 5;
+    border-top: 2px dashed #e5484d;
+    pointer-events: none;
+}
+
+#resume-body.is-editing .page-break-ruler span {
+    position: absolute;
+    right: 0.25rem;
+    top: 0.15rem;
+    padding: 0.1rem 0.35rem;
+    border-radius: 0.25rem;
+    background: #e5484d;
+    color: #fff;
+    font: 600 0.65rem/1.2 var(--font-base);
 }
 
 
@@ -757,6 +823,7 @@ li {
     #resume-toolbar,
     #editor-actions,
     #resume-body dialog,
+    .page-break-ruler,
     .editable-highlight {
         display: none !important;
     }

@@ -34,6 +34,9 @@ const saveButton = requiredElement<HTMLButtonElement>('save-cv');
 const historyButton = requiredElement<HTMLButtonElement>('history-cv');
 const exitButton = requiredElement<HTMLButtonElement>('exit-edit');
 const status = requiredElement<HTMLElement>('resume-status');
+const pageFitGauge = requiredElement<HTMLElement>('page-fit-gauge');
+const pageFitFill = requiredElement<HTMLElement>('page-fit-fill');
+const pageFitLabel = requiredElement<HTMLElement>('page-fit-label');
 
 const loginDialog = requiredElement<HTMLDialogElement>('editor-login-dialog');
 const loginForm = requiredElement<HTMLFormElement>('editor-login-form');
@@ -95,8 +98,26 @@ const pageFitter = createPageFitter({
 let lastFitResult: PageFitResult | null = null;
 let fitTimer = 0;
 
+function renderGauge(result: PageFitResult): void {
+    const state = !result.fits ? 'over' : result.step === 0 ? 'fits' : 'tightened';
+    pageFitGauge.dataset.fitState = state;
+    pageFitGauge.setAttribute('aria-valuenow', String(Math.min(100, result.fillPercent)));
+    pageFitFill.style.width = `${Math.min(100, result.fillPercent)}%`;
+
+    if (state === 'fits') {
+        pageFitLabel.textContent = `${result.fillPercent}% — fits one page`;
+    } else if (state === 'tightened') {
+        pageFitLabel.textContent = `${result.fillPercent}% — fits, auto-tightened`;
+    } else {
+        const lines = result.linesToCut === 1 ? 'line' : 'lines';
+        pageFitLabel.textContent =
+            `${result.fillPercent}% — over by ${result.overflowPx}px, cut ~${result.linesToCut} ${lines}`;
+    }
+}
+
 function runPageFit(): void {
     lastFitResult = pageFitter.fit();
+    if (!lastFitResult.stale) renderGauge(lastFitResult);
 }
 
 function schedulePageFit(): void {
@@ -158,6 +179,7 @@ function renderApplicationState(state: ResumeControllerState): void {
     editorActions.hidden = !state.editing;
     editButton.hidden = state.editing;
     editor.setEditing(state.editing);
+    document.body.classList.toggle('is-editing', state.editing);
 
     cvSelect.disabled = state.dirty || state.degraded;
     editButton.disabled = state.degraded || !state.managementAvailable;

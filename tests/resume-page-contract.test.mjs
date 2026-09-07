@@ -194,3 +194,16 @@ test('runs the page fitter from the resume entry point', () => {
   assert.match(resumeMain, /data-density|dataset\.density/);
   assert.match(resumeMain, /document\.fonts/);
 });
+
+test('shows a page fill gauge and a page break ruler in edit mode', () => {
+  assert.match(html, /id="page-fit-gauge"[^>]+role="progressbar"/);
+  assert.match(html, /id="page-fit-fill"/);
+  assert.match(html, /id="page-fit-label"/);
+  assert.match(html, /class="page-break-ruler"/);
+  // The ruler is an editing aid: never on screen for visitors, never in print.
+  assert.match(css, /#resume-body\.is-editing \.page-break-ruler/);
+  const print = css.slice(css.indexOf('@media print'));
+  assert.match(print, /\.page-break-ruler/);
+  assert.match(resumeMain, /page-fit-label/);
+  assert.match(resumeMain, /is-editing/);
+});
