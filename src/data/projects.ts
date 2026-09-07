@@ -8,6 +8,7 @@ export interface ProjectPreview {
     width: number;
     height: number;
     objectPosition?: string;
+    captionBelow?: boolean;
 }
 
 export interface ProjectHighlight {
@@ -32,11 +33,81 @@ export interface Project {
     detailDescription?: string;
     stackLabel?: string;
     actionLabel?: string;
+    statusNote?: string;
     preview?: ProjectPreview;
     highlights?: ProjectHighlight[];
 }
 
 export const projects: Project[] = [
+    {
+        id: "philchat",
+        title: "PhilChat",
+        category: "Web Development",
+        subtitle: "Multi-model chat workspace",
+        description: "A self-hosted chat workspace for multiple AI providers, with streaming responses, guest trials, approved accounts, and per-user token budgets.",
+        detail: "standard", accent: "#60a5fa", icon: "fa-solid fa-comment-dots",
+        tags: ["React", "Node", "SQLite"], status: "live",
+        link: "https://chat.philippeho.dev", actionLabel: "Try PhilChat",
+        detailDescription: "One chat interface for Google and NVIDIA-hosted models, backed by a server that handles provider credentials, streaming, account approval, and usage limits. The interface is still evolving.",
+        stackLabel: "React · Node · SQLite · Better Auth",
+        preview: { src: "assets/img/philchat-20260907.webp", alt: "PhilChat guest interface showing the model selector, message composer, and remaining guest allowance", caption: "Public guest workspace · model selection and chat", width: 1280, height: 720, captionBelow: true },
+        highlights: [
+            { icon: "fa-solid fa-comments", title: "Multiple providers", detail: "Switch between supported models in a shared interface with streamed responses." },
+            { icon: "fa-solid fa-user-check", title: "Guests and members", detail: "A limited guest trial leads into owner-approved accounts, with credentials kept on the server." },
+            { icon: "fa-solid fa-gauge", title: "Usage budgets", detail: "Per-user monthly token budgets and a global daily ceiling help control inference costs." },
+        ],
+    },
+    {
+        id: "tokentracker",
+        title: "TokenTracker",
+        category: "Automation & Systems",
+        subtitle: "AI usage across machines",
+        description: "Collects Codex and Claude usage across my computers into one dashboard. The activity heatmap below is powered by its public summary feed.",
+        detail: "standard", accent: "#a3e635", icon: "fa-solid fa-chart-simple",
+        tags: ["Aggregation", "Automation", "Cloudflare Access"], status: "live",
+        link: "#activity", actionLabel: "See the live heatmap below",
+        statusNote: "The full dashboard is private. The activity section below shows its public output.",
+        detailDescription: "A personal usage dashboard that brings Codex and Claude session totals together across desktop and laptop. Scheduled syncs feed a central aggregator, which publishes a reduced summary for this portfolio without exposing the private dashboard.",
+        highlights: [
+            { icon: "fa-solid fa-desktop", title: "Across machines", detail: "Bring usage from multiple computers and both coding tools into a single view." },
+            { icon: "fa-solid fa-arrows-rotate", title: "Scheduled collection", detail: "Authenticated syncs deliver usage to the central aggregator on a daily schedule." },
+            { icon: "fa-solid fa-chart-column", title: "Public proof", detail: "The heatmap below reads the reduced summary: daily activity, tool totals, and token breakdowns." },
+        ],
+    },
+    {
+        id: "health-hub",
+        title: "Health Hub",
+        category: "Web Development",
+        subtitle: "Fitbit tracker · under development",
+        description: "A personal health-data workspace for sleep, heart rate, calories, and journal context. Under development as I build out a fuller Fitbit companion.",
+        detail: "standard", accent: "#2dd4bf", icon: "fa-solid fa-heart-pulse",
+        tags: ["TypeScript", "PostgreSQL", "Health data"], status: "under-construction",
+        statusNote: "Private project under development. SpO₂ tracking and LLM-assisted analysis are planned, not available yet.",
+        detailDescription: "An evolving private health archive with daily views, sleep trends, data inspection, and structured exports. The current focus is getting the underlying records and sync behavior right before expanding the app and adding analysis.",
+        highlights: [
+            { icon: "fa-solid fa-bed", title: "Daily health context", detail: "Browse sleep, heart-rate, and calorie records alongside dated journal entries." },
+            { icon: "fa-solid fa-database", title: "Personal archive", detail: "PostgreSQL preserves source records, with encrypted journal content and resumable synchronization." },
+            { icon: "fa-solid fa-file-export", title: "Inspect and export", detail: "Inspect underlying data and prepare structured exports for further analysis." },
+        ],
+    },
+    {
+        id: "shaderlab",
+        title: "ShaderLab",
+        category: "Web Development",
+        subtitle: "GPU playground",
+        description: "A browser shader playground with a code editor, live GPU previews, and a library of visual experiments in GLSL and WGSL.",
+        detail: "standard", accent: "#c084fc", icon: "fa-solid fa-wand-magic-sparkles",
+        tags: ["TypeScript", "WebGL2", "WebGPU"], status: "live",
+        link: "https://shaderlab.philippeho.dev", actionLabel: "Explore ShaderLab",
+        detailDescription: "A hands-on shader lab for editing code and watching the output render on your GPU. The hosted version bundles a shader library and keeps edits in the browser; backend and shader compatibility depend on the browser and example.",
+        stackLabel: "TypeScript · Vite · GLSL · WGSL · WebGL2 / WebGPU",
+        preview: { src: "assets/img/shaderlab-20260907.webp", alt: "ShaderLab displaying GLSL source beside a live geometric shader preview and compile status", caption: "GLSL editor · live geometric shader preview", width: 1280, height: 720, captionBelow: true },
+        highlights: [
+            { icon: "fa-solid fa-code", title: "Code beside output", detail: "Edit shader source beside its rendered preview, with compile feedback and runtime statistics." },
+            { icon: "fa-solid fa-layer-group", title: "Shader library", detail: "Browse bundled visual experiments across GLSL and WGSL." },
+            { icon: "fa-solid fa-image", title: "Preview controls", detail: "Adjust rendering resolution, control playback, and export a PNG of the result." },
+        ],
+    },
     {
         id: "hidden",
         title: "Hidden",
@@ -53,9 +124,10 @@ export const projects: Project[] = [
         stackLabel: "React · TypeScript · WebSocket · PostgreSQL",
         actionLabel: "Play Hidden",
         preview: {
-            src: "assets/img/hidden-gameplay.webp",
-            alt: "Hidden offline practice match showing the blind board, power-ups, timer, and rock paper scissors controls",
-            caption: "Offline practice · active blind-board match",
+            src: "assets/img/hidden-round-five-20260907.webp",
+            alt: "Hidden round-five practice match with red, blue, and concealed board tiles, power-ups, and rock paper scissors controls",
+            caption: "Round five · offline practice against a bot",
+            captionBelow: true,
             width: 1280,
             height: 720,
         },
@@ -93,7 +165,7 @@ export const projects: Project[] = [
         title: "Billing Hub",
         category: "Web Development",
         subtitle: "Freelance operations workspace",
-        description: "A multi-company workspace that turns time entries and expenses into polished invoices, then keeps every paid and archived record within reach.",
+        description: "A freelance billing workspace with separate member accounts — turn time and expenses into polished invoices, track payments, and keep each member's company records private.",
         link: "https://billinghub.philippeho.dev/",
         detail: "billing-hub",
         accent: "#fbbf24",
@@ -133,27 +205,27 @@ export const projects: Project[] = [
         title: "Manga Tracker",
         category: "Web Development",
         subtitle: "Full-stack App",
-        description: "Tracks reading progress across series with a daily scheduler that checks for new chapters. Express + SQLite, self-hosted.",
-        link: "https://philippeho.dev/manga-tracker/",
+        description: "A multi-user reading library with MangaUpdates search, daily chapter checks, and private progress tracking. Visitors can explore a read-only demo.",
+        link: "https://manga.philippeho.dev",
         detail: "standard",
         accent: "#fbbf24",
         icon: "fa-solid fa-book",
-        tags: ["Express", "SQLite", "Cron"],
+        tags: ["TypeScript", "SQLite", "Better Auth"],
         status: "public-demo",
-        detailDescription: "A self-hosted reading library that checks MangaDex for new chapters and keeps a clean, persistent history of what has been read.",
-        stackLabel: "Express · SQLite · MangaDex API",
+        detailDescription: "A self-hosted, multi-user reading library built in strict TypeScript. Approved members get isolated libraries and reading history, while visitors can browse a read-only demo.",
+        stackLabel: "TypeScript · Express 5 · SQLite · Better Auth · MangaUpdates",
         actionLabel: "Open public demo",
         preview: {
             src: "assets/img/manga-tracker.webp",
-            alt: "Manga Tracker public demo showing One Piece and Kagurabachi in the shared library",
-            caption: "Shared demo library · resets daily",
+            alt: "Manga Tracker library showing One Piece and Kagurabachi with reading progress",
+            caption: "Reading library · series and chapter progress",
             width: 1280,
             height: 720,
         },
         highlights: [
-            { icon: "fa-solid fa-magnifying-glass", title: "MangaDex search", detail: "Find titles through MangaDex and add them to a personal or shared demo library." },
-            { icon: "fa-solid fa-clock-rotate-left", title: "Scheduled checks", detail: "A daily job looks for new chapters while the public demonstration data resets on schedule." },
-            { icon: "fa-solid fa-database", title: "Reading history", detail: "SQLite stores series, chapter state, and read history without requiring a hosted database." },
+            { icon: "fa-solid fa-magnifying-glass", title: "MangaUpdates search", detail: "Find series through MangaUpdates and keep chapter progress together in one library." },
+            { icon: "fa-solid fa-clock-rotate-left", title: "Daily chapter checks", detail: "Scheduled checks look for new chapters while SQLite preserves series, chapter state, and reading history." },
+            { icon: "fa-solid fa-user-lock", title: "Independent libraries", detail: "Owner-approved accounts receive isolated libraries; anonymous visitors explore a read-only demo." },
         ],
     },
     {
@@ -162,7 +234,7 @@ export const projects: Project[] = [
         category: "Web Development",
         subtitle: "Animation Tool",
         description: "Build and play back scripted texting animations — a little story engine for fake chat threads, with a JSON-backed editor.",
-        link: "https://philippeho.dev/chatsim/",
+        link: "https://chatsim.philippeho.dev",
         detail: "standard",
         accent: "#a78bfa",
         icon: "fa-solid fa-comments",
@@ -172,9 +244,10 @@ export const projects: Project[] = [
         stackLabel: "React · TypeScript · Node",
         actionLabel: "Open Chatsim",
         preview: {
-            src: "assets/img/chatsim.webp",
-            alt: "Chatsim discovery board with public demo profiles and story cover artwork",
-            caption: "Public story discovery board",
+            src: "assets/img/chatsim-landing-20260907.webp",
+            alt: "Chatsim landing page with a neon stick-figure profile carousel and profile search",
+            caption: "Landing page · featured profiles and story discovery",
+            captionBelow: true,
             width: 1280,
             height: 720,
         },
@@ -273,8 +346,8 @@ export const projects: Project[] = [
         id: "job-scraper",
         title: "Automated Job Intelligence Pipeline",
         category: "Automation & Systems",
-        subtitle: "n8n + Gemini",
-        description: "One system collects targeted job listings, normalizes them with an LLM, publishes structured results to a purpose-built dashboard, and sends a ready-to-review digest.",
+        subtitle: "Multi-user job search + automation",
+        description: "An automated job-search workspace: targeted listings and AI enrichment feed independent user boards, with personal notes, application tracking, and budgeted scrape requests.",
         link: "https://jobs.philippeho.dev/job-viewer/",
         detail: "job-scraper",
         accent: "#22d3ee",
@@ -314,7 +387,7 @@ export const projects: Project[] = [
         title: "MusicPlayer",
         category: "Native & Tools",
         subtitle: "Released desktop app",
-        description: "A native desktop player for DJs — it picks up Traktor's BPM and key analysis and draws a spectral waveform you can jump through a bar at a time.",
+        description: "A native Rust player for DJs, with Traktor BPM and key analysis, spectral waveforms, and bar-accurate navigation. Optimized for long sets with less memory and faster playback startup.",
         detail: "music-player",
         accent: "#fb923c",
         icon: "devicon-rust-plain",

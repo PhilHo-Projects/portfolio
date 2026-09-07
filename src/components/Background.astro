@@ -1,4 +1,5 @@
 ---
+import CourseworkDetails from './CourseworkDetails.astro';
 const toolkit = [
   {
     group: "Languages",
@@ -65,6 +66,17 @@ const toolkit = [
       </div>
       <span class="text-sm font-mono text-slate-600">2008 — 2011</span>
     </div>
+  </div>
+
+  <div data-project-grid class="mb-12 grid grid-cols-1 gap-4">
+    <button type="button" data-project-trigger="unreal-engine-5" aria-expanded="false" aria-controls="project-detail-unreal-engine-5" style="--accent:#e5e7eb" class="group flex min-h-16 items-center justify-between gap-4 rounded-xl border border-white/10 bg-white/[0.02] px-5 py-4 text-left transition-colors hover:border-white/25 focus-visible:outline-2 focus-visible:outline-accent">
+      <span>
+        <span class="block text-[10px] font-mono uppercase tracking-[0.16em] text-slate-500">Further study</span>
+        <span class="mt-1 block text-sm text-slate-300">Unreal Engine 5 · C++ & multiplayer coursework</span>
+      </span>
+      <i class="fa-solid fa-chevron-down text-xs text-slate-500 transition-transform group-aria-expanded:rotate-180" aria-hidden="true"></i>
+    </button>
+    <CourseworkDetails />
   </div>
 
   <!-- Core Stack -->
