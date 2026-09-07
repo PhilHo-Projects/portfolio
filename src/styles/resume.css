@@ -95,10 +95,9 @@
     position: sticky;
     top: 0;
     z-index: 1000;
-    display: grid;
-    grid-template-columns: minmax(18rem, 1fr) auto;
-    align-items: center;
-    gap: 0.625rem 1rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
     width: 100%;
     margin: 0;
     padding: 0.625rem max(0.75rem, calc((100vw - 8.5in) / 2));
@@ -107,9 +106,29 @@
     box-shadow: 0 0.25rem 1rem rgba(0, 0, 0, 0.22);
 }
 
+.toolbar-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.75rem;
+    width: 100%;
+}
+
+.toolbar-row-edit {
+    padding-top: 0.5rem;
+    border-top: 1px solid #343841;
+}
+
+.editor-action-buttons {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    flex-wrap: wrap;
+    justify-content: flex-end;
+}
+
 .resume-toolbar-primary,
-.resume-toolbar-actions,
-#editor-actions {
+.resume-toolbar-actions {
     display: flex;
     align-items: center;
     gap: 0.5rem;
@@ -146,6 +165,19 @@
     text-decoration: none;
 }
 
+/* #resume-body a wins on ID specificity, so the link needs the same weight. */
+#resume-body .toolbar-link {
+    color: #f4f6f8;
+}
+
+/* Same trap for text inside the bar: the generic #resume-body span/p rules
+   would paint it near-black on the dark toolbar. Scoped to .toolbar-row so
+   #resume-status keeps its own muted colour. */
+#resume-body .toolbar-row span,
+#resume-body .toolbar-row p {
+    color: #f4f6f8;
+}
+
 .resume-toolbar button:hover,
 .toolbar-link:hover,
 .resume-toolbar select:hover {
@@ -171,7 +203,7 @@
     grid-template-columns: auto minmax(12rem, 20rem);
     align-items: center;
     gap: 0.5rem;
-    color: #d7dbe2;
+    color: #f4f6f8;
     font: 600 0.75rem/1 var(--font-base);
 }
 
@@ -180,8 +212,9 @@
     padding: 0.55rem 2.25rem 0.55rem 0.7rem;
 }
 
-#resume-status {
-    grid-column: 1 / -1;
+/* Needs #resume-body to outrank the generic "#resume-body p" colour, which
+   otherwise renders every status and error message black on the dark bar. */
+#resume-body #resume-status {
     min-height: 1rem;
     color: #c7ced8;
     font-size: 0.75rem;
@@ -342,6 +375,7 @@
 
 .social-row {
     display: flex;
+    justify-content: center;
     gap: 0.75rem;
     margin-top: 0.5rem;
 }
@@ -586,12 +620,17 @@ li {
         flex: 1 1 auto;
     }
 
-    #editor-actions {
-        flex: 1 0 100%;
+    .toolbar-row {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 0.5rem;
+    }
+
+    .editor-action-buttons {
         flex-wrap: wrap;
     }
 
-    #editor-actions button {
+    .editor-action-buttons button {
         flex: 1 1 calc(33.333% - 0.5rem);
     }
 

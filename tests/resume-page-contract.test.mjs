@@ -129,3 +129,38 @@ test('closes dialogs from Cancel without tripping form validation', () => {
   }
   assert.match(resumeMain, /data-dialog-close/);
 });
+
+test('splits the toolbar into a view row and an edit row', () => {
+  assert.match(html, /class="toolbar-row toolbar-row-view"/);
+  assert.match(html, /id="editor-actions"[^>]+class="toolbar-row toolbar-row-edit"[^>]+hidden/);
+  // The edit controls must not share a row with the view controls: that
+  // competition for width is what made the bar collide when editing.
+  const viewStart = html.indexOf('toolbar-row-view');
+  const editStart = html.indexOf('id="editor-actions"');
+  assert.ok(viewStart !== -1 && editStart > viewStart);
+  const viewRow = html.slice(viewStart, editStart);
+  assert.match(viewRow, /id="print-resume"/);
+  assert.doesNotMatch(viewRow, /id="save-cv"/);
+  assert.doesNotMatch(viewRow, /id="history-cv"/);
+});
+
+test('renders the toolbar uniformly white on black', () => {
+  // #resume-body a has ID specificity and beats a bare .toolbar-link rule.
+  assert.match(css, /#resume-body \.toolbar-link\s*\{[^}]*color:\s*#f4f6f8/);
+});
+
+test('centres the sidebar social icons', () => {
+  assert.match(css, /\.social-row\s*\{[^}]*justify-content:\s*center/);
+});
+
+test('keeps every toolbar row label legible on the dark bar', () => {
+  // #resume-body span / p carry ID specificity and would otherwise paint
+  // toolbar text near-black on near-black.
+  assert.match(css, /#resume-body \.toolbar-row span[\s\S]{0,60}color:\s*#f4f6f8/);
+});
+
+test('keeps the status line legible against #resume-body p', () => {
+  // #resume-body p is (1,0,1) and outranks a bare #resume-status (1,0,0),
+  // which left every status and error message black on the dark bar.
+  assert.match(css, /#resume-body #resume-status\s*\{[^}]*color:/);
+});
