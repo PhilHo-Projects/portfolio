@@ -116,7 +116,13 @@ function renderGauge(result: PageFitResult): void {
 }
 
 function runPageFit(): void {
-    lastFitResult = pageFitter.fit();
+    // Measure the layout as it will print, without the editing chrome.
+    document.body.classList.add('is-measuring');
+    try {
+        lastFitResult = pageFitter.fit();
+    } finally {
+        document.body.classList.remove('is-measuring');
+    }
     if (!lastFitResult.stale) renderGauge(lastFitResult);
 }
 

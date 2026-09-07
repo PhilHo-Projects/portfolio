@@ -672,6 +672,14 @@ li {
     display: none;
 }
 
+/* Editing chrome is screen-only and never prints, so it must not count toward
+   the page budget. The fitter hides it for the duration of a measurement,
+   otherwise the gauge over-reports in the one mode it exists for. */
+#resume-body.is-measuring .struct-controls,
+#resume-body.is-measuring .page-break-ruler {
+    display: none !important;
+}
+
 #resume-body.is-editing .struct-controls {
     display: inline-flex;
     gap: 0.25rem;

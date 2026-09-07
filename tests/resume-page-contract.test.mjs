@@ -232,3 +232,11 @@ test('never reads structural control text as CV content', () => {
   assert.match(editorSource, /struct-controls/);
   assert.match(rendererSource, /headingWithControls/);
 });
+
+test('excludes editing chrome from the page measurement', () => {
+  // Controls and the ruler never print, so counting them would make the gauge
+  // over-report in edit mode, the one mode it exists for.
+  assert.match(css, /#resume-body\.is-measuring \.struct-controls/);
+  assert.match(css, /#resume-body\.is-measuring \.page-break-ruler/);
+  assert.match(resumeMain, /is-measuring/);
+});
