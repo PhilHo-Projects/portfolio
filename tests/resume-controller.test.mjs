@@ -321,3 +321,124 @@ test('restores returned data and exits editing through logout', async () => {
   assert.equal(controller.state.editing, false);
   assert.equal(controller.state.dirty, false);
 });
+
+function editableController(options) {
+  const harness = makeHarness(...(options ?? []));
+  const controller = createResumeController(harness.dependencies);
+  return { harness, controller };
+}
+
+test('adds and removes items in both languages at the same index', async () => {
+  const { controller } = editableController();
+  await controller.initialize();
+  await controller.unlock('0000');
+  const before = controller.state.data.en.main.experience.items.length;
+
+  controller.addItem('experience');
+  const added = controller.state.data;
+  assert.equal(added.en.main.experience.items.length, before + 1);
+  assert.equal(added.fr.main.experience.items.length, before + 1);
+  assert.equal(controller.state.dirty, true);
+
+  controller.removeItem('experience', 0);
+  const removed = controller.state.data;
+  assert.equal(removed.en.main.experience.items.length, before);
+  assert.equal(removed.fr.main.experience.items.length, before);
+});
+
+test('grows every collection by the same amount in both languages', () => {
+  // Asserts the delta, not absolute equality: game-full-stack ships with an
+  // extra French project, so the seed is not itself index-parallel. What must
+  // hold is that a structural edit never widens the gap.
+  return (async () => {
+    const { controller } = editableController();
+    await controller.initialize();
+    await controller.unlock('0000');
+
+    const count = (data) => ({
+      experience: data.en.main.experience.items.length - data.fr.main.experience.items.length,
+      projects: data.en.main.projects.items.length - data.fr.main.projects.items.length,
+      education: data.en.main.education.items.length - data.fr.main.education.items.length,
+      sections: data.en.sidebar.sections.length - data.fr.sidebar.sections.length,
+      points: data.en.main.experience.items[0].points.length
+        - data.fr.main.experience.items[0].points.length,
+    });
+
+    const before = count(controller.state.data);
+    for (const collection of ['experience', 'projects', 'education', 'sidebarSections']) {
+      controller.addItem(collection);
+    }
+    controller.addPoint(0);
+    assert.deepEqual(count(controller.state.data), before);
+
+    controller.removeItem('experience', 0);
+    controller.removePoint(0, 0);
+    assert.deepEqual(count(controller.state.data), before);
+  })();
+});
+
+test('adds and removes bullet points in both languages', async () => {
+  const { controller } = editableController();
+  await controller.initialize();
+  await controller.unlock('0000');
+  const before = controller.state.data.en.main.experience.items[0].points.length;
+
+  controller.addPoint(0);
+  assert.equal(controller.state.data.en.main.experience.items[0].points.length, before + 1);
+  assert.equal(controller.state.data.fr.main.experience.items[0].points.length, before + 1);
+
+  controller.removePoint(0, 0);
+  assert.equal(controller.state.data.en.main.experience.items[0].points.length, before);
+  assert.equal(controller.state.data.fr.main.experience.items[0].points.length, before);
+});
+
+test('restores the exact prior document with one-step undo', async () => {
+  const { controller } = editableController();
+  await controller.initialize();
+  await controller.unlock('0000');
+  const before = controller.state.data;
+
+  controller.removeItem('experience', 0);
+  assert.notDeepEqual(controller.state.data, before);
+  assert.equal(controller.state.undoLabel, 'Job deleted.');
+
+  assert.equal(controller.undoStructural(), true);
+  assert.deepEqual(controller.state.data, before);
+  assert.equal(controller.state.undoLabel, null);
+  assert.equal(controller.undoStructural(), false);
+});
+
+test('refuses structural edits when locked or degraded', async () => {
+  const locked = editableController();
+  await locked.controller.initialize();
+  assert.throws(() => locked.controller.addItem('experience'), /unlock editing/i);
+
+  const offline = editableController([
+    'https://philippeho.dev/resume',
+    { failPublic: true },
+  ]);
+  await offline.controller.initialize();
+  assert.throws(() => offline.controller.addItem('experience'), /unavailable/i);
+});
+
+test('drops the undo snapshot on save and on exit', async () => {
+  const { controller } = editableController();
+  await controller.initialize();
+  await controller.unlock('0000');
+
+  controller.removeItem('projects', 0);
+  assert.equal(controller.state.undoLabel, 'Project deleted.');
+  await controller.save();
+  assert.equal(controller.state.undoLabel, null);
+
+  controller.removeItem('projects', 0);
+  await controller.exitEditing();
+  assert.equal(controller.state.undoLabel, null);
+});
+
+test('rejects an unknown collection name', async () => {
+  const { controller } = editableController();
+  await controller.initialize();
+  await controller.unlock('0000');
+  assert.throws(() => controller.addItem('nonsense'), /Unknown CV collection/);
+});

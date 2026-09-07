@@ -7,6 +7,12 @@ import type {
     ResumeRegistryEntry,
 } from '../../types/resume';
 
+export type StructuralCollection =
+    | 'experience'
+    | 'projects'
+    | 'education'
+    | 'sidebarSections';
+
 export type ResumeControllerState = {
     registry: ResumeRegistry | null;
     activeId: string | null;
@@ -16,6 +22,7 @@ export type ResumeControllerState = {
     dirty: boolean;
     degraded: boolean;
     managementAvailable: boolean;
+    undoLabel: string | null;
 };
 
 type ResumeApi = {
@@ -52,6 +59,11 @@ export type ResumeController = {
     duplicate(name: string): Promise<void>;
     createBlank(name: string): Promise<void>;
     markDirty(): void;
+    addItem(collection: StructuralCollection): void;
+    removeItem(collection: StructuralCollection, index: number): void;
+    addPoint(jobIndex: number): void;
+    removePoint(jobIndex: number, pointIndex: number): void;
+    undoStructural(): boolean;
     save(): Promise<void>;
     listBackups(): Promise<ResumeBackup[]>;
     restore(backupId: string): Promise<void>;
