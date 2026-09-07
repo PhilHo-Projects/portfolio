@@ -64,6 +64,22 @@ const proofPoints = [
       </span>
     </figure>
 
+    <section class="mt-7 rounded-xl border border-orange-400/15 bg-black/20 p-5 sm:p-6" aria-label="Long-set performance improvements">
+      <p class="text-[10px] font-mono uppercase tracking-[0.14em] text-orange-300">Latest development · built for long sets</p>
+      <div class="mt-4 grid gap-5 sm:grid-cols-2">
+        <div>
+          <p class="text-3xl font-medium tracking-tight text-white">67% <span class="text-sm font-normal text-slate-400">less peak memory</span></p>
+          <p class="mt-2 text-xs leading-relaxed text-slate-400">7,171 → 2,396 MB on a 118-minute set by removing redundant audio-buffer copies.</p>
+        </div>
+        <div>
+          <p class="text-3xl font-medium tracking-tight text-white">1.85s <span class="text-sm font-normal text-slate-400">to first sound</span></p>
+          <p class="mt-2 text-xs leading-relaxed text-slate-400">Down from 7.36s on a 2.1-hour WAV. Playback starts while waveform analysis runs in the background.</p>
+        </div>
+      </div>
+      <p class="mt-4 text-xs leading-relaxed text-slate-500">Measured on the latest merged source. Packaged downloads below are v{version}.</p>
+      <a href={`${repository}/pull/1`} target="_blank" rel="noreferrer" class="mt-2 inline-flex min-h-11 items-center text-[10px] font-mono uppercase tracking-[0.12em] text-orange-300 hover:text-orange-200">View benchmark notes <span class="ml-2" aria-hidden="true">↗</span></a>
+    </section>
+
     <div class="mt-7 grid grid-cols-1 gap-8 lg:grid-cols-[1.1fr_0.9fr] lg:gap-10">
       <div>
         <ul class="grid grid-cols-1 gap-2 sm:grid-cols-3" aria-label="MusicPlayer highlights">
