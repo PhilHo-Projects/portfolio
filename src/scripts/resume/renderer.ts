@@ -19,6 +19,67 @@ function editableElement<K extends keyof HTMLElementTagNameMap>(
     return element;
 }
 
+function structButton(
+    label: string,
+    text: string,
+    attributes: Record<string, string>,
+): HTMLButtonElement {
+    const button = document.createElement('button');
+    button.type = 'button';
+    button.className = 'struct-btn';
+    button.textContent = text;
+    button.title = label;
+    button.setAttribute('aria-label', label);
+    for (const [key, value] of Object.entries(attributes)) {
+        button.dataset[key] = value;
+    }
+    return button;
+}
+
+function structControls(...buttons: HTMLButtonElement[]): HTMLElement {
+    const controls = document.createElement('span');
+    controls.className = 'struct-controls';
+    controls.append(...buttons);
+    return controls;
+}
+
+function addItemButton(collection: string, label: string): HTMLElement {
+    const wrapper = document.createElement('div');
+    wrapper.className = 'struct-controls struct-controls-add';
+    wrapper.appendChild(
+        structButton(label, '+ ' + label, {
+            structAction: 'add-item',
+            structCollection: collection,
+        }),
+    );
+    return wrapper;
+}
+
+/**
+ * Wraps an editable value so its controls sit beside it rather than inside it.
+ * The editor reads innerText from the [data-path] element, so anything nested
+ * within one ends up saved into the CV.
+ */
+function headingWithControls(
+    path: string,
+    text: string,
+    controls: HTMLElement,
+): HTMLHeadingElement {
+    const heading = document.createElement('h3');
+    heading.append(editableElement('span', path, text), controls);
+    return heading;
+}
+
+function deleteButton(label: string, collection: string, index: number): HTMLElement {
+    return structControls(
+        structButton(label, '×', {
+            structAction: 'remove-item',
+            structCollection: collection,
+            index: String(index),
+        }),
+    );
+}
+
 function appendTextWithLineBreaks(element: HTMLElement, value: string): void {
     const lines = value.split(/<br\s*\/?>|\r?\n/gi);
     lines.forEach((line, index) => {
@@ -40,6 +101,10 @@ export function renderResume(
     data: ResumeLanguageData,
     language: ResumeLanguage = 'en',
 ): void {
+    // renderResume runs on every state change; drop the previous pass's add
+    // buttons so they are not duplicated.
+    document.querySelectorAll('.struct-controls-add').forEach((element) => element.remove());
+
     document.title = data.meta.title;
     document.documentElement.lang = language;
 
@@ -80,6 +145,7 @@ export function renderResume(
             );
             appendTextWithLineBreaks(content, section.content);
             container.appendChild(content);
+            container.appendChild(deleteButton('Delete sidebar section', 'sidebarSections', index));
             sectionsContainer.appendChild(container);
         });
 
@@ -100,6 +166,7 @@ export function renderResume(
         });
         languages.appendChild(items);
         sectionsContainer.appendChild(languages);
+        sectionsContainer.appendChild(addItemButton('sidebarSections', 'Add section'));
     }
 
     setText('summary-title', data.main.summary.title, 'main.summary.title');
@@ -116,6 +183,12 @@ export function renderResume(
     setText('education-title', data.main.education.title, 'main.education.title');
     setList('education-list', data.main.education.items, createEducationElement);
     setItemContainerVisibility('education-list', data.main.education.items.length > 0);
+
+    // Siblings of the lists, so they stay visible when a list is empty and a
+    // blank CV can be populated at all.
+    document.getElementById('experience-list')?.after(addItemButton('experience', 'Add job'));
+    document.getElementById('projects-list')?.after(addItemButton('projects', 'Add project'));
+    document.getElementById('education-list')?.after(addItemButton('education', 'Add school'));
 }
 
 function setItemContainerVisibility(id: string, hasItems: boolean): void {
@@ -134,6 +207,7 @@ function createJobElement(job: JobItem, index: number): HTMLElement {
         ', ',
         editableElement('span', `${basePath}.role`, job.role),
     );
+    heading.appendChild(deleteButton('Delete job', 'experience', index));
     container.appendChild(heading);
 
     const period = editableElement('div', `${basePath}.period`, job.period);
@@ -142,11 +216,30 @@ function createJobElement(job: JobItem, index: number): HTMLElement {
 
     const points = document.createElement('ul');
     job.points.forEach((point, pointIndex) => {
-        points.appendChild(
-            editableElement('li', `${basePath}.points.${pointIndex}`, point),
+        const item = document.createElement('li');
+        item.append(
+            editableElement('span', `${basePath}.points.${pointIndex}`, point),
+            structControls(
+                structButton('Delete bullet point', '×', {
+                    structAction: 'remove-point',
+                    index: String(index),
+                    pointIndex: String(pointIndex),
+                }),
+            ),
         );
+        points.appendChild(item);
     });
     container.appendChild(points);
+
+    const addPoint = document.createElement('div');
+    addPoint.className = 'struct-controls struct-controls-add';
+    addPoint.appendChild(
+        structButton('Add bullet point', '+ bullet', {
+            structAction: 'add-point',
+            index: String(index),
+        }),
+    );
+    container.appendChild(addPoint);
     return container;
 }
 
@@ -154,8 +247,13 @@ function createProjectElement(project: ProjectItem, index: number): HTMLElement 
     const basePath = `main.projects.items.${index}`;
     const container = document.createElement('div');
     container.className = 'project';
+    const heading = headingWithControls(
+        `${basePath}.title`,
+        project.title,
+        deleteButton('Delete project', 'projects', index),
+    );
     container.append(
-        editableElement('h3', `${basePath}.title`, project.title),
+        heading,
         editableElement('p', `${basePath}.description`, project.description),
     );
     return container;
@@ -165,9 +263,12 @@ function createEducationElement(education: EducationItem, index: number): HTMLEl
     const basePath = `main.education.items.${index}`;
     const container = document.createElement('div');
     container.className = 'school';
-    container.appendChild(
-        editableElement('h3', `${basePath}.school`, education.school),
+    const schoolHeading = headingWithControls(
+        `${basePath}.school`,
+        education.school,
+        deleteButton('Delete education entry', 'education', index),
     );
+    container.appendChild(schoolHeading);
     const period = editableElement('div', `${basePath}.period`, education.period);
     period.className = 'edu-period';
     container.append(

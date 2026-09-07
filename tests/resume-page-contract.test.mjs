@@ -207,3 +207,28 @@ test('shows a page fill gauge and a page break ruler in edit mode', () => {
   assert.match(resumeMain, /page-fit-label/);
   assert.match(resumeMain, /is-editing/);
 });
+
+test('renders structural add and remove controls', () => {
+  assert.match(rendererSource, /data-struct-action|structAction/);
+  for (const action of ['add-item', 'remove-item', 'add-point', 'remove-point']) {
+    assert.match(rendererSource, new RegExp(action));
+  }
+  assert.match(css, /\.struct-controls\s*\{[^}]*display:\s*none/);
+  assert.match(css, /#resume-body\.is-editing[^{]*\.struct-controls/);
+  const print = css.slice(css.indexOf('@media print'));
+  assert.match(print, /\.struct-controls/);
+});
+
+test('handles structural controls with one delegated listener and offers undo', () => {
+  assert.match(resumeMain, /structAction/);
+  assert.match(resumeMain, /undoStructural/);
+  assert.match(resumeMain, /undoLabel/);
+});
+
+test('never reads structural control text as CV content', () => {
+  // The editor reads innerText from the [data-path] element, so a control
+  // nested inside one would be saved into the CV the moment it was edited.
+  assert.match(editorSource, /readValue/);
+  assert.match(editorSource, /struct-controls/);
+  assert.match(rendererSource, /headingWithControls/);
+});

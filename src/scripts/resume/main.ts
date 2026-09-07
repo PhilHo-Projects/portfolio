@@ -11,7 +11,7 @@ import { createResumeApi } from './api';
 import { createPageFitter } from './page-fit';
 import type { PageFitResult } from './page-fit';
 import { createResumeController } from './resume-controller';
-import type { ResumeControllerState } from './resume-controller';
+import type { ResumeControllerState, StructuralCollection } from './resume-controller';
 import { renderResume } from './renderer';
 
 type NameMode = 'rename' | 'duplicate' | 'blank';
@@ -187,7 +187,16 @@ function renderApplicationState(state: ResumeControllerState): void {
     blankButton.disabled = state.dirty;
     historyButton.disabled = state.dirty;
 
-    if (state.dirty) {
+    if (state.undoLabel) {
+        status.replaceChildren(document.createTextNode(`${state.undoLabel} `));
+        const undo = document.createElement('button');
+        undo.type = 'button';
+        undo.id = 'undo-structural';
+        undo.className = 'status-undo';
+        undo.textContent = 'Undo';
+        undo.addEventListener('click', () => controller.undoStructural());
+        status.appendChild(undo);
+    } else if (state.dirty) {
         status.textContent = 'Unsaved changes — save or exit editing first.';
     } else if (state.degraded) {
         status.textContent = 'Showing the built-in gaming CV — the live CV service is temporarily unavailable.';
@@ -229,6 +238,28 @@ cvSelect.addEventListener('change', async () => {
         status.textContent = '';
     } catch (error) {
         cvSelect.value = controller.state.activeId ?? '';
+        status.textContent = messageFrom(error);
+    }
+});
+
+resumeContent.addEventListener('click', (event) => {
+    const target = event.target;
+    if (!(target instanceof HTMLElement)) return;
+    const button = target.closest<HTMLElement>('[data-struct-action]');
+    if (!button) return;
+
+    const { structAction, structCollection, index, pointIndex } = button.dataset;
+    try {
+        if (structAction === 'add-item' && structCollection) {
+            controller.addItem(structCollection as StructuralCollection);
+        } else if (structAction === 'remove-item' && structCollection) {
+            controller.removeItem(structCollection as StructuralCollection, Number(index));
+        } else if (structAction === 'add-point') {
+            controller.addPoint(Number(index));
+        } else if (structAction === 'remove-point') {
+            controller.removePoint(Number(index), Number(pointIndex));
+        }
+    } catch (error) {
         status.textContent = messageFrom(error);
     }
 });

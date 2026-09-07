@@ -28,12 +28,25 @@ export class Editor {
         });
     }
 
+    /**
+     * Structural controls must never be nested inside a [data-path] element,
+     * but read defensively anyway: a stray control would otherwise be saved
+     * into the CV as text the moment the field is edited.
+     */
+    private static readValue(target: HTMLElement): string {
+        if (!target.querySelector('.struct-controls')) return target.innerText;
+        const clone = target.cloneNode(true) as HTMLElement;
+        clone.querySelectorAll('.struct-controls').forEach((element) => element.remove());
+        return clone.textContent ?? '';
+    }
+
     private handleInput(event: Event, path: string): void {
         if (!this.currentData) return;
         const target = event.target as HTMLElement;
+        const text = Editor.readValue(target);
         const value = target.dataset.arrayJoin
-            ? target.innerText.split(/\r?\n/).filter(Boolean)
-            : target.innerText;
+            ? text.split(/\r?\n/).filter(Boolean)
+            : text;
         if (this.updateDeep(this.currentData, path, value)) this.onDirty?.();
     }
 
