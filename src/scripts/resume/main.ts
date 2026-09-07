@@ -69,6 +69,28 @@ function showModal(dialog: HTMLDialogElement): void {
     if (!dialog.open) dialog.showModal();
 }
 
+function resetDialog(dialog: HTMLDialogElement): void {
+    dialog.querySelectorAll<HTMLElement>('.dialog-error').forEach((element) => {
+        element.textContent = '';
+    });
+    dialog.querySelectorAll<HTMLInputElement>('input').forEach((input) => {
+        input.value = '';
+    });
+}
+
+// Cancel cannot be a dialog-method submit: these forms have required inputs and
+// formmethod="dialog" does not bypass constraint validation, so an empty field
+// would block the close.
+for (const dialog of [loginDialog, nameDialog, historyDialog, discardDialog]) {
+    dialog.addEventListener('click', (event) => {
+        const target = event.target;
+        if (target instanceof HTMLElement && target.closest('[data-dialog-close]')) {
+            dialog.close('cancel');
+        }
+    });
+    dialog.addEventListener('close', () => resetDialog(dialog));
+}
+
 function currentName(): string {
     const state = controller.state;
     return state.registry?.resumes.find(({ id }) => id === state.activeId)?.name ?? '';

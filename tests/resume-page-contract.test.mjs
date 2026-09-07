@@ -110,3 +110,22 @@ test('renders stored CV content without dynamic HTML interpretation', () => {
   assert.match(rendererSource, /createTextNode/);
   assert.match(rendererSource, /createElement\(['"]br['"]\)/);
 });
+
+test('closes dialogs from Cancel without tripping form validation', () => {
+  // formmethod="dialog" does not bypass constraint validation, so a required
+  // input would block Cancel. Both cancels must be plain buttons instead.
+  assert.doesNotMatch(html, /formmethod="dialog"/);
+  const sliceDialog = (id) => {
+    const start = html.indexOf('id="' + id + '"');
+    const end = html.indexOf('</dialog>', start);
+    return start === -1 || end === -1 ? '' : html.slice(start, end);
+  };
+  const loginDialog = sliceDialog('editor-login-dialog');
+  const nameDialog = sliceDialog('cv-name-dialog');
+  assert.notEqual(loginDialog, '');
+  assert.notEqual(nameDialog, '');
+  for (const dialog of [loginDialog, nameDialog]) {
+    assert.match(dialog, /<button[^>]+type="button"[^>]+data-dialog-close/);
+  }
+  assert.match(resumeMain, /data-dialog-close/);
+});

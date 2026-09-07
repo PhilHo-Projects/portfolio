@@ -62,7 +62,7 @@ const embeddedRegistry = safeJson(resumeRegistry);
             <p id="editor-login-error" class="dialog-error" role="alert"></p>
             <div class="dialog-actions">
                 <button id="editor-login-submit" type="submit">Unlock</button>
-                <button type="submit" formmethod="dialog" value="cancel">Cancel</button>
+                <button type="button" data-dialog-close>Cancel</button>
             </div>
         </form>
     </dialog>
@@ -75,7 +75,7 @@ const embeddedRegistry = safeJson(resumeRegistry);
             <p id="cv-name-error" class="dialog-error" role="alert"></p>
             <div class="dialog-actions">
                 <button id="cv-name-submit" type="submit">Save</button>
-                <button type="submit" formmethod="dialog" value="cancel">Cancel</button>
+                <button type="button" data-dialog-close>Cancel</button>
             </div>
         </form>
     </dialog>
