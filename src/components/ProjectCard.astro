@@ -1,20 +1,20 @@
 ---
 import type { Project } from '../data/projects';
-const { project } = Astro.props as { project: Project };
+const { project, compact = false } = Astro.props as { project: Project; compact?: boolean };
 const statusLabel = project.status
   ? { live: 'Live demo', 'public-demo': 'Public demo', readonly: 'Read-only', 'under-construction': 'Under construction', 'coming-soon': 'Coming soon' }[project.status]
   : undefined;
 ---
 <button type="button" data-project-trigger={project.id} aria-expanded="false" aria-controls={`project-detail-${project.id}`} class="project-card group relative flex min-h-11 flex-col overflow-hidden rounded-2xl border bg-[#1a1a1a] text-left transition-colors hover:border-white/25 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent" style={`--accent:${project.accent}`}>
-  <span class="relative flex h-24 items-center justify-center overflow-hidden" style={`background-color:${project.accent}14;`}>
-    <i class={`${project.icon} text-4xl transition-transform duration-300 group-hover:scale-110`} style={`color:${project.accent}; opacity:0.55;`} aria-hidden="true"></i>
+  <span class:list={['relative flex items-center justify-center overflow-hidden', compact ? 'h-16' : 'h-24']} style={`background-color:${project.accent}14;`}>
+    <i class:list={[project.icon, 'transition-transform duration-300 group-hover:scale-110', compact ? 'text-2xl' : 'text-4xl']} style={`color:${project.accent}; opacity:0.55;`} aria-hidden="true"></i>
     {statusLabel && <span class="absolute left-2.5 top-2.5 rounded-md bg-black/50 px-2 py-1 text-[10px] font-mono tracking-wide" style={`color:${project.accent};`}>{statusLabel}</span>}
     <i class="fa-solid fa-chevron-down absolute right-3 top-3 text-xs text-slate-500 transition-transform group-aria-expanded:rotate-180" aria-hidden="true"></i>
   </span>
-  <span class="flex flex-1 flex-col p-5">
+  <span class:list={['flex flex-1 flex-col', compact ? 'p-4' : 'p-5']}>
     {project.subtitle && <span class="mb-1.5 text-[10px] font-mono uppercase tracking-[0.18em]" style={`color:${project.accent};`}>{project.subtitle}</span>}
-    <span class="text-lg font-medium text-slate-100">{project.title}</span>
-    <span class="mt-2 text-sm leading-relaxed text-slate-400">{project.description}</span>
+    <span class:list={['font-medium text-slate-100', compact ? 'text-base' : 'text-lg']}>{project.title}</span>
+    <span class:list={['mt-2 leading-relaxed text-slate-400', compact ? 'text-xs' : 'text-sm']}>{project.description}</span>
     {project.tags && <span class="mt-4 flex flex-wrap gap-1.5">{project.tags.map(tag => <span class="rounded border border-white/10 px-2 py-0.5 text-[10px] font-mono text-slate-400">{tag}</span>)}</span>}
   </span>
 </button>

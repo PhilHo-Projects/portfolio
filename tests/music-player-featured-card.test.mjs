@@ -38,5 +38,5 @@ test('offers verified platform downloads and source access', () => {
 test('removes the inaccurate generic Music Player card', () => {
   assert.doesNotMatch(html, /MusicBee-style desktop client/);
   assert.doesNotMatch(html, /<h4[^>]*>Rust Music Player<\/h4>/);
-  assert.match(html, /Song Finder/);
+  assert.doesNotMatch(html, /data-project-trigger="song-finder"/);
 });

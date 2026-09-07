@@ -30,7 +30,7 @@ function projectDetail(id) {
 }
 
 test('renders every project as a collapsed expandable index item', () => {
-  const ids = ['hidden', 'unreal-engine-5', 'billing-hub', 'job-scraper', 'music-player', 'song-finder'];
+  const ids = ['hidden', 'unreal-engine-5', 'billing-hub', 'job-scraper', 'music-player'];
   for (const id of ids) {
     assert.match(html, new RegExp(`data-project-trigger="${id}"`));
     assert.match(html, new RegExp(`aria-controls="project-detail-${id}"`));
@@ -39,18 +39,31 @@ test('renders every project as a collapsed expandable index item', () => {
   assert.doesNotMatch(html, /aria-expanded="true"/);
 });
 
-test('renders Web Development before Game Development', () => {
-  const webDevelopment = html.indexOf('id="web-development"');
-  const gameDevelopment = html.indexOf('id="game-development"');
-
-  assert.notEqual(webDevelopment, -1);
-  assert.notEqual(gameDevelopment, -1);
-  assert.ok(webDevelopment < gameDevelopment);
+test('leads with ranked products and separates experiments from coursework', () => {
+  const triggers = [...html.matchAll(/data-project-trigger="([^"]+)"/g)].map(match => match[1]);
+  assert.deepEqual(triggers.slice(0, 9), ['hidden', 'personal-soundcloud', 'music-player', 'job-scraper', 'billing-hub', 'philchat', 'tokentracker', 'chatsim', 'manga-tracker']);
+  const experiments = html.indexOf('id="experiments"');
+  assert.ok(experiments > html.indexOf('data-project-trigger="manga-tracker"'));
+  assert.ok(experiments < html.indexOf('data-project-trigger="wave-function-collapse"'));
+  assert.ok(html.indexOf('data-project-trigger="unreal-engine-5"') > html.indexOf('id="background"'));
+  assert.doesNotMatch(html, /id="(?:web-development|game-development|native-tools)"/);
 });
 
 test('keeps the unfinished MP3 utility hidden from the built page', () => {
   assert.doesNotMatch(html, /data-project-trigger="mp3-maker"/);
   assert.doesNotMatch(html, /id="project-detail-mp3-maker"/);
+});
+
+test('adds the approved projects without publishing private or deferred apps', () => {
+  const experiments = html.indexOf('id="experiments"');
+  for (const id of ['shaderlab', 'health-hub']) {
+    assert.ok(html.indexOf(`data-project-trigger="${id}"`) > experiments);
+  }
+  assert.match(projectDetail('health-hub'), /planned, not available yet/);
+  const tokenPanel = projectDetail('tokentracker');
+  assert.match(tokenPanel, /href="#activity"/);
+  assert.doesNotMatch(tokenPanel.match(/<a[^>]+href="#activity"[^>]*>/)?.[0] ?? '', /target="_blank"/);
+  assert.doesNotMatch(html, /data-project-trigger="(?:hungry-dogs|fontmaker|powertree|restaurant-canton|laboutique)"/);
 });
 
 test('presents CloudSound as the live self-hosted audio platform', () => {
@@ -76,7 +89,7 @@ test('presents CloudSound as the live self-hosted audio platform', () => {
   );
 });
 
-test('shows Coming soon only for projects with that explicit status', () => {
+test('keeps finished coursework free of a coming-soon label', () => {
   const card = (id) => {
     const start = html.indexOf(`data-project-trigger="${id}"`);
     assert.notEqual(start, -1, `Missing card for ${id}`);
@@ -84,7 +97,6 @@ test('shows Coming soon only for projects with that explicit status', () => {
   };
 
   assert.doesNotMatch(card('unreal-engine-5'), /Coming soon/);
-  assert.match(card('song-finder'), /Coming soon/);
 });
 
 test('presents Hidden as the current live browser strategy game', () => {
@@ -93,7 +105,7 @@ test('presents Hidden as the current live browser strategy game', () => {
   assert.match(html, /data-project-trigger="hidden"/);
   assert.match(detail, /Blind-board Strategy Game/);
   assert.match(detail, /React · TypeScript · WebSocket · PostgreSQL/);
-  assert.match(detail, /assets\/img\/hidden-gameplay\.webp/);
+  assert.match(detail, /assets\/img\/hidden-round-five-20260907\.webp/);
   assert.match(detail, /Blind-board tactics/);
   assert.match(detail, /Online and offline play/);
   assert.match(detail, /Production account backend/);
@@ -128,10 +140,8 @@ test('gives every finished standard project a screenshot-led proof panel', () =>
   }
 });
 
-test('keeps Song Finder as the unfinished text-only exception', () => {
-  const detail = projectDetail('song-finder');
-  assert.match(detail, /Coming soon/);
-  assert.doesNotMatch(detail, /data-rich-project|data-project-preview|<img\b|Open project/);
+test('omits the coming-soon Song Finder from the showcase', () => {
+  assert.doesNotMatch(html, /data-project-trigger="song-finder"|id="project-detail-song-finder"/);
 });
 
 test('keeps status and compact copy aligned with the live implementations', () => {
