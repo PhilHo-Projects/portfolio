@@ -21,27 +21,36 @@ const embeddedRegistry = safeJson(resumeRegistry);
 
 <body id="resume-body">
     <header id="resume-toolbar" class="resume-toolbar">
-        <div class="resume-toolbar-primary">
-            <a id="portfolio-link" class="toolbar-link" href="/#projects">
-                <i class="fas fa-arrow-left" aria-hidden="true"></i>
-                Portfolio
-            </a>
-            <label class="cv-selector-label" for="cv-select">
-                <span>CV version</span>
-                <select id="cv-select" aria-label="CV version"></select>
-            </label>
+        <div class="toolbar-row toolbar-row-view">
+            <div class="resume-toolbar-primary">
+                <a id="portfolio-link" class="toolbar-link" href="/#projects">
+                    <i class="fas fa-arrow-left" aria-hidden="true"></i>
+                    Portfolio
+                </a>
+                <label class="cv-selector-label" for="cv-select">
+                    <span>CV version</span>
+                    <select id="cv-select" aria-label="CV version"></select>
+                </label>
+            </div>
+            <div class="resume-toolbar-actions">
+                <button id="lang-toggle" type="button">FR</button>
+                <button id="print-resume" type="button">
+                    <i class="fas fa-print" aria-hidden="true"></i>
+                    Print / PDF
+                </button>
+                <button id="edit-toggle" type="button">
+                    <i class="fas fa-pen" aria-hidden="true"></i>
+                    Edit
+                </button>
+            </div>
         </div>
-        <div class="resume-toolbar-actions">
-            <button id="lang-toggle" type="button">FR</button>
-            <button id="print-resume" type="button">
-                <i class="fas fa-print" aria-hidden="true"></i>
-                Print / PDF
-            </button>
-            <button id="edit-toggle" type="button">
-                <i class="fas fa-pen" aria-hidden="true"></i>
-                Edit
-            </button>
-            <div id="editor-actions" hidden>
+        <div id="editor-actions" class="toolbar-row toolbar-row-edit" hidden>
+            <div id="page-fit-gauge" class="page-fit-gauge" role="progressbar" aria-label="Page fill"
+                aria-valuemin="0" aria-valuemax="100" aria-valuenow="0">
+                <div class="page-fit-bar"><span id="page-fit-fill" class="page-fit-fill"></span></div>
+                <p id="page-fit-label" class="page-fit-label"></p>
+            </div>
+            <div class="editor-action-buttons">
                 <button id="rename-cv" type="button">Rename</button>
                 <button id="duplicate-cv" type="button">Duplicate</button>
                 <button id="new-blank-cv" type="button">New Blank</button>
@@ -62,7 +71,7 @@ const embeddedRegistry = safeJson(resumeRegistry);
             <p id="editor-login-error" class="dialog-error" role="alert"></p>
             <div class="dialog-actions">
                 <button id="editor-login-submit" type="submit">Unlock</button>
-                <button type="submit" formmethod="dialog" value="cancel">Cancel</button>
+                <button type="button" data-dialog-close>Cancel</button>
             </div>
         </form>
     </dialog>
@@ -75,7 +84,7 @@ const embeddedRegistry = safeJson(resumeRegistry);
             <p id="cv-name-error" class="dialog-error" role="alert"></p>
             <div class="dialog-actions">
                 <button id="cv-name-submit" type="submit">Save</button>
-                <button type="submit" formmethod="dialog" value="cancel">Cancel</button>
+                <button type="button" data-dialog-close>Cancel</button>
             </div>
         </form>
     </dialog>
@@ -110,6 +119,7 @@ const embeddedRegistry = safeJson(resumeRegistry);
     </dialog>
 
     <div class="container" id="resume-content">
+        <div class="page-break-ruler" aria-hidden="true"><span>End of page 1</span></div>
         <aside class="sidebar">
             <header>
                 <h1 id="name"></h1>

@@ -2,7 +2,7 @@ const express = require('express');
 const { readFileSync } = require('node:fs');
 const { join } = require('node:path');
 const { CvError } = require('./cv-data.cjs');
-const { createCvAuth } = require('./cv-auth.cjs');
+const { createCvAuth, describePasswordProblem } = require('./cv-auth.cjs');
 const { createCvStore } = require('./cv-store.cjs');
 
 const TRUSTED_PROXY_RANGES = [
@@ -50,6 +50,14 @@ function createPortfolioApp({
   const app = express();
   const auth = createCvAuth({ password, secure, ...authOptions });
   let managementAvailable = true;
+
+  // Fail closed on a missing or guessable secret. Serving the public CV with
+  // editing switched off is correct; serving it with a guessable editor is not.
+  const passwordProblem = describePasswordProblem(password);
+  if (passwordProblem) {
+    console.warn(`[cv-auth] CV editing is disabled: ${passwordProblem}.`);
+    managementAvailable = false;
+  }
   let store = createCvStore({ dataDir, seedDir, ...storeOptions });
 
   try {

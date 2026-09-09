@@ -21,7 +21,7 @@ async function startApp(options = {}) {
     dataDir,
     seedDir,
     distDir: join(rootDir, 'dist'),
-    password: '0000',
+    password: 'test-editor-password-0123',
     secure: false,
     authOptions: { tokenFactory: () => 'api-test-token' },
     storeOptions: { idFactory: () => 'apiid' },
@@ -93,7 +93,7 @@ test('protects writes and exposes login, session, and logout state', async () =>
   const login = await fetch(`${baseUrl}/api/cv-editor/login`, {
     method: 'POST',
     headers: { 'content-type': 'application/json' },
-    body: JSON.stringify({ password: '0000' }),
+    body: JSON.stringify({ password: 'test-editor-password-0123' }),
   });
   assert.equal(login.status, 204);
   const setCookie = login.headers.get('set-cookie');
@@ -123,7 +123,7 @@ test('supports authenticated rename, duplicate, blank, save, history, and restor
   const login = await fetch(`${baseUrl}/api/cv-editor/login`, {
     method: 'POST',
     headers: { 'content-type': 'application/json' },
-    body: JSON.stringify({ password: '0000' }),
+    body: JSON.stringify({ password: 'test-editor-password-0123' }),
   });
   const cookie = login.headers.get('set-cookie').split(';')[0];
   const headers = { 'content-type': 'application/json', cookie };
@@ -238,4 +238,37 @@ test('falls back to immutable seeds when the runtime registry is corrupt', async
   });
   assert.equal(management.status, 503);
   assert.equal((await json(management)).error.code, 'cv_store_unavailable');
+});
+
+test('fails closed when the editor password is missing or weak', async () => {
+  for (const password of [undefined, '0000']) {
+    const { baseUrl } = await startApp({ password });
+
+    // The public portfolio must stay up even with editing switched off.
+    const list = await fetch(`${baseUrl}/api/cvs`);
+    assert.equal(list.status, 200);
+    const read = await fetch(`${baseUrl}/api/cvs/game-full-stack`);
+    assert.equal(read.status, 200);
+
+    const session = await json(await fetch(`${baseUrl}/api/cv-editor/session`));
+    assert.equal(session.available, false);
+    assert.equal(session.authenticated, false);
+
+    // The weak password must not unlock the editor.
+    const login = await fetch(`${baseUrl}/api/cv-editor/login`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ password: '0000' }),
+    });
+    assert.equal(login.status, 503);
+    assert.equal((await json(login)).error.code, 'cv_store_unavailable');
+
+    // And writes stay shut with or without a cookie.
+    const write = await fetch(`${baseUrl}/api/cvs/game-full-stack`, {
+      method: 'PUT',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(gaming),
+    });
+    assert.equal(write.status, 503);
+  }
 });

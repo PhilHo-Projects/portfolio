@@ -6,6 +6,31 @@ const DEFAULT_IDLE_MS = 2 * 60 * 60 * 1000;
 const DEFAULT_ATTEMPT_WINDOW_MS = 15 * 60 * 1000;
 const DEFAULT_MAX_ATTEMPTS = 5;
 
+/**
+ * The editor is a single shared secret with no second factor, so its whole
+ * strength is this length. Anything short enough to guess makes the session
+ * machinery below pointless.
+ */
+const MIN_EDITOR_PASSWORD_LENGTH = 16;
+
+/**
+ * Returns a human-readable reason the password is unusable, or null when it is
+ * fit to protect the editor. Callers fail closed on a non-null result: the
+ * public CV stays readable, editing is switched off.
+ */
+function describePasswordProblem(password) {
+  if (typeof password !== 'string' || password.length === 0) {
+    return 'CV_EDITOR_PASSWORD is not set';
+  }
+  if (password !== password.trim()) {
+    return 'CV_EDITOR_PASSWORD has leading or trailing whitespace';
+  }
+  if (password.length < MIN_EDITOR_PASSWORD_LENGTH) {
+    return `CV_EDITOR_PASSWORD must be at least ${MIN_EDITOR_PASSWORD_LENGTH} characters`;
+  }
+  return null;
+}
+
 function digest(value) {
   return createHash('sha256').update(typeof value === 'string' ? value : '').digest();
 }
@@ -136,5 +161,7 @@ function createCvAuth({
 
 module.exports = {
   COOKIE_NAME,
+  MIN_EDITOR_PASSWORD_LENGTH,
   createCvAuth,
+  describePasswordProblem,
 };

@@ -8,8 +8,10 @@ import type {
     ResumeLanguageData,
 } from '../../types/resume';
 import { createResumeApi } from './api';
+import { createPageFitter } from './page-fit';
+import type { PageFitResult } from './page-fit';
 import { createResumeController } from './resume-controller';
-import type { ResumeControllerState } from './resume-controller';
+import type { ResumeControllerState, StructuralCollection } from './resume-controller';
 import { renderResume } from './renderer';
 
 type NameMode = 'rename' | 'duplicate' | 'blank';
@@ -32,6 +34,9 @@ const saveButton = requiredElement<HTMLButtonElement>('save-cv');
 const historyButton = requiredElement<HTMLButtonElement>('history-cv');
 const exitButton = requiredElement<HTMLButtonElement>('exit-edit');
 const status = requiredElement<HTMLElement>('resume-status');
+const pageFitGauge = requiredElement<HTMLElement>('page-fit-gauge');
+const pageFitFill = requiredElement<HTMLElement>('page-fit-fill');
+const pageFitLabel = requiredElement<HTMLElement>('page-fit-label');
 
 const loginDialog = requiredElement<HTMLDialogElement>('editor-login-dialog');
 const loginForm = requiredElement<HTMLFormElement>('editor-login-form');
@@ -57,6 +62,74 @@ const confirmExitButton = requiredElement<HTMLButtonElement>('confirm-exit-edit'
 
 const api = createResumeApi();
 const editor = new Editor();
+const resumeContent = requiredElement<HTMLElement>('resume-content');
+
+/**
+ * The grid stretches both columns to the taller row, so scrollHeight reports
+ * the stretched height for both and cannot be used. Measure the union of each
+ * column's children instead.
+ */
+function columnHeight(column: Element | null): number {
+    if (!column) return 0;
+    const children = [...column.children].filter((child) => child.getClientRects().length > 0);
+    if (children.length === 0) return 0;
+    const top = Math.min(...children.map((child) => child.getBoundingClientRect().top));
+    const bottom = Math.max(...children.map((child) => child.getBoundingClientRect().bottom));
+    const styles = getComputedStyle(column);
+    return (bottom - top) + parseFloat(styles.paddingTop) + parseFloat(styles.paddingBottom);
+}
+
+const pageFitter = createPageFitter({
+    measure: () => Math.max(
+        columnHeight(resumeContent.querySelector('.content')),
+        columnHeight(resumeContent.querySelector('.sidebar')),
+    ),
+    applyStep: (step: number) => {
+        resumeContent.dataset.density = String(step);
+    },
+    getLineHeight: () => {
+        const sample = resumeContent.querySelector('.content p');
+        if (!sample) return 21;
+        const lineHeight = parseFloat(getComputedStyle(sample).lineHeight);
+        return Number.isFinite(lineHeight) && lineHeight > 0 ? lineHeight : 21;
+    },
+});
+
+let lastFitResult: PageFitResult | null = null;
+let fitTimer = 0;
+
+function renderGauge(result: PageFitResult): void {
+    const state = !result.fits ? 'over' : result.step === 0 ? 'fits' : 'tightened';
+    pageFitGauge.dataset.fitState = state;
+    pageFitGauge.setAttribute('aria-valuenow', String(Math.min(100, result.fillPercent)));
+    pageFitFill.style.width = `${Math.min(100, result.fillPercent)}%`;
+
+    if (state === 'fits') {
+        pageFitLabel.textContent = `${result.fillPercent}% — fits one page`;
+    } else if (state === 'tightened') {
+        pageFitLabel.textContent = `${result.fillPercent}% — fits, auto-tightened`;
+    } else {
+        const lines = result.linesToCut === 1 ? 'line' : 'lines';
+        pageFitLabel.textContent =
+            `${result.fillPercent}% — over by ${result.overflowPx}px, cut ~${result.linesToCut} ${lines}`;
+    }
+}
+
+function runPageFit(): void {
+    // Measure the layout as it will print, without the editing chrome.
+    document.body.classList.add('is-measuring');
+    try {
+        lastFitResult = pageFitter.fit();
+    } finally {
+        document.body.classList.remove('is-measuring');
+    }
+    if (!lastFitResult.stale) renderGauge(lastFitResult);
+}
+
+function schedulePageFit(): void {
+    window.clearTimeout(fitTimer);
+    fitTimer = window.setTimeout(runPageFit, 150);
+}
 let nameMode: NameMode = 'rename';
 let selectedBackup: ResumeBackup | null = null;
 let transientStatus = 'Loading CV…';
@@ -67,6 +140,28 @@ function messageFrom(error: unknown): string {
 
 function showModal(dialog: HTMLDialogElement): void {
     if (!dialog.open) dialog.showModal();
+}
+
+function resetDialog(dialog: HTMLDialogElement): void {
+    dialog.querySelectorAll<HTMLElement>('.dialog-error').forEach((element) => {
+        element.textContent = '';
+    });
+    dialog.querySelectorAll<HTMLInputElement>('input').forEach((input) => {
+        input.value = '';
+    });
+}
+
+// Cancel cannot be a dialog-method submit: these forms have required inputs and
+// formmethod="dialog" does not bypass constraint validation, so an empty field
+// would block the close.
+for (const dialog of [loginDialog, nameDialog, historyDialog, discardDialog]) {
+    dialog.addEventListener('click', (event) => {
+        const target = event.target;
+        if (target instanceof HTMLElement && target.closest('[data-dialog-close]')) {
+            dialog.close('cancel');
+        }
+    });
+    dialog.addEventListener('close', () => resetDialog(dialog));
 }
 
 function currentName(): string {
@@ -90,6 +185,7 @@ function renderApplicationState(state: ResumeControllerState): void {
     editorActions.hidden = !state.editing;
     editButton.hidden = state.editing;
     editor.setEditing(state.editing);
+    document.body.classList.toggle('is-editing', state.editing);
 
     cvSelect.disabled = state.dirty || state.degraded;
     editButton.disabled = state.degraded || !state.managementAvailable;
@@ -97,7 +193,16 @@ function renderApplicationState(state: ResumeControllerState): void {
     blankButton.disabled = state.dirty;
     historyButton.disabled = state.dirty;
 
-    if (state.dirty) {
+    if (state.undoLabel) {
+        status.replaceChildren(document.createTextNode(`${state.undoLabel} `));
+        const undo = document.createElement('button');
+        undo.type = 'button';
+        undo.id = 'undo-structural';
+        undo.className = 'status-undo';
+        undo.textContent = 'Undo';
+        undo.addEventListener('click', () => controller.undoStructural());
+        status.appendChild(undo);
+    } else if (state.dirty) {
         status.textContent = 'Unsaved changes — save or exit editing first.';
     } else if (state.degraded) {
         status.textContent = 'Showing the built-in gaming CV — the live CV service is temporarily unavailable.';
@@ -116,12 +221,16 @@ const controller = createResumeController({
     render: (languageData: ResumeLanguageData, language: 'en' | 'fr') => {
         renderResume(languageData, language);
         editor.bind(languageData);
+        runPageFit();
     },
     replaceUrl: (relativeUrl: string) => history.replaceState(null, '', relativeUrl),
     onState: (state: ResumeControllerState) => renderApplicationState(state),
 });
 
-editor.onDirty = () => controller.markDirty();
+editor.onDirty = () => {
+    controller.markDirty();
+    schedulePageFit();
+};
 
 printButton.addEventListener('click', () => window.print());
 languageButton.addEventListener('click', () => controller.toggleLanguage());
@@ -135,6 +244,28 @@ cvSelect.addEventListener('change', async () => {
         status.textContent = '';
     } catch (error) {
         cvSelect.value = controller.state.activeId ?? '';
+        status.textContent = messageFrom(error);
+    }
+});
+
+resumeContent.addEventListener('click', (event) => {
+    const target = event.target;
+    if (!(target instanceof HTMLElement)) return;
+    const button = target.closest<HTMLElement>('[data-struct-action]');
+    if (!button) return;
+
+    const { structAction, structCollection, index, pointIndex } = button.dataset;
+    try {
+        if (structAction === 'add-item' && structCollection) {
+            controller.addItem(structCollection as StructuralCollection);
+        } else if (structAction === 'remove-item' && structCollection) {
+            controller.removeItem(structCollection as StructuralCollection, Number(index));
+        } else if (structAction === 'add-point') {
+            controller.addPoint(Number(index));
+        } else if (structAction === 'remove-point') {
+            controller.removePoint(Number(index), Number(pointIndex));
+        }
+    } catch (error) {
         status.textContent = messageFrom(error);
     }
 });
@@ -299,6 +430,9 @@ confirmExitButton.addEventListener('click', async () => {
 async function init(): Promise<void> {
     try {
         await controller.initialize();
+        // Web font metrics change measured height materially, so refit once
+        // the real faces have loaded.
+        void document.fonts.ready.then(runPageFit);
         if (!controller.state.dirty && controller.state.managementAvailable) {
             transientStatus = '';
             status.textContent = '';

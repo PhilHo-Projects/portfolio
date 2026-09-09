@@ -1,13 +1,17 @@
 const assert = require('node:assert/strict');
 const test = require('node:test');
 const { CvError } = require('../server/cv-data.cjs');
-const { createCvAuth } = require('../server/cv-auth.cjs');
+const {
+  createCvAuth,
+  describePasswordProblem,
+  MIN_EDITOR_PASSWORD_LENGTH,
+} = require('../server/cv-auth.cjs');
 
 function makeAuth(overrides = {}) {
   let timestamp = Date.UTC(2026, 6, 29, 12);
   let tokenIndex = 0;
   const auth = createCvAuth({
-    password: '0000',
+    password: 'test-editor-password-0123',
     secure: false,
     now: () => timestamp,
     tokenFactory: () => `test-token-${tokenIndex++}`,
@@ -24,7 +28,7 @@ function makeAuth(overrides = {}) {
 test('accepts only the configured password and returns an HttpOnly cookie', () => {
   const { auth } = makeAuth({ tokenFactory: () => 'test-token' });
   assert.throws(() => auth.login('127.0.0.1', 'wrong'), /Incorrect editor password/);
-  const result = auth.login('127.0.0.1', '0000');
+  const result = auth.login('127.0.0.1', 'test-editor-password-0123');
   assert.match(result.setCookie, /^cv_editor_session=test-token;/);
   assert.match(result.setCookie, /HttpOnly/);
   assert.match(result.setCookie, /SameSite=Strict/);
@@ -32,8 +36,8 @@ test('accepts only the configured password and returns an HttpOnly cookie', () =
 });
 
 test('adds Secure only when configured for HTTPS', () => {
-  const insecure = makeAuth().auth.login('127.0.0.1', '0000').setCookie;
-  const secure = makeAuth({ secure: true }).auth.login('127.0.0.1', '0000').setCookie;
+  const insecure = makeAuth().auth.login('127.0.0.1', 'test-editor-password-0123').setCookie;
+  const secure = makeAuth({ secure: true }).auth.login('127.0.0.1', 'test-editor-password-0123').setCookie;
   assert.doesNotMatch(insecure, /; Secure/);
   assert.match(secure, /; Secure/);
 });
@@ -57,7 +61,7 @@ test('successful login clears failures for that address', () => {
   for (let attempt = 0; attempt < 4; attempt += 1) {
     assert.throws(() => auth.login('203.0.113.8', 'wrong'));
   }
-  auth.login('203.0.113.8', '0000');
+  auth.login('203.0.113.8', 'test-editor-password-0123');
   assert.throws(
     () => auth.login('203.0.113.8', 'wrong'),
     (error) => error instanceof CvError && error.code === 'invalid_editor_password',
@@ -66,7 +70,7 @@ test('successful login clears failures for that address', () => {
 
 test('expires sessions after two hours of inactivity', () => {
   const { auth, advance } = makeAuth();
-  const { setCookie } = auth.login('127.0.0.1', '0000');
+  const { setCookie } = auth.login('127.0.0.1', 'test-editor-password-0123');
   advance(2 * 60 * 60 * 1000 + 1);
   assert.equal(auth.isAuthenticated(setCookie), false);
   assert.throws(
@@ -77,7 +81,7 @@ test('expires sessions after two hours of inactivity', () => {
 
 test('logout invalidates the token and clears the cookie', () => {
   const { auth } = makeAuth();
-  const { setCookie } = auth.login('127.0.0.1', '0000');
+  const { setCookie } = auth.login('127.0.0.1', 'test-editor-password-0123');
   const result = auth.logout(setCookie);
   assert.match(result.setCookie, /^cv_editor_session=;/);
   assert.match(result.setCookie, /Max-Age=0/);
@@ -101,4 +105,24 @@ test('clears failed attempts after the throttle window', () => {
     () => auth.login('198.51.100.4', 'wrong'),
     (error) => error instanceof CvError && error.code === 'invalid_editor_password',
   );
+});
+
+test('rejects a missing editor password', () => {
+  assert.match(describePasswordProblem(undefined), /not set/);
+  assert.match(describePasswordProblem(''), /not set/);
+  assert.match(describePasswordProblem(null), /not set/);
+});
+
+test('rejects passwords shorter than the minimum length', () => {
+  assert.match(describePasswordProblem('0000'), /at least 16 characters/);
+  assert.match(describePasswordProblem('x'.repeat(MIN_EDITOR_PASSWORD_LENGTH - 1)), /at least/);
+});
+
+test('rejects passwords padded with whitespace', () => {
+  assert.match(describePasswordProblem(` ${'x'.repeat(20)} `), /whitespace/);
+});
+
+test('accepts a password at or above the minimum length', () => {
+  assert.equal(describePasswordProblem('x'.repeat(MIN_EDITOR_PASSWORD_LENGTH)), null);
+  assert.equal(describePasswordProblem('test-editor-password-0123'), null);
 });

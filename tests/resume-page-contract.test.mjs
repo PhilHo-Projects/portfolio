@@ -110,3 +110,133 @@ test('renders stored CV content without dynamic HTML interpretation', () => {
   assert.match(rendererSource, /createTextNode/);
   assert.match(rendererSource, /createElement\(['"]br['"]\)/);
 });
+
+test('closes dialogs from Cancel without tripping form validation', () => {
+  // formmethod="dialog" does not bypass constraint validation, so a required
+  // input would block Cancel. Both cancels must be plain buttons instead.
+  assert.doesNotMatch(html, /formmethod="dialog"/);
+  const sliceDialog = (id) => {
+    const start = html.indexOf('id="' + id + '"');
+    const end = html.indexOf('</dialog>', start);
+    return start === -1 || end === -1 ? '' : html.slice(start, end);
+  };
+  const loginDialog = sliceDialog('editor-login-dialog');
+  const nameDialog = sliceDialog('cv-name-dialog');
+  assert.notEqual(loginDialog, '');
+  assert.notEqual(nameDialog, '');
+  for (const dialog of [loginDialog, nameDialog]) {
+    assert.match(dialog, /<button[^>]+type="button"[^>]+data-dialog-close/);
+  }
+  assert.match(resumeMain, /data-dialog-close/);
+});
+
+test('splits the toolbar into a view row and an edit row', () => {
+  assert.match(html, /class="toolbar-row toolbar-row-view"/);
+  assert.match(html, /id="editor-actions"[^>]+class="toolbar-row toolbar-row-edit"[^>]+hidden/);
+  // The edit controls must not share a row with the view controls: that
+  // competition for width is what made the bar collide when editing.
+  const viewStart = html.indexOf('toolbar-row-view');
+  const editStart = html.indexOf('id="editor-actions"');
+  assert.ok(viewStart !== -1 && editStart > viewStart);
+  const viewRow = html.slice(viewStart, editStart);
+  assert.match(viewRow, /id="print-resume"/);
+  assert.doesNotMatch(viewRow, /id="save-cv"/);
+  assert.doesNotMatch(viewRow, /id="history-cv"/);
+});
+
+test('renders the toolbar uniformly white on black', () => {
+  // #resume-body a has ID specificity and beats a bare .toolbar-link rule.
+  assert.match(css, /#resume-body \.toolbar-link\s*\{[^}]*color:\s*#f4f6f8/);
+});
+
+test('centres the sidebar social icons', () => {
+  assert.match(css, /\.social-row\s*\{[^}]*justify-content:\s*center/);
+});
+
+test('keeps every toolbar row label legible on the dark bar', () => {
+  // #resume-body span / p carry ID specificity and would otherwise paint
+  // toolbar text near-black on near-black.
+  assert.match(css, /#resume-body \.toolbar-row span[\s\S]{0,60}color:\s*#f4f6f8/);
+});
+
+test('keeps the status line legible against #resume-body p', () => {
+  // #resume-body p is (1,0,1) and outranks a bare #resume-status (1,0,0),
+  // which left every status and error message black on the dark bar.
+  assert.match(css, /#resume-body #resume-status\s*\{[^}]*color:/);
+});
+
+test('defines a five-step density ladder down to a 0.92 type floor', () => {
+  for (const step of [1, 2, 3, 4]) {
+    assert.match(css, new RegExp(`\[data-density="${step}"\]`));
+  }
+  assert.match(css, /--fit-scale:\s*0\.92/);
+  assert.doesNotMatch(css, /\[data-density="5"\]/);
+  // Sizing must flow through the custom properties, not hardcoded overrides.
+  assert.match(css, /font-size:\s*calc\([^)]*var\(--fit-scale\)/);
+  assert.match(css, /line-height:\s*var\(--fit-leading/);
+});
+
+test('measures the same layout it prints', () => {
+  // The fitter measures the screen layout to predict the printed page, so a
+  // different print padding would rewrap the text and invalidate the result.
+  const print = css.slice(css.indexOf('@media print'));
+  const printContent = print.match(/#resume-body \.content\s*\{([^}]*)\}/)?.[1] ?? '';
+  const printSidebar = print.match(/#resume-body \.sidebar\s*\{([^}]*)\}/)?.[1] ?? '';
+  assert.doesNotMatch(printContent, /padding/);
+  assert.doesNotMatch(printSidebar, /padding/);
+  const screen = css.slice(0, css.indexOf('@media screen'));
+  assert.match(screen, /#resume-body \.content\s*\{[^}]*padding:\s*1\.5rem 2\.5rem/);
+  assert.match(screen, /#resume-body \.sidebar\s*\{[^}]*padding:\s*1\.5rem 1rem/);
+});
+
+test('runs the page fitter from the resume entry point', () => {
+  assert.match(resumeMain, /createPageFitter/);
+  assert.match(resumeMain, /data-density|dataset\.density/);
+  assert.match(resumeMain, /document\.fonts/);
+});
+
+test('shows a page fill gauge and a page break ruler in edit mode', () => {
+  assert.match(html, /id="page-fit-gauge"[^>]+role="progressbar"/);
+  assert.match(html, /id="page-fit-fill"/);
+  assert.match(html, /id="page-fit-label"/);
+  assert.match(html, /class="page-break-ruler"/);
+  // The ruler is an editing aid: never on screen for visitors, never in print.
+  assert.match(css, /#resume-body\.is-editing \.page-break-ruler/);
+  const print = css.slice(css.indexOf('@media print'));
+  assert.match(print, /\.page-break-ruler/);
+  assert.match(resumeMain, /page-fit-label/);
+  assert.match(resumeMain, /is-editing/);
+});
+
+test('renders structural add and remove controls', () => {
+  assert.match(rendererSource, /data-struct-action|structAction/);
+  for (const action of ['add-item', 'remove-item', 'add-point', 'remove-point']) {
+    assert.match(rendererSource, new RegExp(action));
+  }
+  assert.match(css, /\.struct-controls\s*\{[^}]*display:\s*none/);
+  assert.match(css, /#resume-body\.is-editing[^{]*\.struct-controls/);
+  const print = css.slice(css.indexOf('@media print'));
+  assert.match(print, /\.struct-controls/);
+});
+
+test('handles structural controls with one delegated listener and offers undo', () => {
+  assert.match(resumeMain, /structAction/);
+  assert.match(resumeMain, /undoStructural/);
+  assert.match(resumeMain, /undoLabel/);
+});
+
+test('never reads structural control text as CV content', () => {
+  // The editor reads innerText from the [data-path] element, so a control
+  // nested inside one would be saved into the CV the moment it was edited.
+  assert.match(editorSource, /readValue/);
+  assert.match(editorSource, /struct-controls/);
+  assert.match(rendererSource, /headingWithControls/);
+});
+
+test('excludes editing chrome from the page measurement', () => {
+  // Controls and the ruler never print, so counting them would make the gauge
+  // over-report in edit mode, the one mode it exists for.
+  assert.match(css, /#resume-body\.is-measuring \.struct-controls/);
+  assert.match(css, /#resume-body\.is-measuring \.page-break-ruler/);
+  assert.match(resumeMain, /is-measuring/);
+});
