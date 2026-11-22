@@ -18,8 +18,8 @@ const cards = [
     <span class="text-xs font-mono text-slate-600" data-activity="measured"></span>
   </div>
 
-  <div class="grid grid-cols-2 gap-8 mb-10">
-    {['codex', 'claude'].map((tool) => (
+  <div class="grid grid-cols-2 sm:grid-cols-3 gap-8 mb-10">
+    {['codex', 'claude', 'gemini'].map((tool) => (
       <div>
         <p class="text-xs font-mono text-slate-500 uppercase tracking-wider mb-2">{tool}</p>
         <p class="text-2xl font-medium" data-activity={`${tool}-raw`}>—</p>
