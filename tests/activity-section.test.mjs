@@ -47,3 +47,7 @@ test('is composed into the home page', () => {
   assert.match(index, /import Activity from '\.\.\/components\/Activity\.astro'/);
   assert.match(index, /<Activity \/>/);
 });
+
+test('renders tool slots for codex, claude, and gemini', () => {
+  assert.match(component, /\['codex',\s*'claude',\s*'gemini'\]/);
+});

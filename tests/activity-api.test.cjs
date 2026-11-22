@@ -27,6 +27,7 @@ const SUMMARY = {
   tools: [
     { tool: 'codex', raw: 1040, sessions: 1 },
     { tool: 'claude', raw: 0, sessions: 0 },
+    { tool: 'gemini', raw: 0, sessions: 0 },
   ],
 };
 
